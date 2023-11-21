@@ -1,0 +1,33 @@
+[tool.poetry]
+name = "cellcom_scraper"
+version = "0.1.0"
+description = "Cellcom Scraper Version 2"
+authors = ["Alejandro <alejandro.granados.dev@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+alembic = "^1.12.1"
+mysql-connector-python = "^8.2.0"
+mysqlclient = "^2.2.0"
+black = "^23.11.0"
+pydantic = "^2.5.1"
+isort = "^5.12.0"
+python-dotenv = "^1.0.0"
+selenium = "^4.15.2"
+pyautogui = "^0.9.54"
+sqlalchemy = "^2.0.23"
+twilio = "^8.10.2"
+
+[tool.black]
+exclude = '''
+/(
+    | venv
+    | venv/
+    | venv\\
+)/
+'''
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
