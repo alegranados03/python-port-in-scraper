@@ -1,10 +1,10 @@
 from selenium import webdriver
 
 from cellcom_scraper.application.enums import NavigatorWebDriverType
-from cellcom_scraper.domain.interfaces.automation_driver_builder import \
-    AutomationDriverBuilder
-from settings.navigator_default_configurations import \
-    get_webdriver_default_config
+from cellcom_scraper.domain.interfaces.automation_driver_builder import (
+    AutomationDriverBuilder,
+)
+from settings.navigator_default_configurations import get_webdriver_default_config
 
 
 class EdgeDriverBuilder(AutomationDriverBuilder):

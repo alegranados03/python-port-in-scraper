@@ -16,3 +16,12 @@ class NoItemFoundException(ApplicationException):
             f"Item was not found while executing scraper: {message}", "SEC001"
         )
 
+
+class UnknownNavigatorException(ApplicationException):
+    def __init__(self, message):
+        super().__init__(f"Unknown navigator selected: {message}", "SEC005")
+
+
+class UnknownStrategyException(ApplicationException):
+    def __init__(self, message):
+        super().__init__(f"Unknown strategy selected: {message}", "SEC006")

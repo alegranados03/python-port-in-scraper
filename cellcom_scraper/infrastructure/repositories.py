@@ -1,8 +1,6 @@
 from cellcom_scraper.domain.entities import ProcessQueueRequestEntity
-from cellcom_scraper.infrastructure.sqlalchemy.models import \
-    ProcessQueueRequest
-from cellcom_scraper.infrastructure.sqlalchemy.repository import \
-    SQLAlchemyRepository
+from cellcom_scraper.infrastructure.sqlalchemy.models import ProcessQueueRequest
+from cellcom_scraper.infrastructure.sqlalchemy.repository import SQLAlchemyRepository
 
 
 class ProcessQueueRequestRepository(SQLAlchemyRepository):

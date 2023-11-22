@@ -11,7 +11,7 @@ class Scraper(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    def execute(self, extras: dict, navigator_options: dict):
+    def execute(self, navigator_options: dict):
         raise NotImplementedError
 
     @abstractmethod

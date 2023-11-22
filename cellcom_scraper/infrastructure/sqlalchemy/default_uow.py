@@ -11,5 +11,7 @@ class DefaultUnitOfWork(SQLAlchemyUnitOfWork):
 
     def __enter__(self) -> "DefaultUnitOfWork":
         super(DefaultUnitOfWork, self).__enter__()
-        self.process_requests: ProcessQueueRequestRepository = ProcessQueueRequestRepository(self.session)
+        self.process_requests: ProcessQueueRequestRepository = (
+            ProcessQueueRequestRepository(self.session)
+        )
         return self
