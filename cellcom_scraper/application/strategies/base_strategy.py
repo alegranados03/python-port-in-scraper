@@ -10,6 +10,7 @@ from cellcom_scraper.config import AWS_SERVER_URL
 from datetime import datetime
 import os
 import base64
+import logging
 
 
 class BaseScraperStrategy(Strategy):
@@ -47,6 +48,10 @@ class BaseScraperStrategy(Strategy):
     @staticmethod
     def send_to_aws(data: dict, endpoint: str):
         response = requests.post(f"{AWS_SERVER_URL}/{endpoint}", json=data, timeout=20)
+        if response.status_code == 200:
+            logging.info("Request to AWS sent successfully")
+        else:
+            logging.error("Request to AWS failed")
 
     def take_screenshot(self):
         path = os.getcwd()

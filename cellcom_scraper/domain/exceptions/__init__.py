@@ -6,4 +6,5 @@ from cellcom_scraper.domain.exceptions.exceptions import (
     PortInNumberException,
     ApplicationException,
     ForcedStopException,
+    UnknownConfigurationException
 )

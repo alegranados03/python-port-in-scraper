@@ -1,4 +1,4 @@
-from sqlalchemy import Column, DateTime, Integer, String
+from sqlalchemy import Column, DateTime, BigInteger, String
 from sqlalchemy.dialects.mysql import ENUM
 
 from cellcom_scraper.domain.entities import ProcessQueueRequestEntity
@@ -9,8 +9,8 @@ from cellcom_scraper.infrastructure.sqlalchemy.database import Base
 class ProcessQueueRequest(Base):
     __tablename__ = "process_queue"
 
-    id = Column(Integer, primary_key=True)
-    aws_id = Column(Integer, nullable=False)
+    id = Column(BigInteger, primary_key=True)
+    aws_id = Column(BigInteger, nullable=False)
     number_to_port = Column(String(255), nullable=False)
     type = Column(ENUM("PORT IN NUMBER", "SIM EXTRACTION"), nullable=False)
     start_timestamp = Column(DateTime, nullable=False)

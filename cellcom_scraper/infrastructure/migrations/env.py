@@ -6,6 +6,7 @@ from sqlalchemy import engine_from_config, pool
 from cellcom_scraper.infrastructure.sqlalchemy.database import create_connection_string
 from cellcom_scraper.infrastructure.sqlalchemy.models import Base
 
+
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
 config = context.config

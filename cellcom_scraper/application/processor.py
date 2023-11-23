@@ -82,7 +82,9 @@ class Processor:
                 )
 
             except Exception as error:
-                message = f"Please check request id: {request.id} strategy: {request.type}"
+                message = (
+                    f"Please check request id: {request.id} strategy: {request.type}"
+                )
                 logging.error(message)
                 logging.error(error)
                 self._update_request_status(request=request, status=RequestStatus.ERROR)

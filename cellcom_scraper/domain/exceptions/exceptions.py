@@ -40,3 +40,8 @@ class UnknownNavigatorException(ApplicationException):
 class UnknownStrategyException(ApplicationException):
     def __init__(self, message):
         super().__init__(f"Unknown strategy selected: {message}", "SEC006")
+
+
+class UnknownConfigurationException(ApplicationException):
+    def __init__(self, message):
+        super().__init__(f"Unknown configuration selected: {message}", "SEC008")
