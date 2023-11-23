@@ -34,7 +34,6 @@ class SimExtractionStrategy(BellFastBaseStrategy):
             )
         )
         mobile_radiobtn.click()
-        time.sleep(2)
 
         mobile_number_input = self.wait120.until(
             ec.presence_of_element_located(
@@ -65,8 +64,8 @@ class SimExtractionStrategy(BellFastBaseStrategy):
                     )
                 )
             )
-        except Exception as e:
-            SimExtractionException("Phone number not found")
+        except Exception:
+            raise SimExtractionException("Phone number not found")
 
         agreement_number_link = self.wait120.until(
             ec.presence_of_element_located(

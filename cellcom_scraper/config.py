@@ -1,6 +1,6 @@
 import os
 
-MAX_ATTEMPTS = 10
+MAX_ATTEMPTS = 2
 FORCE_STOP_ERRORS = [
     "Phone number not found",
     "The original order cannot be found for this port-in number. Please verify the information entered and try again.",
