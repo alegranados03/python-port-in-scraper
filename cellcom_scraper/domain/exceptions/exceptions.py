@@ -13,8 +13,23 @@ class ApplicationException(Exception):
 class NoItemFoundException(ApplicationException):
     def __init__(self, message):
         super().__init__(
-            f"Item was not found while executing scraper: {message}", "SEC001"
+            f"Item was not found while executing scraper: {message}", "SEC007"
         )
+
+
+class SimExtractionException(ApplicationException):
+    def __init__(self, message):
+        super().__init__(message, "SEC002")
+
+
+class PortInNumberException(ApplicationException):
+    def __init__(self, message):
+        super().__init__(message, "SEC003")
+
+
+class ForcedStopException(ApplicationException):
+    def __init__(self, message):
+        super().__init__(message, "SEC004")
 
 
 class UnknownNavigatorException(ApplicationException):

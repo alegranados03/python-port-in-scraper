@@ -1,5 +1,3 @@
-import time
-
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as ec
 
@@ -7,8 +5,13 @@ from cellcom_scraper.application.strategies.port_in.base_bellfast_strategy impor
     BellFastBaseStrategy,
 )
 
+from cellcom_scraper.domain.exceptions import PortInNumberException
+
 
 class PortInNumberStrategy(BellFastBaseStrategy):
+    def __init__(self, credentials):
+        super().__init__(credentials)
+
     def port_in_number(self):
         portin_dates_changes = self.wait30.until(
             ec.presence_of_element_located(
@@ -58,11 +61,9 @@ class PortInNumberStrategy(BellFastBaseStrategy):
                 By.XPATH,
                 "//body/div[@id='instant_activation']/div[2]/div[1]/div[1]/form[1]/div[1]/div[1]/div[1]/ul[1]/li[1]/font[1]",
             )
-
-            # raise IncompletePortProcessException(error_msg.text)
+            raise PortInNumberException(error_msg.text)
 
         else:
-            time.sleep(2)
             submit_btn = self.wait30.until(
                 ec.presence_of_element_located((By.XPATH, "//a[@id='submitted']"))
             )
@@ -70,3 +71,15 @@ class PortInNumberStrategy(BellFastBaseStrategy):
 
     def execute(self):
         super().execute()
+        self.port_in_number()
+
+    def handle_results(self, aws_id: int):
+        screenshot = self.take_screenshot()
+        data = {
+            "response": "Finished successfully",
+            "error_filename": screenshot["error_filename"],
+            "error_screenshot": screenshot["error_screenshot"],
+            "process_id": aws_id,
+        }
+        endpoint: str = "reply-results"
+        self.send_to_aws(data, endpoint)

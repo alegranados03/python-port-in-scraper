@@ -23,3 +23,7 @@ class Scraper(ABC):
     @abstractmethod
     def set_credentials(self, credentials):
         raise NotImplementedError
+
+    @abstractmethod
+    def set_aws_id(self, aws_id: int):
+        raise NotImplementedError

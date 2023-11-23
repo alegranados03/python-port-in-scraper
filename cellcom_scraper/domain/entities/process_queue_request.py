@@ -14,3 +14,8 @@ class ProcessQueueRequestEntity(BaseModel):
     start_timestamp: datetime
     end_timestamp: Optional[datetime] = None
     status: RequestStatus
+
+
+class ProcessQueueUpdateEntity(BaseModel):
+    status: str
+    end_timestamp: str

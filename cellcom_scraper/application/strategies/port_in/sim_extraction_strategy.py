@@ -1,11 +1,12 @@
 import time
-
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as ec
 
 from cellcom_scraper.application.strategies.port_in.base_bellfast_strategy import (
     BellFastBaseStrategy,
 )
+
+from cellcom_scraper.domain.exceptions import SimExtractionException
 
 
 class SimExtractionStrategy(BellFastBaseStrategy):
@@ -65,7 +66,7 @@ class SimExtractionStrategy(BellFastBaseStrategy):
                 )
             )
         except Exception as e:
-            pass  # raise phone number not found
+            SimExtractionException("Phone number not found")
 
         agreement_number_link = self.wait120.until(
             ec.presence_of_element_located(
@@ -93,12 +94,11 @@ class SimExtractionStrategy(BellFastBaseStrategy):
                 if table_text and table_text != "HSPA+ / LTE / 5G":
                     sim_card = table_text
                     break
-            except:
+            except Exception:
                 continue
 
         if not sim_card:
-            pass  # raise error sim not found
-
+            raise SimExtractionException("SIM number not found")
         return sim_card
 
     @staticmethod
@@ -111,3 +111,14 @@ class SimExtractionStrategy(BellFastBaseStrategy):
         super().execute()
         self.search_sim_number()
         self.sim_number = self.get_sim_value()
+
+    def handle_results(self, aws_id: int):
+        sim_card: str = self.sim_number.strip()
+        data: dict = {
+            "response": "Finished successfully",
+            "result": "Ok",
+            "process_id": aws_id,
+            "sim_card": sim_card,
+        }
+        endpoint: str = "request-sim-confirmation"
+        self.send_to_aws(data, endpoint)

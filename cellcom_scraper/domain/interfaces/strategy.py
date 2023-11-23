@@ -25,5 +25,15 @@ class Strategy(ABC):
     def execute(self):
         raise NotImplementedError
 
-    def handle_results(self):
+    @abstractmethod
+    def take_screenshot(self):
+        raise NotImplementedError
+
+    @abstractmethod
+    def handle_results(self, aws_id: int):
+        raise NotImplementedError
+
+    @staticmethod
+    @abstractmethod
+    def send_to_aws(data: dict, endpoint: str):
         raise NotImplementedError

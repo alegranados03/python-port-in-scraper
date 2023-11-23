@@ -14,6 +14,10 @@ from cellcom_scraper.domain.interfaces.automation_driver_builder import (
 )
 from cellcom_scraper.domain.interfaces.scraper import Scraper
 from cellcom_scraper.domain.interfaces.uow import UnitOfWork
+from cellcom_scraper.domain.entities.process_queue_request import (
+    ProcessQueueUpdateEntity,
+)
+from datetime import datetime
 import os
 
 
@@ -47,7 +51,12 @@ class Processor:
 
     def _update_request_status(self, *, request, status):
         with self.uow:
-            pass
+            repository = self.uow.get_repository("process_requests")
+            end_date = datetime.now()
+            update_data = ProcessQueueUpdateEntity(
+                status=status, end_timestamp=end_date.strftime("%Y-%m-%d %H:%M:%S")
+            )
+            repository.update(request.id, update_data)
             self.uow.commit()
 
     def start_processor(self):
@@ -73,7 +82,7 @@ class Processor:
                 )
 
             except Exception as error:
-                message = f"Please check request id: {request.id}"
+                message = f"Please check request id: {request.id} strategy: {request.type}"
                 logging.error(message)
                 logging.error(error)
                 self._update_request_status(request=request, status=RequestStatus.ERROR)

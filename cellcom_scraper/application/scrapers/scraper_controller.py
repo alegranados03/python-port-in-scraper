@@ -11,6 +11,7 @@ from cellcom_scraper.domain.interfaces.automation_driver_builder import (
 from cellcom_scraper.domain.interfaces.scraper import Scraper
 from cellcom_scraper.domain.interfaces.strategy import Strategy
 from cellcom_scraper.config import MAX_ATTEMPTS, FORCE_STOP_ERRORS
+from cellcom_scraper.domain.exceptions import ApplicationException
 
 
 class ScraperController(Scraper):
@@ -20,6 +21,7 @@ class ScraperController(Scraper):
         self.driver: Optional[WebDriver] = None
         self.credentials: Optional[AccountEntity] = None
         self.phone_number: Optional[str] = None
+        self.aws_id: Optional[int] = None
 
     def set_automation_driver_builder(self, builder: AutomationDriverBuilder):
         self.builder = builder
@@ -33,6 +35,9 @@ class ScraperController(Scraper):
     def set_phone_number(self, phone_number: str):
         self.phone_number = phone_number
 
+    def set_aws_id(self, aws_id: int):
+        self.aws_id = aws_id
+
     def execute(self, navigator_options=None):
         tries = 0
         while tries < MAX_ATTEMPTS:
@@ -43,14 +48,35 @@ class ScraperController(Scraper):
             self.strategy.set_phone_number(self.phone_number)
             try:
                 self.strategy.execute()
+                self.handle_results()
                 tries = MAX_ATTEMPTS + 1
-            except Exception as e:
+            except ApplicationException as e:
                 for error in FORCE_STOP_ERRORS:
                     if error in str(e):
                         tries = MAX_ATTEMPTS
-
+                        break
                 if tries == MAX_ATTEMPTS:
-                    print(e)
+                    self.handle_error(e.message, "yes")
+                    raise ApplicationException("Scraper request failed", "E001")
+                else:
+                    self.handle_error(e.message, "no")
+
+        driver = self.builder.get_driver()
+        driver.close()
 
     def handle_results(self):
-        self.strategy.handle_results()
+        self.strategy.handle_results(self.aws_id)
+
+    def handle_error(self, error_description, send_sms, error_log=""):
+        screenshot: dict = self.strategy.take_screenshot()
+        data: dict = {
+            "error_description": error_description,
+            "error_log": error_log,
+            "result": "Fail",
+            "process_id": self.aws_id,
+            "error_filename": screenshot["error_filename"],
+            "error_screenshot": screenshot["error_screenshot"],
+            "send_sms": send_sms,
+        }
+        endpoint: str = "report-errors"
+        self.strategy.send_to_aws(data, endpoint)

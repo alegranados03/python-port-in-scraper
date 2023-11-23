@@ -1,3 +1,5 @@
+import os
+
 MAX_ATTEMPTS = 10
 FORCE_STOP_ERRORS = [
     "Phone number not found",
@@ -5,3 +7,4 @@ FORCE_STOP_ERRORS = [
     "The status for the mobile number entered is not valid.",
     "The number entered does not meet the criteria for port-in date change.",
 ]
+AWS_SERVER_URL = os.environ.get("AWS_SERVER_URL")

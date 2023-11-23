@@ -5,6 +5,11 @@ from selenium.webdriver.support.ui import WebDriverWait
 
 from cellcom_scraper.domain.entities import AccountEntity
 from cellcom_scraper.domain.interfaces.strategy import Strategy
+import requests
+from cellcom_scraper.config import AWS_SERVER_URL
+from datetime import datetime
+import os
+import base64
 
 
 class BaseScraperStrategy(Strategy):
@@ -15,7 +20,6 @@ class BaseScraperStrategy(Strategy):
         self.wait30: Optional[WebDriverWait] = None
         self.wait60: Optional[WebDriverWait] = None
         self.wait120: Optional[WebDriverWait] = None
-        # TODO: Implement adapters and handle_results to send them to other systems
         self.results: Any = None
         self.request_adapter: Any = None
 
@@ -37,5 +41,25 @@ class BaseScraperStrategy(Strategy):
     def execute(self):
         self.login()
 
-    def handle_results(self):
+    def handle_results(self, aws_id: int):
         raise NotImplementedError
+
+    @staticmethod
+    def send_to_aws(data: dict, endpoint: str):
+        response = requests.post(f"{AWS_SERVER_URL}/{endpoint}", json=data, timeout=20)
+
+    def take_screenshot(self):
+        path = os.getcwd()
+        dt = datetime.now().strftime("%Y%m%d %H%M%S").split(" ")
+        filename = "_".join([dt[0], self.phone_number, dt[1]])
+        fullpath = os.path.join(path, "screenshots", filename)
+        self.driver.save_screenshot(fullpath + ".png")
+
+        with open(fullpath + ".png", "rb") as f:
+            encoded = base64.b64encode(f.read()).decode("utf-8")
+
+        return {
+            "error_screenshot": encoded,
+            "error_filename": filename,
+            "fullpath": fullpath,
+        }

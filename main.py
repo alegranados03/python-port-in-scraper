@@ -1,5 +1,5 @@
 import logging
-from datetime import datetime, timedelta
+from datetime import datetime
 
 from cellcom_scraper.application.processor import Processor
 from cellcom_scraper.application.scrapers.scraper_controller import ScraperController
