@@ -7,9 +7,12 @@ from cellcom_scraper.application.builders.edge_driver_builder import EdgeDriverB
 from cellcom_scraper.application.builders.firefox_driver_builder import (
     FirefoxDriverBuilder,
 )
-from cellcom_scraper.application.enums import NavigatorWebDriverType, StrategyName
+from cellcom_scraper.application.enums import NavigatorWebDriverType
+from cellcom_scraper.application.strategies.port_in import (
+    PortInNumberStrategy,
+    SimExtractionStrategy,
+)
 from cellcom_scraper.domain.enums import RequestType
-
 from cellcom_scraper.domain.exceptions import (
     UnknownNavigatorException,
     UnknownStrategyException,
@@ -37,8 +40,12 @@ def get_webdriver_builder(navigator_name: NavigatorWebDriverType) -> DriverBuild
 
 def get_scraper_strategy(strategy_name: RequestType):
     strategies_list = {
-        RequestType.SIM_EXTRACTION: "",
-        RequestType.PORT_IN_NUMBER: "",
+        RequestType.SIM_EXTRACTION: lambda credentials: SimExtractionStrategy(
+            credentials
+        ),
+        RequestType.PORT_IN_NUMBER: lambda credentials: PortInNumberStrategy(
+            credentials
+        ),
     }
 
     if strategy_name in strategies_list:

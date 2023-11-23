@@ -1,5 +1,7 @@
 from abc import ABC, abstractmethod
 
+from cellcom_scraper.domain.enums import RequestType
+
 
 class Scraper(ABC):
     @abstractmethod
@@ -7,7 +9,11 @@ class Scraper(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    def set_strategy(self, scraper_name: str):
+    def set_strategy(self, scraper_name: RequestType):
+        raise NotImplementedError
+
+    @abstractmethod
+    def set_phone_number(self, set_phone_number: str):
         raise NotImplementedError
 
     @abstractmethod

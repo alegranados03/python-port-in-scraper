@@ -1,16 +1,20 @@
 import logging
 from typing import List, Optional
 
+from cellcom_scraper.application.enums import NavigatorWebDriverType
 from cellcom_scraper.application.selectors import get_webdriver_builder
-from cellcom_scraper.domain.entities import ProcessQueueRequestEntity
+from cellcom_scraper.domain.entities import (
+    AccountEntity,
+    ProcessQueueRequestEntity,
+    ScraperEntity,
+)
 from cellcom_scraper.domain.enums import RequestStatus, RequestType
 from cellcom_scraper.domain.interfaces.automation_driver_builder import (
     AutomationDriverBuilder,
 )
 from cellcom_scraper.domain.interfaces.scraper import Scraper
 from cellcom_scraper.domain.interfaces.uow import UnitOfWork
-from cellcom_scraper.application.enums import NavigatorWebDriverType, StrategyName
-from cellcom_scraper.domain.entities import AccountEntity, ScraperEntity
+import os
 
 
 class Processor:
@@ -26,15 +30,17 @@ class Processor:
     def set_requests(self, requests: List[ProcessQueueRequestEntity]):
         self.scraper_requests = requests
 
-    def _get_navigator(self) -> NavigatorWebDriverType:
+    @staticmethod
+    def _get_navigator() -> NavigatorWebDriverType:
         return NavigatorWebDriverType.CHROME
 
     def _get_account_credentials(self):
         return self.account_credentials
 
-    def _get_scraper(self):
+    @staticmethod
+    def _get_scraper():
         return ScraperEntity(
-            url="https://wac.bell.ca:8000/wac-ia/bell_login.jsp",
+            url=os.environ.get("FAST_ACT_URL"),
             slug="port_in_scraper",
             name="Port In Scraper",
         )
@@ -50,6 +56,7 @@ class Processor:
             return
         for request in self.scraper_requests:
             try:
+                request_type = RequestType(request.type)
                 credentials: AccountEntity = self._get_account_credentials()
                 navigator: NavigatorWebDriverType = self._get_navigator()
                 scraper = self._get_scraper()
@@ -57,12 +64,14 @@ class Processor:
                     navigator
                 )(scraper.url)
                 self.controller.set_credentials(credentials)
-                self.controller.set_strategy(request.type)
+                self.controller.set_strategy(request_type)
                 self.controller.set_automation_driver_builder(self.builder)
-                self.controller.execute()
+                self.controller.set_phone_number(request.number_to_port)
+                self.controller.execute({})
                 self._update_request_status(
                     request=request, status=RequestStatus.FINISHED
                 )
+
             except Exception as error:
                 message = f"Please check request id: {request.id}"
                 logging.error(message)
