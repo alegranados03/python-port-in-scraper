@@ -28,7 +28,7 @@ class Main:
     @staticmethod
     def get_credentials():
         return AccountEntity(
-            username=os.getenv("USERNAME"),
-            dealer_code=os.getenv("DEALER_CODE"),
-            password=os.getenv("PASSWORD"),
+            username=os.getenv("BELL_FAST_USERNAME"),
+            dealer_code=os.getenv("BELL_FAST_DEALER_CODE"),
+            password=os.getenv("BELL_FAST_PASSWORD"),
         )

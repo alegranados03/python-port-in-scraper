@@ -35,7 +35,7 @@ class BellFastBaseStrategy(BaseScraperStrategy):
             dealer_code_field.send_keys(self.credentials.dealer_code)
             password_field.send_keys(self.credentials.password)
             login_button.click()
-            time.sleep(10)
+
         except (NoSuchElementException, TimeoutException) as e:
             message = "Failed during FastAct login"
             logging.error(e)
