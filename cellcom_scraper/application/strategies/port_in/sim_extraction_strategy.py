@@ -87,7 +87,7 @@ class SimExtractionStrategy(BellFastBaseStrategy):
         sim_card = ""
         for possibility in possibilities:
             try:
-                table_field = self.wait30.until(
+                table_field = self.wait10.until(
                     ec.presence_of_element_located((By.XPATH, possibility))
                 )
                 table_text = table_field.get_attribute("innerHTML")

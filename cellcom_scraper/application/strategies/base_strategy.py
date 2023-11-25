@@ -29,6 +29,7 @@ class BaseScraperStrategy(Strategy):
 
     def set_driver(self, driver: WebDriver):
         self.driver = driver
+        self.wait10 = WebDriverWait(self.driver, 10)
         self.wait30 = WebDriverWait(self.driver, 30)
         self.wait60 = WebDriverWait(self.driver, 60)
         self.wait120 = WebDriverWait(self.driver, 120)
