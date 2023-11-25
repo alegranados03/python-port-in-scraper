@@ -489,4 +489,4 @@ docker-compose.yml
 test-reports/
 static/
 downloads/
-screenshots/
+screenshots/*.png
