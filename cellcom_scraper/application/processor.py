@@ -61,7 +61,9 @@ class Processor:
 
     def start_processor(self):
         if len(self.scraper_requests) == 0:
-            logging.info("No requests for this execution")
+            message = "No requests for this execution"
+            logging.info(message)
+            print(message)
             return
         for request in self.scraper_requests:
             try:
@@ -76,6 +78,7 @@ class Processor:
                 self.controller.set_strategy(request_type)
                 self.controller.set_automation_driver_builder(self.builder)
                 self.controller.set_phone_number(request.number_to_port)
+                self.controller.set_aws_id(request.aws_id)
                 self.controller.execute({})
                 self._update_request_status(
                     request=request, status=RequestStatus.FINISHED
