@@ -2,6 +2,7 @@ import os
 
 MAX_ATTEMPTS = 2
 FORCE_STOP_ERRORS = [
+    "SIM number not found",
     "Phone number not found",
     "The original order cannot be found for this port-in number. Please verify the information entered and try again.",
     "The status for the mobile number entered is not valid.",

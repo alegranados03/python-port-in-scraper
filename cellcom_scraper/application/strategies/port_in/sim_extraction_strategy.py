@@ -78,11 +78,12 @@ class SimExtractionStrategy(BellFastBaseStrategy):
         agreement_number_link.click()
 
     def get_sim_value(self):
-        sim_p_1 = self.get_sim_field_xpath("8", "4")
-        sim_p_2 = self.get_sim_field_xpath("9", "5")
-        sim_p_3 = self.get_sim_field_xpath("9", "4")
+        sim_p_1 = self.get_sim_field_xpath("4", "8", "4")
+        sim_p_2 = self.get_sim_field_xpath("4", "9", "5")
+        sim_p_3 = self.get_sim_field_xpath("4", "9", "4")
+        sim_p_4 = self.get_sim_field_xpath("5", "9", "4")
 
-        possibilities = [sim_p_1, sim_p_2, sim_p_3]
+        possibilities = [sim_p_1, sim_p_2, sim_p_3, sim_p_4]
         sim_card = ""
         for possibility in possibilities:
             try:
@@ -101,9 +102,9 @@ class SimExtractionStrategy(BellFastBaseStrategy):
         return sim_card
 
     @staticmethod
-    def get_sim_field_xpath(div1: str, div2: str):
-        sim_generic_xpath = "/html[1]/body[1]/div[1]/div[2]/div[1]/div[2]/div[1]/div[3]/div[1]/div[2]/form[1]/div[4]/div[1]/div[1]/div[1]/div[%(div1)s]/div[%(div2)s]/div[2]"
-        values = {"div1": div1, "div2": div2}
+    def get_sim_field_xpath(div1: str, div2: str, div3: str):
+        sim_generic_xpath = "/html[1]/body[1]/div[1]/div[2]/div[1]/div[2]/div[1]/div[3]/div[1]/div[2]/form[1]/div[%(div1)s]/div[1]/div[1]/div[1]/div[%(div2)s]/div[%(div3)s]/div[2]"
+        values = {"div1": div1, "div2": div2, "div3": div3}
         return sim_generic_xpath % values
 
     def execute(self):
