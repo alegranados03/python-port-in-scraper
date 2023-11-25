@@ -1,14 +1,16 @@
+import logging
+
+from selenium.common.exceptions import NoSuchElementException, TimeoutException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as ec
 
 from cellcom_scraper.application.strategies.port_in.base_bellfast_strategy import (
     BellFastBaseStrategy,
 )
-
-from cellcom_scraper.domain.exceptions import PortInNumberException
-from selenium.common.exceptions import NoSuchElementException, TimeoutException
-from cellcom_scraper.domain.exceptions import NoItemFoundException
-import logging
+from cellcom_scraper.domain.exceptions import (
+    NoItemFoundException,
+    PortInNumberException,
+)
 
 
 class PortInNumberStrategy(BellFastBaseStrategy):

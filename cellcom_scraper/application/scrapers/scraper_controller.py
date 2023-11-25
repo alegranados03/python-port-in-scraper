@@ -3,15 +3,15 @@ from typing import Optional
 from selenium.webdriver.remote.webdriver import WebDriver
 
 from cellcom_scraper.application.selectors import get_scraper_strategy
+from cellcom_scraper.config import FORCE_STOP_ERRORS, MAX_ATTEMPTS
 from cellcom_scraper.domain.entities import AccountEntity
 from cellcom_scraper.domain.enums import RequestType
+from cellcom_scraper.domain.exceptions import ApplicationException
 from cellcom_scraper.domain.interfaces.automation_driver_builder import (
     AutomationDriverBuilder,
 )
 from cellcom_scraper.domain.interfaces.scraper import Scraper
 from cellcom_scraper.domain.interfaces.strategy import Strategy
-from cellcom_scraper.config import MAX_ATTEMPTS, FORCE_STOP_ERRORS
-from cellcom_scraper.domain.exceptions import ApplicationException
 
 
 class ScraperController(Scraper):

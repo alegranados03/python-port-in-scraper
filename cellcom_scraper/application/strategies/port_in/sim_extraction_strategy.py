@@ -1,11 +1,11 @@
 import time
+
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as ec
 
 from cellcom_scraper.application.strategies.port_in.base_bellfast_strategy import (
     BellFastBaseStrategy,
 )
-
 from cellcom_scraper.domain.exceptions import SimExtractionException
 
 

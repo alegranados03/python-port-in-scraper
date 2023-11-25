@@ -1,12 +1,11 @@
 import logging
+import os
 from datetime import datetime
 
 from cellcom_scraper.application.processor import Processor
 from cellcom_scraper.application.scrapers.scraper_controller import ScraperController
-from cellcom_scraper.infrastructure.sqlalchemy.default_uow import DefaultUnitOfWork
 from cellcom_scraper.domain.entities.account import AccountEntity
-import os
-
+from cellcom_scraper.infrastructure.sqlalchemy.default_uow import DefaultUnitOfWork
 
 
 class Main:
@@ -27,7 +26,6 @@ class Main:
             logging.error(message)
             logging.error(e)
             print(message)
-            
 
     @staticmethod
     def get_credentials():

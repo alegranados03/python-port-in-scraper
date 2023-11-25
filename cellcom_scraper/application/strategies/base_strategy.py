@@ -1,16 +1,16 @@
+import base64
+import logging
+import os
+from datetime import datetime
 from typing import Any, Optional
 
+import requests
 from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.support.ui import WebDriverWait
 
+from cellcom_scraper.config import AWS_SERVER_URL
 from cellcom_scraper.domain.entities import AccountEntity
 from cellcom_scraper.domain.interfaces.strategy import Strategy
-import requests
-from cellcom_scraper.config import AWS_SERVER_URL
-from datetime import datetime
-import os
-import base64
-import logging
 
 
 class BaseScraperStrategy(Strategy):

@@ -1,11 +1,11 @@
 import logging
 import time
 
+from selenium.common.exceptions import NoSuchElementException, TimeoutException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as ec
 
 from cellcom_scraper.application.strategies.base_strategy import BaseScraperStrategy
-from selenium.common.exceptions import NoSuchElementException, TimeoutException
 from cellcom_scraper.domain.exceptions import NoItemFoundException
 
 
@@ -24,7 +24,9 @@ class BellFastBaseStrategy(BaseScraperStrategy):
             )
 
             password_field = self.wait30.until(
-                ec.presence_of_element_located((By.XPATH, "//tbody/tr[3]/td[3]/input[2]"))
+                ec.presence_of_element_located(
+                    (By.XPATH, "//tbody/tr[3]/td[3]/input[2]")
+                )
             )
 
             login_button = self.wait30.until(
@@ -41,4 +43,3 @@ class BellFastBaseStrategy(BaseScraperStrategy):
             logging.error(e)
             logging.error(message)
             raise NoItemFoundException(message)
-

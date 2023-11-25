@@ -1,4 +1,6 @@
 import logging
+import os
+from datetime import datetime
 from typing import List, Optional
 
 from cellcom_scraper.application.enums import NavigatorWebDriverType
@@ -8,17 +10,15 @@ from cellcom_scraper.domain.entities import (
     ProcessQueueRequestEntity,
     ScraperEntity,
 )
+from cellcom_scraper.domain.entities.process_queue_request import (
+    ProcessQueueUpdateEntity,
+)
 from cellcom_scraper.domain.enums import RequestStatus, RequestType
 from cellcom_scraper.domain.interfaces.automation_driver_builder import (
     AutomationDriverBuilder,
 )
 from cellcom_scraper.domain.interfaces.scraper import Scraper
 from cellcom_scraper.domain.interfaces.uow import UnitOfWork
-from cellcom_scraper.domain.entities.process_queue_request import (
-    ProcessQueueUpdateEntity,
-)
-from datetime import datetime
-import os
 
 
 class Processor:
