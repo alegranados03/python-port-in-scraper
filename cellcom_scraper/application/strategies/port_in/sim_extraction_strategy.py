@@ -82,8 +82,9 @@ class SimExtractionStrategy(BellFastBaseStrategy):
         sim_p_2 = self.get_sim_field_xpath("4", "9", "5")
         sim_p_3 = self.get_sim_field_xpath("4", "9", "4")
         sim_p_4 = self.get_sim_field_xpath("5", "9", "4")
+        sim_p_5 = self.get_sim_field_xpath("6", "9", "5")
 
-        possibilities = [sim_p_1, sim_p_2, sim_p_3, sim_p_4]
+        possibilities = [sim_p_1, sim_p_2, sim_p_3, sim_p_4, sim_p_5]
         sim_card = ""
         for possibility in possibilities:
             try:
