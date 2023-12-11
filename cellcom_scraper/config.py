@@ -1,6 +1,6 @@
 import os
 
-MAX_ATTEMPTS = 1
+MAX_ATTEMPTS = 10
 FORCE_STOP_ERRORS = [
     "SIM number not found",
     "Phone number not found",
