@@ -1,5 +1,5 @@
 from cellcom_scraper.application.strategies.port_in.base_bellfast_strategy import (
-    BellFastBaseStrategy,
+    BellFastActBaseStrategy,
 )
 from cellcom_scraper.application.strategies.port_in.port_in_number_strategy import (
     PortInNumberStrategy,

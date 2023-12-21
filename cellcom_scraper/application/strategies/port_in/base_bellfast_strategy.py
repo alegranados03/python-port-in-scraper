@@ -9,7 +9,7 @@ from cellcom_scraper.application.strategies.base_strategy import BaseScraperStra
 from cellcom_scraper.domain.exceptions import NoItemFoundException
 
 
-class BellFastBaseStrategy(BaseScraperStrategy):
+class BellFastActBaseStrategy(BaseScraperStrategy):
     def __init__(self, credentials):
         super().__init__(credentials)
 

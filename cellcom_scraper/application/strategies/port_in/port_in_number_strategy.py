@@ -5,7 +5,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as ec
 
 from cellcom_scraper.application.strategies.port_in.base_bellfast_strategy import (
-    BellFastBaseStrategy,
+    BellFastActBaseStrategy,
 )
 from cellcom_scraper.domain.exceptions import (
     NoItemFoundException,
@@ -13,7 +13,7 @@ from cellcom_scraper.domain.exceptions import (
 )
 
 
-class PortInNumberStrategy(BellFastBaseStrategy):
+class PortInNumberStrategy(BellFastActBaseStrategy):
     def __init__(self, credentials):
         super().__init__(credentials)
 
