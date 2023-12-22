@@ -14,6 +14,7 @@ class Strategy(ABC):
     def set_driver(self, driver: WebDriver):
         raise NotImplementedError
 
+    @abstractmethod
     def set_phone_number(self, phone_number: str):
         raise NotImplementedError
 

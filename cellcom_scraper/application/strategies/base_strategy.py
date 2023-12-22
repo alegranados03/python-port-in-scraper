@@ -18,6 +18,7 @@ class BaseScraperStrategy(Strategy):
         self.credentials: AccountEntity = credentials
         self.driver: Optional[WebDriver] = None
         self.phone_number: Optional[str] = None
+        self.wait10: Optional[WebDriverWait] = None
         self.wait30: Optional[WebDriverWait] = None
         self.wait60: Optional[WebDriverWait] = None
         self.wait120: Optional[WebDriverWait] = None
