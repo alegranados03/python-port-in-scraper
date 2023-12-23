@@ -104,7 +104,6 @@ class PortInViaFicticeNumberStrategy(BellFastActBaseStrategy):
     def execute(self):
         super().execute()
 
-
     def handle_results(self, aws_id: int):
         screenshot = self.take_screenshot()
         data = {

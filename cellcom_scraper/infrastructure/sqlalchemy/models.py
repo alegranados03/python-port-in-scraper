@@ -1,7 +1,10 @@
 from sqlalchemy import BigInteger, Column, DateTime, String
 from sqlalchemy.dialects.mysql import ENUM
 
-from cellcom_scraper.domain.entities import ProcessQueueRequestEntity
+from cellcom_scraper.domain.entities import (
+    ProcessQueueRequestEntity,
+    SpecialPortInEntity,
+)
 from cellcom_scraper.domain.enums import RequestStatus, RequestType
 from cellcom_scraper.infrastructure.sqlalchemy.database import Base
 
@@ -12,7 +15,6 @@ class ProcessQueueRequest(Base):
     id = Column(BigInteger, primary_key=True)
     aws_id = Column(BigInteger, nullable=False)
     number_to_port = Column(String(255), nullable=False)
-    fictive_number = Column(String(255), nullable=True)
     type = Column(
         ENUM("PORT IN NUMBER", "SIM EXTRACTION", "PORT INT VIA FICTIVE NUMBER"),
         nullable=False,
@@ -30,4 +32,25 @@ class ProcessQueueRequest(Base):
             start_timestamp=self.start_timestamp,
             end_timestamp=self.end_timestamp,
             status=RequestStatus(self.status),
+        )
+
+
+class FictiveNumberPortIn(Base):
+    __tablename__ = "fictive_number_port_in"
+    id = Column(BigInteger, primary_key=True)
+    number_to_port = Column(String(255), nullable=False)
+    fictive_number = Column(String(255), nullable=True)
+    current_provider_account_number = Column(String(255), nullable=True)
+    client_authorization_name = Column(String(255), nullable=True)
+    current_billing_provider_value = Column(
+        String(50), comment="this value is for the dropdown in the ui", nullable=True
+    )
+
+    def to_entity(self) -> SpecialPortInEntity:
+        return SpecialPortInEntity(
+            number_to_port=self.number_to_port,
+            fictive_number=self.fictive_number,
+            current_provider_account_number=self.current_provider_account_number,
+            client_authorization_name=self.client_authorization_name,
+            current_billing_provider_value=self.current_billing_provider_value,
         )

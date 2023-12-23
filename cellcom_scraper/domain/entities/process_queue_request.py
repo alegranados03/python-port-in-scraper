@@ -16,6 +16,14 @@ class ProcessQueueRequestEntity(BaseModel):
     status: RequestStatus
 
 
+class SpecialPortInEntity(BaseModel):
+    number_to_port: str
+    fictive_number: Optional[str] = (None,)
+    current_provider_account_number: Optional[str] = (None,)
+    client_authorization_name: Optional[str] = (None,)
+    current_billing_provider_value: Optional[str] = None
+
+
 class ProcessQueueUpdateEntity(BaseModel):
     status: str
     end_timestamp: str
