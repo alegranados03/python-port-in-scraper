@@ -4,4 +4,6 @@ from cellcom_scraper.domain.entities.process_queue_request import (
 )
 from cellcom_scraper.domain.entities.scraper import ScraperEntity
 
-from cellcom_scraper.domain.entities.process_queue_request import SpecialPortInEntity
+from cellcom_scraper.domain.entities.process_queue_request import (
+    FictiveNumberPortInEntity,
+)

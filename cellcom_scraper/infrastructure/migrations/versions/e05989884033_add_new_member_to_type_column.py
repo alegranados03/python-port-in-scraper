@@ -12,14 +12,19 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision: str = 'e05989884033'
-down_revision: Union[str, None] = '662d8c8df97d'
+revision: str = "e05989884033"
+down_revision: Union[str, None] = "662d8c8df97d"
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
 
 
 def upgrade() -> None:
-    op.execute("ALTER TABLE process_queue MODIFY COLUMN type ENUM('PORT IN NUMBER', 'SIM EXTRACTION', 'FICTIVE NUMBER PORT INT')")
+    op.execute(
+        "ALTER TABLE process_queue MODIFY COLUMN type ENUM('PORT IN NUMBER', 'SIM EXTRACTION', 'FICTIVE NUMBER PORT INT')"
+    )
+
 
 def downgrade() -> None:
-    op.execute("ALTER TABLE process_queue MODIFY COLUMN type ENUM('PORT IN NUMBER', 'SIM EXTRACTION')")
+    op.execute(
+        "ALTER TABLE process_queue MODIFY COLUMN type ENUM('PORT IN NUMBER', 'SIM EXTRACTION')"
+    )

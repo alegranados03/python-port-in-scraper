@@ -3,7 +3,7 @@ from sqlalchemy.dialects.mysql import ENUM
 
 from cellcom_scraper.domain.entities import (
     ProcessQueueRequestEntity,
-    SpecialPortInEntity,
+    FictiveNumberPortInEntity,
 )
 from cellcom_scraper.domain.enums import RequestStatus, RequestType
 from cellcom_scraper.infrastructure.sqlalchemy.database import Base
@@ -46,8 +46,9 @@ class FictiveNumberPortIn(Base):
         String(50), comment="this value is for the dropdown in the ui", nullable=True
     )
 
-    def to_entity(self) -> SpecialPortInEntity:
-        return SpecialPortInEntity(
+    def to_entity(self) -> FictiveNumberPortInEntity:
+        return FictiveNumberPortInEntity(
+            id=self.id,
             number_to_port=self.number_to_port,
             fictive_number=self.fictive_number,
             current_provider_account_number=self.current_provider_account_number,

@@ -16,7 +16,8 @@ class ProcessQueueRequestEntity(BaseModel):
     status: RequestStatus
 
 
-class SpecialPortInEntity(BaseModel):
+class FictiveNumberPortInEntity(BaseModel):
+    id: int
     number_to_port: str
     fictive_number: Optional[str] = (None,)
     current_provider_account_number: Optional[str] = (None,)
