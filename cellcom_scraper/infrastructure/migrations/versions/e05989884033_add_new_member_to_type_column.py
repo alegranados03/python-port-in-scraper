@@ -20,7 +20,7 @@ depends_on: Union[str, Sequence[str], None] = None
 
 def upgrade() -> None:
     op.execute(
-        "ALTER TABLE process_queue MODIFY COLUMN type ENUM('PORT IN NUMBER', 'SIM EXTRACTION', 'FICTIVE NUMBER PORT INT')"
+        "ALTER TABLE process_queue MODIFY COLUMN type ENUM('PORT IN NUMBER', 'SIM EXTRACTION', 'FICTIVE NUMBER PORT IN')"
     )
 
 

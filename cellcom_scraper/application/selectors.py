@@ -47,7 +47,7 @@ def get_scraper_strategy(strategy_name: RequestType):
         RequestType.PORT_IN_NUMBER: lambda credentials: PortInNumberStrategy(
             credentials
         ),
-        RequestType.PORT_IN_VIA_FICTIVE_NUMBER: lambda credentials: PortInViaFicticeNumberStrategy(
+        RequestType.FICTIVE_NUMBER_PORT_IN: lambda credentials: PortInViaFicticeNumberStrategy(
             credentials
         ),
     }

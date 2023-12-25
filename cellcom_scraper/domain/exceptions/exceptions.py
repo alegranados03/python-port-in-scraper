@@ -45,3 +45,8 @@ class UnknownStrategyException(ApplicationException):
 class UnknownConfigurationException(ApplicationException):
     def __init__(self, message):
         super().__init__(f"Unknown configuration selected: {message}", "SEC008")
+
+
+class UnknownFictiveNumberPortInException(ApplicationException):
+    def __init__(self, message):
+        super().__init__(f"Unknown fictive number port in configuration: {message}", "SEC009")
