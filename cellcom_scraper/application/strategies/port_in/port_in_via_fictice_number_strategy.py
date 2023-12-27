@@ -153,7 +153,7 @@ class PortInViaFicticeNumberStrategy(BellFastActBaseStrategy):
                 )
             )
 
-            #quick_submit_button.click()
+            quick_submit_button.click()
 
 
         except Exception as e:
