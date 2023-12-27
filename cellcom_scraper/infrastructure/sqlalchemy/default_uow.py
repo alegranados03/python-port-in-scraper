@@ -17,7 +17,7 @@ class DefaultUnitOfWork(SQLAlchemyUnitOfWork):
         self.process_requests: ProcessQueueRequestRepository = (
             ProcessQueueRequestRepository(self.session)
         )
-        self.fictive_number_port_in: FictiveNumberPortInRepository(
-            FictiveNumberPortInRepository(self.session)
-        )
+        self.fictive_number_port_in: FictiveNumberPortInRepository = (
+            FictiveNumberPortInRepository(self.session)   
+        ) 
         return self

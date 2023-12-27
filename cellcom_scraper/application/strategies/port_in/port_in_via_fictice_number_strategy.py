@@ -65,7 +65,7 @@ class PortInViaFicticeNumberStrategy(BellFastActBaseStrategy):
             select_transaction_dropdown = Select(
                 self.wait30.until(
                     ec.presence_of_element_located(
-                        (By.XPATH, "//select[@id='transactionTypeProfile']0")
+                        (By.XPATH, "//select[@id='transactionTypeProfile']")
                     )
                 )
             )

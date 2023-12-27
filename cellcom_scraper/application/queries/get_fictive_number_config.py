@@ -8,6 +8,8 @@ from cellcom_scraper.infrastructure.injection.containers import (
 
 from cellcom_scraper.infrastructure.sqlalchemy.uow import UnitOfWork
 
+from cellcom_scraper.infrastructure.sqlalchemy.default_uow import DefaultUnitOfWork
+
 from dependency_injector.wiring import Provide, inject
 from mediatr import Mediator
 from typing import Optional
@@ -24,7 +26,7 @@ class GetFictiveNumberPortInHandler(
     @inject
     def __init__(
         self,
-        uow: UnitOfWork = Provide[PortInRepositoriesContainer.default_uow],
+        uow: UnitOfWork = DefaultUnitOfWork()
     ) -> None:
         self.uow: UnitOfWork = uow
 
