@@ -7,4 +7,5 @@ from cellcom_scraper.domain.exceptions.exceptions import (
     UnknownConfigurationException,
     UnknownNavigatorException,
     UnknownStrategyException,
+    UnknownFictiveNumberPortInException   
 )

@@ -9,5 +9,7 @@ FORCE_STOP_ERRORS = [
     "The number entered does not meet the criteria for port-in date change.",
     "The Port in Date change function is not available for previous mobile number change transactions. Please contact Retail Support to complete the transaction.",
     "A Port In request is still in progress and changes cannot be made at this time. Please contact Retail Support to complete the request.",
+    "There is currently a future dated transaction on this account. Please call Bell Mobility.",
+    "For interbrand transfers, please complete an Account Migration transaction through fastACT.",
 ]
 AWS_SERVER_URL = os.environ.get("AWS_SERVER_URL")
