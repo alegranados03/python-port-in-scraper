@@ -1,3 +1,6 @@
+from dependency_injector.wiring import Provide, inject
+from mediatr import Mediator
+
 from cellcom_scraper.domain.entities.cqrs import Command, CommandHandler
 from cellcom_scraper.domain.entities.process_queue_request import (
     FictiveNumberPortInEntity,
@@ -6,9 +9,6 @@ from cellcom_scraper.infrastructure.injection.containers import (
     PortInRepositoriesContainer,
 )
 from cellcom_scraper.infrastructure.sqlalchemy.uow import UnitOfWork
-
-from dependency_injector.wiring import Provide, inject
-from mediatr import Mediator
 
 
 class UpdateFictiveNumberPortIn(Command):

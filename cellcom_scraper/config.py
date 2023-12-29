@@ -11,5 +11,6 @@ FORCE_STOP_ERRORS = [
     "A Port In request is still in progress and changes cannot be made at this time. Please contact Retail Support to complete the request.",
     "There is currently a future dated transaction on this account. Please call Bell Mobility.",
     "For interbrand transfers, please complete an Account Migration transaction through fastACT.",
+    "Unknown fictive number port in configuration",
 ]
 AWS_SERVER_URL = os.environ.get("AWS_SERVER_URL")

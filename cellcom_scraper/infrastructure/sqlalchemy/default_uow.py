@@ -1,8 +1,8 @@
 from sqlalchemy.orm import sessionmaker
 
 from cellcom_scraper.infrastructure.repositories import (
-    ProcessQueueRequestRepository,
     FictiveNumberPortInRepository,
+    ProcessQueueRequestRepository,
 )
 from cellcom_scraper.infrastructure.sqlalchemy.database import SESSION_FACTORY
 from cellcom_scraper.infrastructure.sqlalchemy.uow import SQLAlchemyUnitOfWork
@@ -18,6 +18,6 @@ class DefaultUnitOfWork(SQLAlchemyUnitOfWork):
             ProcessQueueRequestRepository(self.session)
         )
         self.fictive_number_port_in: FictiveNumberPortInRepository = (
-            FictiveNumberPortInRepository(self.session)   
-        ) 
+            FictiveNumberPortInRepository(self.session)
+        )
         return self

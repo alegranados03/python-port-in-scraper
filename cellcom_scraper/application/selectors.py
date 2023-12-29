@@ -10,8 +10,8 @@ from cellcom_scraper.application.builders.firefox_driver_builder import (
 from cellcom_scraper.application.enums import NavigatorWebDriverType
 from cellcom_scraper.application.strategies.port_in import (
     PortInNumberStrategy,
-    SimExtractionStrategy,
     PortInViaFicticeNumberStrategy,
+    SimExtractionStrategy,
 )
 from cellcom_scraper.domain.enums import RequestType
 from cellcom_scraper.domain.exceptions import (

@@ -2,8 +2,8 @@ from sqlalchemy import BigInteger, Column, DateTime, String
 from sqlalchemy.dialects.mysql import ENUM
 
 from cellcom_scraper.domain.entities import (
-    ProcessQueueRequestEntity,
     FictiveNumberPortInEntity,
+    ProcessQueueRequestEntity,
 )
 from cellcom_scraper.domain.enums import RequestStatus, RequestType
 from cellcom_scraper.infrastructure.sqlalchemy.database import Base

@@ -1,10 +1,10 @@
 from cellcom_scraper.domain.entities import (
-    ProcessQueueRequestEntity,
     FictiveNumberPortInEntity,
+    ProcessQueueRequestEntity,
 )
 from cellcom_scraper.infrastructure.sqlalchemy.models import (
-    ProcessQueueRequest,
     FictiveNumberPortIn,
+    ProcessQueueRequest,
 )
 from cellcom_scraper.infrastructure.sqlalchemy.repository import SQLAlchemyRepository
 

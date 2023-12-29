@@ -49,4 +49,6 @@ class UnknownConfigurationException(ApplicationException):
 
 class UnknownFictiveNumberPortInException(ApplicationException):
     def __init__(self, message):
-        super().__init__(f"Unknown fictive number port in configuration: {message}", "SEC009")
+        super().__init__(
+            f"Unknown fictive number port in configuration: {message}", "SEC009"
+        )
