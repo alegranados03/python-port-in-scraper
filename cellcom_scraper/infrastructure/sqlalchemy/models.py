@@ -16,7 +16,7 @@ class ProcessQueueRequest(Base):
     aws_id = Column(BigInteger, nullable=False)
     number_to_port = Column(String(255), nullable=False)
     type = Column(
-        ENUM("PORT IN NUMBER", "SIM EXTRACTION", "FICTIVE NUMBER PORT IN"),
+        ENUM(RequestType),
         nullable=False,
     )
     start_timestamp = Column(DateTime, nullable=False)
