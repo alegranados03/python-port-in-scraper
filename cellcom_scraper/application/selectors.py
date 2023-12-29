@@ -12,6 +12,7 @@ from cellcom_scraper.application.strategies.port_in import (
     PortInNumberStrategy,
     PortInViaFicticeNumberStrategy,
     SimExtractionStrategy,
+    SimExtractionFictiveNumberStrategy
 )
 from cellcom_scraper.domain.enums import RequestType
 from cellcom_scraper.domain.exceptions import (
@@ -45,6 +46,9 @@ def get_scraper_strategy(strategy_name: RequestType):
             credentials
         ),
         RequestType.PORT_IN_NUMBER: lambda credentials: PortInNumberStrategy(
+            credentials
+        ),
+        RequestType.FICTIVE_NUMBER_SIM_EXTRACTION: lambda credentials: SimExtractionFictiveNumberStrategy(
             credentials
         ),
         RequestType.FICTIVE_NUMBER_PORT_IN: lambda credentials: PortInViaFicticeNumberStrategy(

@@ -10,3 +10,7 @@ from cellcom_scraper.application.strategies.port_in.port_in_via_fictice_number_s
 from cellcom_scraper.application.strategies.port_in.sim_extraction_strategy import (
     SimExtractionStrategy,
 )
+
+from cellcom_scraper.application.strategies.port_in.sim_extraction_fictive_number_strategy import (
+    SimExtractionFictiveNumberStrategy
+)
