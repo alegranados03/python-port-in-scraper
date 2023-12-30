@@ -12,5 +12,6 @@ FORCE_STOP_ERRORS = [
     "There is currently a future dated transaction on this account. Please call Bell Mobility.",
     "For interbrand transfers, please complete an Account Migration transaction through fastACT.",
     "Unknown fictive number port in configuration",
+    "Only accounts with Open or Suspended status can be viewed",
 ]
 AWS_SERVER_URL = os.environ.get("AWS_SERVER_URL")
