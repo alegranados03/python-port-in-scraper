@@ -15,21 +15,21 @@ class BellFastActBaseStrategy(BaseScraperStrategy):
     def login(self):
         try:
             username_field = self.wait30.until(
-                ec.presence_of_element_located((By.XPATH, "//input[@id='strUsrAlias']"))
+                ec.presence_of_element_located((By.XPATH, "//input[@id='myUser']"))
             )
 
             dealer_code_field = self.wait30.until(
-                ec.presence_of_element_located((By.XPATH, "//input[@id='strDealerID']"))
+                ec.presence_of_element_located((By.XPATH, "//input[@id='dealercode']"))
             )
 
             password_field = self.wait30.until(
                 ec.presence_of_element_located(
-                    (By.XPATH, "//tbody/tr[3]/td[3]/input[2]")
+                    (By.XPATH, "//input[@id='myPassword']")
                 )
             )
 
             login_button = self.wait30.until(
-                ec.presence_of_element_located((By.XPATH, "//input[@id='loginId']"))
+                ec.presence_of_element_located((By.XPATH, "//button[@id='myButton']"))
             )
 
             username_field.send_keys(self.credentials.username)

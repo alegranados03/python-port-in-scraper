@@ -13,6 +13,7 @@ from cellcom_scraper.domain.interfaces.automation_driver_builder import (
 from cellcom_scraper.domain.interfaces.scraper import Scraper
 from cellcom_scraper.domain.interfaces.strategy import Strategy
 
+import logging
 
 class ScraperController(Scraper):
     def __init__(self):
@@ -60,6 +61,12 @@ class ScraperController(Scraper):
                     raise ApplicationException("Scraper request failed", "E001")
                 else:
                     self.handle_error(e.message, "no")
+            except Exception as e:
+                message = "Another type of exception ocurred please check what happened"
+                self.handle_error(message, "yes")
+                logging.error(e)
+                logging.error(message)
+                
 
         driver = self.builder.get_driver()
         driver.close()
