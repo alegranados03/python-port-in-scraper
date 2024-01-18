@@ -62,7 +62,7 @@ class Processor:
     def start_processor(self):
         if len(self.scraper_requests) == 0:
             message = "No requests for this execution"
-            logging.info(message)
+            #logging.info(message)
             print(message)
             return
         for request in self.scraper_requests:

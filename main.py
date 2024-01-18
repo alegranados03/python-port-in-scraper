@@ -40,5 +40,5 @@ class Main:
         current_date = datetime.now()
         init_message = f"Port in Scraper, execution start at: {current_date}"
         logging.basicConfig(filename="./scrapers.log", level=logging.DEBUG)
-        logging.info(init_message)
+        #logging.info(init_message)
         return init_message
