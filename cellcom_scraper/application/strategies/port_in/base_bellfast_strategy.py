@@ -23,9 +23,7 @@ class BellFastActBaseStrategy(BaseScraperStrategy):
             )
 
             password_field = self.wait30.until(
-                ec.presence_of_element_located(
-                    (By.XPATH, "//input[@id='myPassword']")
-                )
+                ec.presence_of_element_located((By.XPATH, "//input[@id='myPassword']"))
             )
 
             login_button = self.wait30.until(

@@ -52,7 +52,9 @@ class BaseScraperStrategy(Strategy):
     @staticmethod
     def send_to_aws(data: dict, endpoint: str):
         try:
-            response = requests.post(f"{AWS_SERVER_URL}/{endpoint}", json=data, timeout=20)
+            response = requests.post(
+                f"{AWS_SERVER_URL}/{endpoint}", json=data, timeout=20
+            )
 
             if response.status_code == 200:
                 logging.info("Request to AWS sent successfully")
@@ -63,7 +65,9 @@ class BaseScraperStrategy(Strategy):
                 logging.error(error_message)
 
         except json.JSONDecodeError:
-            logging.error(f"Request to AWS failed with status code {response.status_code}: {response.text}")
+            logging.error(
+                f"Request to AWS failed with status code {response.status_code}: {response.text}"
+            )
 
         except requests.RequestException as e:
             logging.error(f"Request to AWS failed: {e}")

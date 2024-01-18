@@ -12,7 +12,7 @@ from cellcom_scraper.application.strategies.port_in import (
     PortInNumberStrategy,
     PortInViaFicticeNumberStrategy,
     SimExtractionStrategy,
-    SimExtractionFictiveNumberStrategy
+    SimExtractionFictiveNumberStrategy,
 )
 from cellcom_scraper.domain.enums import RequestType
 from cellcom_scraper.domain.exceptions import (

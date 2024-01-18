@@ -12,5 +12,5 @@ from cellcom_scraper.application.strategies.port_in.sim_extraction_strategy impo
 )
 
 from cellcom_scraper.application.strategies.port_in.sim_extraction_fictive_number_strategy import (
-    SimExtractionFictiveNumberStrategy
+    SimExtractionFictiveNumberStrategy,
 )
