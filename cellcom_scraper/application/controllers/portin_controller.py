@@ -10,12 +10,13 @@ from cellcom_scraper.domain.exceptions import ApplicationException
 from cellcom_scraper.domain.interfaces.automation_driver_builder import (
     AutomationDriverBuilder,
 )
-from cellcom_scraper.domain.interfaces.scraper import Scraper
+from cellcom_scraper.domain.interfaces.controller import Controller
 from cellcom_scraper.domain.interfaces.strategy import Strategy
 
 import logging
 
-class ScraperController(Scraper):
+
+class PortInController(Controller):
     def __init__(self):
         self.builder: Optional[AutomationDriverBuilder] = None
         self.strategy: Optional[Strategy] = None
@@ -57,12 +58,12 @@ class ScraperController(Scraper):
                         tries = MAX_ATTEMPTS
                         break
                 if tries == MAX_ATTEMPTS:
-                    self.handle_error(error_description=e.message, send_sms= "yes", send_client_sms="yes")
+                    self.handle_error(error_description=e.message, send_sms="yes", send_client_sms="yes")
                     raise ApplicationException("Scraper request failed", "E001")
                 else:
-                    self.handle_error(error_description=e.message, send_sms= "no")
+                    self.handle_error(error_description=e.message, send_sms="no")
             except Exception as e:
-                message = "Another type of exception ocurred please check what happened"
+                message = "Another type of exception occurred please check what happened"
                 self.handle_error(error_description=message, send_sms="yes")
                 logging.error(e)
                 logging.error(message)

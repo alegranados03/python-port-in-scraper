@@ -3,7 +3,7 @@ from abc import ABC, abstractmethod
 from cellcom_scraper.domain.enums import RequestType
 
 
-class Scraper(ABC):
+class Controller(ABC):
     @abstractmethod
     def set_automation_driver_builder(self, builder):
         raise NotImplementedError

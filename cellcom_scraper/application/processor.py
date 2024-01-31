@@ -17,13 +17,13 @@ from cellcom_scraper.domain.enums import RequestStatus, RequestType
 from cellcom_scraper.domain.interfaces.automation_driver_builder import (
     AutomationDriverBuilder,
 )
-from cellcom_scraper.domain.interfaces.scraper import Scraper
+from cellcom_scraper.domain.interfaces.controller import Controller
 from cellcom_scraper.domain.interfaces.uow import UnitOfWork
 
 
 class Processor:
     def __init__(
-        self, uow: UnitOfWork, controller: Scraper, account_credentials: AccountEntity
+        self, uow: UnitOfWork, controller: Controller, account_credentials: AccountEntity
     ):
         self.uow: UnitOfWork = uow
         self.controller = controller
