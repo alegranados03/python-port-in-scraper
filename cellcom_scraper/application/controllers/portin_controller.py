@@ -17,7 +17,7 @@ import logging
 
 
 class PortInController(Controller):
-    def __init__(self):
+    def __init__(self) -> None:
         self.builder: Optional[AutomationDriverBuilder] = None
         self.strategy: Optional[Strategy] = None
         self.driver: Optional[WebDriver] = None
@@ -25,22 +25,22 @@ class PortInController(Controller):
         self.phone_number: Optional[str] = None
         self.aws_id: Optional[int] = None
 
-    def set_automation_driver_builder(self, builder: AutomationDriverBuilder):
+    def set_automation_driver_builder(self, builder: AutomationDriverBuilder) -> None:
         self.builder = builder
 
-    def set_strategy(self, scraper_name: RequestType):
+    def set_strategy(self, scraper_name: RequestType) -> None:
         self.strategy = get_scraper_strategy(scraper_name)(self.credentials)
 
-    def set_credentials(self, credentials: AccountEntity):
+    def set_credentials(self, credentials: AccountEntity) -> None:
         self.credentials = credentials
 
-    def set_phone_number(self, phone_number: str):
+    def set_phone_number(self, phone_number: str) -> None:
         self.phone_number = phone_number
 
-    def set_aws_id(self, aws_id: int):
+    def set_aws_id(self, aws_id: int) -> None:
         self.aws_id = aws_id
 
-    def execute(self, navigator_options=None):
+    def execute(self, navigator_options=None) -> None:
         tries = 0
         while tries < MAX_ATTEMPTS:
             tries += 1

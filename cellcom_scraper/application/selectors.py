@@ -26,7 +26,7 @@ from cellcom_scraper.domain.interfaces.automation_driver_builder import (
 DriverBuilder = TypeVar("DriverBuilder", bound=AutomationDriverBuilder)
 
 
-def get_webdriver_builder(navigator_name: NavigatorWebDriverType) -> DriverBuilder:
+def get_webdriver_builder(navigator_name: NavigatorWebDriverType) -> AutomationDriverBuilder:
     builders = {
         NavigatorWebDriverType.CHROME: ChromeDriverBuilder,
         NavigatorWebDriverType.FIREFOX: FirefoxDriverBuilder,
