@@ -15,45 +15,49 @@ class SimExtractionStrategy(BellFastActBaseStrategy):
         self.sim_number = None
 
     def search_sim_number(self):
-        search_link = self.wait120.until(
-            ec.presence_of_element_located(
-                (
-                    By.XPATH,
-                    "//body/div[@id='instant_activation']/div[2]/div[1]/div[2]/div[1]/div[3]/div[1]/div[2]/form[2]/div[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[1]/ul[1]/li[3]/a[1]",
+        try:
+            search_link = self.wait120.until(
+                ec.presence_of_element_located(
+                    (
+                        By.XPATH,
+                        "//body/div[@id='instant_activation']/div[2]/div[1]/div[2]/div[1]/div[3]/div[1]/div[2]/form[2]/div[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[1]/ul[1]/li[3]/a[1]",
+                    )
                 )
             )
-        )
-        search_link.click()
+            search_link.click()
 
-        mobile_radiobtn = self.wait120.until(
-            ec.presence_of_element_located(
-                (
-                    By.XPATH,
-                    "//body/div[@id='instant_activation']/div[2]/div[1]/div[2]/div[1]/div[3]/div[1]/div[2]/form[1]/div[1]/div[1]/div[2]/div[2]/div[3]/input[1]",
+            mobile_radiobtn = self.wait120.until(
+                ec.presence_of_element_located(
+                    (
+                        By.XPATH,
+                        "//body/div[@id='instant_activation']/div[2]/div[1]/div[2]/div[1]/div[3]/div[1]/div[2]/form[1]/div[1]/div[1]/div[2]/div[2]/div[3]/input[1]",
+                    )
                 )
             )
-        )
-        mobile_radiobtn.click()
+            mobile_radiobtn.click()
 
-        mobile_number_input = self.wait120.until(
-            ec.presence_of_element_located(
-                (
-                    By.XPATH,
-                    "//body/div[@id='instant_activation']/div[2]/div[1]/div[2]/div[1]/div[3]/div[1]/div[2]/form[1]/div[2]/div[1]/div[11]/div[2]/input[1]",
+            mobile_number_input = self.wait120.until(
+                ec.presence_of_element_located(
+                    (
+                        By.XPATH,
+                        "//body/div[@id='instant_activation']/div[2]/div[1]/div[2]/div[1]/div[3]/div[1]/div[2]/form[1]/div[2]/div[1]/div[11]/div[2]/input[1]",
+                    )
                 )
             )
-        )
-        mobile_number_input.send_keys(self.phone_number)
+            mobile_number_input.send_keys(self.phone_number)
 
-        button_next = self.wait120.until(
-            ec.presence_of_element_located(
-                (
-                    By.XPATH,
-                    "//body/div[@id='instant_activation']/div[2]/div[1]/div[2]/div[1]/div[3]/div[1]/div[2]/form[1]/div[5]/div[1]/div[1]/div[1]/button[1]",
+            button_next = self.wait120.until(
+                ec.presence_of_element_located(
+                    (
+                        By.XPATH,
+                        "//body/div[@id='instant_activation']/div[2]/div[1]/div[2]/div[1]/div[3]/div[1]/div[2]/form[1]/div[5]/div[1]/div[1]/div[1]/button[1]",
+                    )
                 )
             )
-        )
-        button_next.click()
+            button_next.click()
+
+        except Exception:
+            raise SimExtractionException("Failed searching SIM number")
 
         try:
             self.wait30.until(

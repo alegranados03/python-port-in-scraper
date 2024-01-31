@@ -490,3 +490,6 @@ test-reports/
 static/
 downloads/
 screenshots/*.png
+
+#Custom files to ignore
+result_query.txt
