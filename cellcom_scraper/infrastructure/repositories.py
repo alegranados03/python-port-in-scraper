@@ -19,7 +19,7 @@ class ProcessQueueRequestRepository(SQLAlchemyRepository):
         return ProcessQueueRequest(
             id=entity.id,
             aws_id=entity.aws_id,
-            number_to_port=entity.number_to_port,
+            phone_number=entity.number_to_port,
             type=entity.type.value,
             start_timestamp=entity.start_timestamp,
             end_timestamp=entity.end_timestamp,

@@ -13,15 +13,16 @@ from sqlalchemy.orm import relationship
 
 class Scraper(Base):
     __tablename__ = "scrapers"
+    id = Column(BigInteger, primary_key=True)
     name = Column(String(500), nullable=False)
     url = Column(String(100), nullable=False)
     slug = Column(String(100), nullable=False)
     execution_frequency = Column(
-        ENUM([e.value for e in ExecutionFrequency]),
+        ENUM(*[e.value for e in ExecutionFrequency]),
         default=ExecutionFrequency.ONCE.value,
         nullable=False,
     )
-    available = Column(Boolean, default=True)
+    available = Column(Boolean, default=True, nullable=False)
     requests = relationship("ProcessQueueRequest", back_populates="scraper")
 
     def __str__(self):
@@ -43,7 +44,7 @@ class ProcessQueueRequest(Base):
 
     id = Column(BigInteger, primary_key=True)
     aws_id = Column(BigInteger, nullable=False)
-    number_to_port = Column(String(255), nullable=False)
+    phone_number = Column(String(255), nullable=False)
     type = Column(
         ENUM(*[e.value for e in RequestType]),
         nullable=False,
@@ -51,14 +52,14 @@ class ProcessQueueRequest(Base):
     start_timestamp = Column(DateTime, nullable=False)
     end_timestamp = Column(DateTime, nullable=True)
     status = Column(ENUM("READY", "FINISHED", "ERROR"), nullable=False, default="READY")
-    scraper_id = Column(BigInteger, ForeignKey("scrapers.id"), nullable=False)
+    scraper_id = Column(BigInteger, ForeignKey("scrapers.id"), nullable=True)
     scraper = relationship("Scraper", back_populates="requests")
 
     def to_entity(self) -> ProcessQueueRequestEntity:
         return ProcessQueueRequestEntity(
             id=self.id,
             aws_id=self.aws_id,
-            number_to_port=self.number_to_port,
+            number_to_port=self.phone_number,
             type=RequestType(self.type),
             start_timestamp=self.start_timestamp,
             end_timestamp=self.end_timestamp,
