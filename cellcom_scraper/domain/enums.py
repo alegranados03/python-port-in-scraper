@@ -12,3 +12,9 @@ class RequestStatus(str, Enum):
     READY = "READY"
     FINISHED = "FINISHED"
     ERROR = "ERROR"
+
+
+class ExecutionFrequency(str, Enum):
+    ONCE: str = "ONCE"
+    DAILY: str = "DAILY"
+    MONTHLY: str = "MONTHLY"

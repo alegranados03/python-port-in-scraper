@@ -1,10 +1,12 @@
 from cellcom_scraper.domain.entities import (
     FictiveNumberPortInEntity,
     ProcessQueueRequestEntity,
+    ScraperEntity,
 )
 from cellcom_scraper.infrastructure.sqlalchemy.models import (
     FictiveNumberPortIn,
     ProcessQueueRequest,
+    Scraper,
 )
 from cellcom_scraper.infrastructure.sqlalchemy.repository import SQLAlchemyRepository
 
@@ -37,4 +39,15 @@ class FictiveNumberPortInRepository(SQLAlchemyRepository):
             current_provider_account_number=entity.current_provider_account_number,
             client_authorization_name=entity.client_authorization_name,
             current_billing_provider_value=entity.current_billing_provider_value,
+        )
+
+
+class ScraperRepository(SQLAlchemyRepository):
+    class Meta:
+        model = Scraper
+
+    def to_orm_model(self, entity: ScraperEntity) -> Scraper:
+        return Scraper(
+            id=entity.id,
+            name=entity.name,
         )

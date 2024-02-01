@@ -1,12 +1,41 @@
-from sqlalchemy import BigInteger, Column, DateTime, String
+from sqlalchemy import Boolean, BigInteger, Column, DateTime, String, ForeignKey
 from sqlalchemy.dialects.mysql import ENUM
 
 from cellcom_scraper.domain.entities import (
     FictiveNumberPortInEntity,
     ProcessQueueRequestEntity,
+    ScraperEntity,
 )
-from cellcom_scraper.domain.enums import RequestStatus, RequestType
+from cellcom_scraper.domain.enums import RequestStatus, RequestType, ExecutionFrequency
 from cellcom_scraper.infrastructure.sqlalchemy.database import Base
+from sqlalchemy.orm import relationship
+
+
+class Scraper(Base):
+    __tablename__ = "scrapers"
+    name = Column(String(500), nullable=False)
+    url = Column(String(100), nullable=False)
+    slug = Column(String(100), nullable=False)
+    execution_frequency = Column(
+        ENUM([e.value for e in ExecutionFrequency]),
+        default=ExecutionFrequency.ONCE.value,
+        nullable=False,
+    )
+    available = Column(Boolean, default=True)
+    requests = relationship("ProcessQueueRequest", back_populates="scraper")
+
+    def __str__(self):
+        return f"{self.name} - {self.slug}"
+
+    def to_entity(self):
+        return ScraperEntity(
+            id=self.id,
+            name=self.name,
+            url=self.url,
+            slug=self.slug,
+            execution_frequency=ExecutionFrequency(self.execution_frequency),
+            available=self.available,
+        )
 
 
 class ProcessQueueRequest(Base):
@@ -22,6 +51,8 @@ class ProcessQueueRequest(Base):
     start_timestamp = Column(DateTime, nullable=False)
     end_timestamp = Column(DateTime, nullable=True)
     status = Column(ENUM("READY", "FINISHED", "ERROR"), nullable=False, default="READY")
+    scraper_id = Column(BigInteger, ForeignKey("scrapers.id"), nullable=False)
+    scraper = relationship("Scraper", back_populates="requests")
 
     def to_entity(self) -> ProcessQueueRequestEntity:
         return ProcessQueueRequestEntity(

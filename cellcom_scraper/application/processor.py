@@ -23,7 +23,10 @@ from cellcom_scraper.domain.interfaces.uow import UnitOfWork
 
 class Processor:
     def __init__(
-        self, uow: UnitOfWork, controller: Controller, account_credentials: AccountEntity
+        self,
+        uow: UnitOfWork,
+        controller: Controller,
+        account_credentials: AccountEntity,
     ):
         self.uow: UnitOfWork = uow
         self.controller = controller
@@ -62,7 +65,7 @@ class Processor:
     def start_processor(self):
         if len(self.scraper_requests) == 0:
             message = "No requests for this execution"
-            #logging.info(message)
+            # logging.info(message)
             print(message)
             return
         for request in self.scraper_requests:
