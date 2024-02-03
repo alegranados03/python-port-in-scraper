@@ -83,7 +83,7 @@ class BaseScraperStrategy(Strategy):
             encoded = base64.b64encode(f.read()).decode("utf-8")
 
         return {
-            "error_screenshot": encoded,
-            "error_filename": filename,
+            "screenshot": encoded,
+            "filename": filename,
             "fullpath": fullpath,
         }

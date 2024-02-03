@@ -19,3 +19,8 @@ class ExecutionFrequency(str, Enum):
     ONCE: str = "ONCE"
     DAILY: str = "DAILY"
     MONTHLY: str = "MONTHLY"
+
+
+class ScraperControllerType(str, Enum):
+    port_in_scraper: str = "port_in_scraper"
+    upgrade_and_dto_scraper: str = "upgrade_and_dto_scraper"

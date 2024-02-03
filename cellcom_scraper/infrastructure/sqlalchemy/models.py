@@ -64,6 +64,7 @@ class ProcessQueueRequest(Base):
             start_timestamp=self.start_timestamp,
             end_timestamp=self.end_timestamp,
             status=RequestStatus(self.status),
+            scraper_id=self.scraper_id,
         )
 
 

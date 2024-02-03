@@ -88,8 +88,8 @@ class PortInNumberStrategy(BellFastActBaseStrategy):
         screenshot = self.take_screenshot()
         data = {
             "response": "Finished successfully",
-            "error_filename": screenshot["error_filename"],
-            "error_screenshot": screenshot["error_screenshot"],
+            "error_filename": screenshot["filename"],
+            "error_screenshot": screenshot["screenshot"],
             "process_id": aws_id,
         }
         endpoint: str = "reply-results"

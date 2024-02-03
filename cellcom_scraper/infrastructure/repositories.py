@@ -24,6 +24,7 @@ class ProcessQueueRequestRepository(SQLAlchemyRepository):
             start_timestamp=entity.start_timestamp,
             end_timestamp=entity.end_timestamp,
             status=entity.status.value,
+            scraper_id=entity.scraper_id,
         )
 
 

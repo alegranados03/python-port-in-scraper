@@ -3,7 +3,7 @@ import os
 from datetime import datetime
 
 from cellcom_scraper.application.processor import Processor
-from cellcom_scraper.application.controllers.portin_controller import PortInController
+
 from cellcom_scraper.domain.entities.account import AccountEntity
 from cellcom_scraper.infrastructure.sqlalchemy.default_uow import DefaultUnitOfWork
 
@@ -12,9 +12,8 @@ class Main:
     def start(self):
         print(self.log_init_message())
         uow = DefaultUnitOfWork()
-        controller = PortInController()
         credentials = self.get_credentials()
-        processor = Processor(uow, controller, credentials)
+        processor = Processor(uow, credentials)
         try:
             with uow:
                 processor.set_requests(

@@ -19,20 +19,38 @@ from cellcom_scraper.domain.interfaces.automation_driver_builder import (
 )
 from cellcom_scraper.domain.interfaces.controller import Controller
 from cellcom_scraper.domain.interfaces.uow import UnitOfWork
+from cellcom_scraper.application.controllers.portin_controller import PortInController
+from cellcom_scraper.application.controllers.upgrade_and_dto_controller import (
+    UpgradeAndDtoController,
+)
+from cellcom_scraper.domain.enums import ScraperControllerType
+from cellcom_scraper.domain.exceptions import UnknownControllerException
 
 
 class Processor:
     def __init__(
         self,
         uow: UnitOfWork,
-        controller: Controller,
         account_credentials: AccountEntity,
     ):
         self.uow: UnitOfWork = uow
-        self.controller = controller
+        self.controller: Optional[Controller] = None
         self.builder = None
         self.scraper_requests: Optional[List[ProcessQueueRequestEntity]] = None
         self.account_credentials: AccountEntity = account_credentials
+        self.cache_scrapers: dict = {}
+        self.controllers_list = {
+            ScraperControllerType.port_in_scraper: PortInController,
+            ScraperControllerType.upgrade_and_dto_scraper: UpgradeAndDtoController,
+        }
+
+    def get_controller(self, scraper_slug: str) -> Controller:
+        if scraper_slug in self.controllers_list:
+            return self.controllers_list[ScraperControllerType(scraper_slug)]()
+        else:
+            raise UnknownControllerException(
+                f"{scraper_slug} is not registered in the processor"
+            )
 
     def set_requests(self, requests: List[ProcessQueueRequestEntity]):
         self.scraper_requests = requests
@@ -44,13 +62,15 @@ class Processor:
     def _get_account_credentials(self):
         return self.account_credentials
 
-    @staticmethod
-    def _get_scraper():
-        return ScraperEntity(
-            url=os.environ.get("FAST_ACT_URL"),
-            slug="port_in_scraper",
-            name="Port In Scraper",
-        )
+    def _get_scraper(self, scraper_id: int) -> ScraperEntity:
+        if scraper_id in self.cache_scrapers:
+            return self.cache_scrapers[scraper_id]
+        with self.uow:
+            scraper: ScraperEntity = self.uow.get_repository("scrapers").get(
+                id_=scraper_id
+            )
+            self.cache_scrapers[scraper_id] = scraper
+            return scraper
 
     def _update_request_status(self, *, request, status):
         with self.uow:
@@ -70,10 +90,11 @@ class Processor:
             return
         for request in self.scraper_requests:
             try:
+                scraper: ScraperEntity = self._get_scraper(request.scraper_id)
+                self.controller = self.get_controller(scraper.slug)
                 request_type = RequestType(request.type)
                 credentials: AccountEntity = self._get_account_credentials()
                 navigator: NavigatorWebDriverType = self._get_navigator()
-                scraper = self._get_scraper()
                 self.builder: AutomationDriverBuilder = get_webdriver_builder(
                     navigator
                 )(scraper.url)

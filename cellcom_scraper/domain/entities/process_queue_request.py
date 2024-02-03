@@ -14,6 +14,7 @@ class ProcessQueueRequestEntity(BaseModel):
     start_timestamp: datetime
     end_timestamp: Optional[datetime] = None
     status: RequestStatus
+    scraper_id: int
 
 
 class FictiveNumberPortInEntity(BaseModel):
