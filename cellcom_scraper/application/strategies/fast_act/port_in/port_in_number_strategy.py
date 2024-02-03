@@ -4,7 +4,7 @@ from selenium.common.exceptions import NoSuchElementException, TimeoutException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as ec
 
-from cellcom_scraper.application.strategies.port_in.base_bellfast_strategy import (
+from cellcom_scraper.application.strategies.fast_act.base_bellfast_strategy import (
     BellFastActBaseStrategy,
 )
 from cellcom_scraper.domain.exceptions import (

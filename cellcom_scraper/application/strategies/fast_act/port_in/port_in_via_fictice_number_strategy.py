@@ -8,14 +8,13 @@ from selenium.webdriver.support.select import Select
 from cellcom_scraper.application.queries.get_fictive_number_config import (
     GetFictiveNumberPortIn,
 )
-from cellcom_scraper.application.strategies.port_in.base_bellfast_strategy import (
+from cellcom_scraper.application.strategies.fast_act.base_bellfast_strategy import (
     BellFastActBaseStrategy,
 )
 from cellcom_scraper.domain.entities.process_queue_request import (
     FictiveNumberPortInEntity,
 )
 from cellcom_scraper.domain.exceptions import (
-    NoItemFoundException,
     PortInNumberException,
     UnknownFictiveNumberPortInException,
 )

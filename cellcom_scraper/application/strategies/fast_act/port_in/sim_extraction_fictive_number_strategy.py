@@ -1,13 +1,9 @@
-import time
-
 from mediatr import Mediator
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support import expected_conditions as ec
 
 from cellcom_scraper.application.queries.get_fictive_number_config import (
     GetFictiveNumberPortIn,
 )
-from cellcom_scraper.application.strategies.port_in.sim_extraction_strategy import (
+from cellcom_scraper.application.strategies.fast_act.port_in.sim_extraction_strategy import (
     SimExtractionStrategy,
 )
 from cellcom_scraper.domain.entities.process_queue_request import (

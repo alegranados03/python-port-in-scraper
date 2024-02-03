@@ -8,7 +8,7 @@ from cellcom_scraper.application.builders.firefox_driver_builder import (
     FirefoxDriverBuilder,
 )
 from cellcom_scraper.application.enums import NavigatorWebDriverType
-from cellcom_scraper.application.strategies.port_in import (
+from cellcom_scraper.application.strategies.fast_act.port_in import (
     PortInNumberStrategy,
     PortInViaFicticeNumberStrategy,
     SimExtractionStrategy,
