@@ -37,7 +37,7 @@ class Main:
     @staticmethod
     def log_init_message():
         current_date = datetime.now()
-        init_message = f"Port in Scraper, execution start at: {current_date}"
+        init_message = f"Scraper requests processor, execution start at: {current_date}"
         logging.basicConfig(filename="./scrapers.log", level=logging.DEBUG)
         # logging.info(init_message)
         return init_message
