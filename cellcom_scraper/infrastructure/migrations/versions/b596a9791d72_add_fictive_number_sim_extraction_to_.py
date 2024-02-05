@@ -14,7 +14,7 @@ from alembic import op
 revision: str = 'b596a9791d72'
 down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
-depends_on: Union[str, Sequence[str], None] = None
+depends_on: Union[str, Sequence[str], None] = '662d8c8df97d'
 
 
 def upgrade() -> None:
