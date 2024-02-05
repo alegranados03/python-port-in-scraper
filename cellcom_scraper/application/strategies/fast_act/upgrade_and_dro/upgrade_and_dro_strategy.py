@@ -2,6 +2,8 @@ from typing import Optional
 
 import logging
 import re
+import time
+import random
 from datetime import datetime
 
 from selenium.common.exceptions import NoSuchElementException, TimeoutException
@@ -27,7 +29,7 @@ class UpgradeAndDroStrategy(BellFastActBaseStrategy):
 
     def check_upgrade_and_dro_status(self):
         try:
-            hardware_upgrade_link = self.wait60.until(
+            hardware_upgrade_link = self.wait10.until(
                 ec.presence_of_element_located(
                     (
                         By.XPATH,
@@ -54,7 +56,6 @@ class UpgradeAndDroStrategy(BellFastActBaseStrategy):
             next_step_button.click()
 
             # check if alert appears, if appears set upgrade = NO and DRO = NO
-
             try:
                 cant_open_profile_error = self.wait60.until(
                     ec.presence_of_element_located(
@@ -72,6 +73,14 @@ class UpgradeAndDroStrategy(BellFastActBaseStrategy):
 
             except (NoSuchElementException, TimeoutException) as e:
                 pass  # No error displayed
+
+
+            section = self.wait10.until(
+                ec.presence_of_element_located((
+                    By.XPATH,"//body/div[@id='instant_activation']/div[2]/div[1]/div[1]/div[4]/form[1]/div[1]/div[3]/div[1]"
+                ))
+            )
+            self.driver.execute_script("arguments[0].scrollIntoView(true);", section)
 
             upgrade_status = self.wait30.until(
                 ec.presence_of_element_located(
@@ -94,50 +103,49 @@ class UpgradeAndDroStrategy(BellFastActBaseStrategy):
                     ec.presence_of_element_located(
                         (
                             By.XPATH,
-                            "//body/div[@id='instant_activation']/div[2]/div[1]/div[1]/div[4]/form[1]/div[1]/div[3]/div[2]/div[1]/div[2]/div[1]/ul[1]/div[1]/div[2]/a[1]",
+                            "/html[1]/body[1]/div[1]/div[2]/div[1]/div[1]/div[4]/form[1]/div[1]/div[3]/div[2]/div[1]/div[2]/div[1]/ul[1]/div[1]/div[2]/a[1]",
                         )
                     )
                 )
                 device_description_button.click()
                 self.dro = "Yes"
+                time.sleep(random.randint(5, 15))
             except Exception as e:
                 self.dro = "No"
                 return
             
             try:
                 device_description = self.wait30.until(
-                    ec.presence_of_element_located(
+                    ec.visibility_of_element_located(
                         (
                             By.XPATH,
                             "//body/div[@id='instant_activation']/div[2]/div[1]/div[1]/div[4]/form[1]/div[1]/div[3]/div[2]/div[1]/div[2]/div[1]/ul[1]/div[1]/div[2]/div[1]/li[1]/div[2]",
                         )
                     )
-                ).text
+                )
                 deferred_amount = self.wait30.until(
-                    ec.presence_of_element_located(
+                    ec.visibility_of_element_located(
                         (
                             By.XPATH,
                             "/html[1]/body[1]/div[1]/div[2]/div[1]/div[1]/div[4]/form[1]/div[1]/div[3]/div[2]/div[1]/div[2]/div[1]/ul[1]/div[1]/div[2]/div[1]/li[2]/div[2]",
                         )
                     )
-                ).text
-                due_date = self.extract_date(
-                    self.wait30.until(
-                        ec.presence_of_element_located(
+                )
+                due_date = self.wait30.until(
+                        ec.visibility_of_element_located(
                             (
                                 By.XPATH,
                                 "/html[1]/body[1]/div[1]/div[2]/div[1]/div[1]/div[4]/form[1]/div[1]/div[3]/div[2]/div[1]/div[2]/div[1]/ul[1]/div[1]/div[2]/div[1]/li[3]/div[2]",
                             )
                         )
-                    ).text
                 )
 
                 details = (
-                    f"Device description: {device_description} "
-                    f"Deferred amount:{deferred_amount} "
-                    f"Due date:{due_date}"
+                    f"Device description: {device_description.text} \n"
+                    f"Deferred amount:{deferred_amount.text} \n"
+                    f"Due date:{self.extract_date(due_date.text)}"
                 )
-            except:
+            except Exception as e:
                 details = "Couldn't obtain exact details"
             self.details = details
 

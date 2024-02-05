@@ -34,6 +34,7 @@ class BellFastActBaseStrategy(BaseScraperStrategy):
             username_field.send_keys(self.credentials.username)
             dealer_code_field.send_keys(self.credentials.dealer_code)
             password_field.send_keys(self.credentials.password)
+            time.sleep(5)
             login_button.click()
             time.sleep(10)
 
