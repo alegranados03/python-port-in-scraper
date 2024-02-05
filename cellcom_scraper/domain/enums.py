@@ -23,4 +23,4 @@ class ExecutionFrequency(str, Enum):
 
 class ScraperControllerType(str, Enum):
     port_in_scraper: str = "port_in_scraper"
-    upgrade_and_dto_scraper: str = "upgrade_and_dto_scraper"
+    upgrade_and_dro_scraper: str = "upgrade_and_dro_scraper"

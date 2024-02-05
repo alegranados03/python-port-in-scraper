@@ -14,6 +14,9 @@ from cellcom_scraper.application.strategies.fast_act.port_in import (
     SimExtractionStrategy,
     SimExtractionFictiveNumberStrategy,
 )
+from cellcom_scraper.application.strategies.fast_act.upgrade_and_dro import (
+    UpgradeAndDroStrategy,
+)
 from cellcom_scraper.domain.enums import RequestType
 from cellcom_scraper.domain.exceptions import (
     UnknownNavigatorException,
@@ -27,7 +30,7 @@ DriverBuilder = TypeVar("DriverBuilder", bound=AutomationDriverBuilder)
 
 
 def get_webdriver_builder(
-    navigator_name: NavigatorWebDriverType,
+    navigator_name: NavigatorWebDriverType, url: str
 ) -> AutomationDriverBuilder:
     builders = {
         NavigatorWebDriverType.CHROME: ChromeDriverBuilder,
@@ -35,7 +38,7 @@ def get_webdriver_builder(
         NavigatorWebDriverType.EDGE: EdgeDriverBuilder,
     }
     if navigator_name in builders:
-        return builders[navigator_name]
+        return builders[navigator_name](url)
     else:
         raise UnknownNavigatorException(
             f"Selected navigator {navigator_name} doesn't exist"
@@ -54,6 +57,9 @@ def get_scraper_strategy(strategy_name: RequestType):
             credentials
         ),
         RequestType.FICTIVE_NUMBER_PORT_IN: lambda credentials: PortInViaFicticeNumberStrategy(
+            credentials
+        ),
+        RequestType.UPGRADE_STATUS_AND_DRO: lambda credentials: UpgradeAndDroStrategy(
             credentials
         ),
     }

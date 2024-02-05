@@ -1,7 +1,7 @@
 import base64
 import logging
 import os
-import requests
+
 import json
 from datetime import datetime
 from typing import Any, Optional
@@ -10,7 +10,6 @@ import requests
 from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.support.ui import WebDriverWait
 
-from cellcom_scraper.config import AWS_SERVER_URL
 from cellcom_scraper.domain.entities import AccountEntity
 from cellcom_scraper.domain.interfaces.strategy import Strategy
 
@@ -26,6 +25,7 @@ class BaseScraperStrategy(Strategy):
         self.wait120: Optional[WebDriverWait] = None
         self.results: Any = None
         self.request_adapter: Any = None
+        self.response_server_url: Optional[str] = None
 
     def set_credentials(self, credentials: AccountEntity):
         self.credentials = credentials
@@ -49,11 +49,10 @@ class BaseScraperStrategy(Strategy):
     def handle_results(self, aws_id: int):
         raise NotImplementedError
 
-    @staticmethod
-    def send_to_aws(data: dict, endpoint: str):
+    def send_to_aws(self, data: dict, endpoint: str):
         try:
             response = requests.post(
-                f"{AWS_SERVER_URL}/{endpoint}", json=data, timeout=20
+                f"{self.response_server_url}/{endpoint}", json=data, timeout=20
             )
 
             if response.status_code == 200:

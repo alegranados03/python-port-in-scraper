@@ -5,11 +5,13 @@ from cellcom_scraper.application.strategies.fast_act.base_bellfast_strategy impo
     BellFastActBaseStrategy,
 )
 from cellcom_scraper.domain.exceptions import SimExtractionException
+from cellcom_scraper.config import PORT_IN_AWS_SERVER
 
 
 class SimExtractionStrategy(BellFastActBaseStrategy):
     def __init__(self, credentials):
         super().__init__(credentials)
+        self.response_server_url = PORT_IN_AWS_SERVER
         self.sim_number = None
 
     def search_sim_number(self):

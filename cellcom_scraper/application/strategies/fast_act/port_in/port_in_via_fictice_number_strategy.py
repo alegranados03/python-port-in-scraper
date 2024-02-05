@@ -18,11 +18,13 @@ from cellcom_scraper.domain.exceptions import (
     PortInNumberException,
     UnknownFictiveNumberPortInException,
 )
+from cellcom_scraper.config import PORT_IN_AWS_SERVER
 
 
 class PortInViaFicticeNumberStrategy(BellFastActBaseStrategy):
     def __init__(self, credentials) -> None:
         super().__init__(credentials)
+        self.response_server_url = PORT_IN_AWS_SERVER
 
     def port_in_number(self, configuration: FictiveNumberPortInEntity) -> None:
         try:

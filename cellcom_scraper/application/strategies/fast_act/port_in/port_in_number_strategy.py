@@ -11,11 +11,13 @@ from cellcom_scraper.domain.exceptions import (
     NoItemFoundException,
     PortInNumberException,
 )
+from cellcom_scraper.config import PORT_IN_AWS_SERVER
 
 
 class PortInNumberStrategy(BellFastActBaseStrategy):
     def __init__(self, credentials):
         super().__init__(credentials)
+        self.response_server_url = PORT_IN_AWS_SERVER
 
     def port_in_number(self):
         try:

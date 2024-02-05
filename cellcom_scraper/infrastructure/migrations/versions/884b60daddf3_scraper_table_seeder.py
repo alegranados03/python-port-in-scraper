@@ -47,7 +47,7 @@ def upgrade() -> None:
                 "id": 2,
                 "name": "Upgrade and DRO Scraper",
                 "url": "https://wac.bell.ca:8000/wac-ia/bell_login.jsp",
-                "slug": "upgrade_and_dto_scraper",
+                "slug": "upgrade_and_dro_scraper",
                 "execution_frequency": "ONCE",
                 "available": True,
             },

@@ -10,11 +10,13 @@ from cellcom_scraper.domain.entities.process_queue_request import (
     FictiveNumberPortInEntity,
 )
 from cellcom_scraper.domain.exceptions import UnknownFictiveNumberPortInException
+from cellcom_scraper.config import PORT_IN_AWS_SERVER
 
 
 class SimExtractionFictiveNumberStrategy(SimExtractionStrategy):
     def __init__(self, credentials):
         super().__init__(credentials)
+        self.response_server_url = PORT_IN_AWS_SERVER
 
     def execute(self):
         query: GetFictiveNumberPortIn = GetFictiveNumberPortIn(

@@ -20,8 +20,8 @@ from cellcom_scraper.domain.interfaces.automation_driver_builder import (
 from cellcom_scraper.domain.interfaces.controller import Controller
 from cellcom_scraper.domain.interfaces.uow import UnitOfWork
 from cellcom_scraper.application.controllers.portin_controller import PortInController
-from cellcom_scraper.application.controllers.upgrade_and_dto_controller import (
-    UpgradeAndDtoController,
+from cellcom_scraper.application.controllers.upgrade_and_dro_controller import (
+    UpgradeAndDroController,
 )
 from cellcom_scraper.domain.enums import ScraperControllerType
 from cellcom_scraper.domain.exceptions import UnknownControllerException
@@ -41,7 +41,7 @@ class Processor:
         self.cache_scrapers: dict = {}
         self.controllers_list = {
             ScraperControllerType.port_in_scraper: PortInController,
-            ScraperControllerType.upgrade_and_dto_scraper: UpgradeAndDtoController,
+            ScraperControllerType.upgrade_and_dro_scraper: UpgradeAndDroController,
         }
 
     def get_controller(self, scraper_slug: str) -> Controller:
@@ -96,8 +96,8 @@ class Processor:
                 credentials: AccountEntity = self._get_account_credentials()
                 navigator: NavigatorWebDriverType = self._get_navigator()
                 self.builder: AutomationDriverBuilder = get_webdriver_builder(
-                    navigator
-                )(scraper.url)
+                    navigator, scraper.url
+                )
                 self.controller.set_credentials(credentials)
                 self.controller.set_strategy(request_type)
                 self.controller.set_automation_driver_builder(self.builder)

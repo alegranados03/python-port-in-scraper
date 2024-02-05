@@ -1,6 +1,7 @@
 import os
 
 MAX_ATTEMPTS = 10
+UPGRADE_AND_DRO_MAX_ATTEMPTS = 3
 FORCE_STOP_ERRORS = [
     "SIM number not found",
     "Phone number not found",
@@ -14,4 +15,5 @@ FORCE_STOP_ERRORS = [
     "Unknown fictive number port in configuration",
     "Only accounts with Open or Suspended status can be viewed",
 ]
-AWS_SERVER_URL = os.environ.get("AWS_SERVER_URL")
+PORT_IN_AWS_SERVER = os.environ.get("PORT_IN_AWS_SERVER")
+UPGRADE_AND_DRO_AWS_SERVER = os.environ.get("UPGRADE_AND_DRO_AWS_SERVER")
