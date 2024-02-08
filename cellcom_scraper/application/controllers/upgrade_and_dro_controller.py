@@ -3,7 +3,7 @@ from cellcom_scraper.domain.exceptions import ApplicationException
 from cellcom_scraper.application.controllers.base_controller import BaseController
 
 import traceback
-
+import logging
 
 class UpgradeAndDroController(BaseController):
     def __init__(self) -> None:
@@ -42,6 +42,8 @@ class UpgradeAndDroController(BaseController):
                     f"{error_type}\nMessage: {error_message}\nTraceback:\n{error_traceback}"
                 )
                 message = "Unknown error occurred, please notify this error to the administrator"
+                logging.error(message)
+                logging.error(full_error_message)
                 self.handle_error(
                     aws_id=self.aws_id, description=message, details=full_error_message
                 )
@@ -56,5 +58,5 @@ class UpgradeAndDroController(BaseController):
             "screenshot": screenshot["screenshot"],
             "details": details,
         }
-        endpoint: str = f"/phones/{aws_id}/logs/error"
+        endpoint: str = f"phones/{aws_id}/logs/error"
         self.strategy.send_to_aws(data=payload, endpoint=endpoint)

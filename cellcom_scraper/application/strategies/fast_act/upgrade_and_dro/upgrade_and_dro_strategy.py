@@ -168,7 +168,7 @@ class UpgradeAndDroStrategy(BellFastActBaseStrategy):
             "details": self.details,
             "description": "system completed the request",
         }
-        endpoint: str = f"/phones/{aws_id}/logs/info"
+        endpoint: str = f"phones/{aws_id}/logs/info"
         self.send_to_aws(data, endpoint)
 
     @staticmethod
