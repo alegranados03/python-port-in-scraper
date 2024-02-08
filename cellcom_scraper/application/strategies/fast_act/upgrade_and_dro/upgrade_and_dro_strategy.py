@@ -179,5 +179,5 @@ class UpgradeAndDroStrategy(BellFastActBaseStrategy):
         )
         if match:
             date_str = match.group(0)
-            return datetime.strptime(date_str, "%B %d, %Y").date()
+            return datetime.strptime(date_str, "%B %d, %Y").date().isoformat()
         return None
