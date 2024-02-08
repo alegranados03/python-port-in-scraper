@@ -39,7 +39,7 @@ class UpgradeAndDroController(BaseController):
                 error_traceback = traceback.format_exc()
                 full_error_message = (
                     f"Exception Type:"
-                    f"{error_type}\nMessage: {error_message}\nTraceback:\n{error_traceback}"
+                    f"{error_type}\n Message: {error_message}\n Traceback:\n{error_traceback}"
                 )
                 message = "Unknown error occurred, please notify this error to the administrator"
                 logging.error(message)

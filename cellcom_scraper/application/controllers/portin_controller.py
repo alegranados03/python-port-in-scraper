@@ -3,7 +3,7 @@ from cellcom_scraper.domain.exceptions import ApplicationException
 from cellcom_scraper.application.controllers.base_controller import BaseController
 
 import logging
-
+import traceback
 
 class PortInController(BaseController):
     def __init__(self) -> None:
@@ -39,9 +39,16 @@ class PortInController(BaseController):
                 message = (
                     "Another type of exception occurred please check what happened"
                 )
-                self.handle_error(error_description=message, send_sms="yes")
-                logging.error(e)
+                error_message = str(e)
+                error_type = type(e).__name__
+                error_traceback = traceback.format_exc()
+                full_error_message = (
+                    f"Exception Type:"
+                    f"{error_type}\n Message: {error_message}\n Traceback:\n{error_traceback}"
+                )
+                logging.error(full_error_message)
                 logging.error(message)
+                self.handle_error(error_description=message, send_sms="yes", error_log=full_error_message)
 
         driver = self.builder.get_driver()
         driver.close()
