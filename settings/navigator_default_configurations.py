@@ -13,6 +13,10 @@ CHROME_DRIVER_DEFAULT_CONFIGURATIONS: dict = {
         "--start-maximized",
         "--disable-blink-features=AutomationControlled",
         "--disable-infobars",
+        "--disable-webgl",
+        "--disable-rtc-smoothness-algorithm",
+        "--disable-dev-shm-usage",
+        "--no-sandbox",
     ],
     "experimental_options": {
         "excludeSwitches": ["enable-automation"],
@@ -26,6 +30,7 @@ CHROME_DRIVER_DEFAULT_CONFIGURATIONS: dict = {
             "download.manager.showWhenStarting": False,
             "profile.password_manager_enabled": False,
             "credentials_enable_service": False,
+            "permissions.default.stylesheet": 2,
         },
     },
 }
@@ -54,7 +59,9 @@ EDGE_DRIVER_DEFAULT_CONFIGURATIONS: dict = {
         "--inprivate",
         "--start-maximized",
         "--disable-blink-features=AutomationControlled",
-        "--disable-infobars" "--disable-infobars",
+        "--disable-infobars",
+        "--disable-webgl",
+        "--disable-rtc-smoothness-algorithm"
     ],
     "experimental_options": {
         "excludeSwitches": ["enable-automation"],

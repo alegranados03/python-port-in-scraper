@@ -57,7 +57,7 @@ class Processor:
 
     @staticmethod
     def _get_navigator() -> NavigatorWebDriverType:
-        return NavigatorWebDriverType.CHROME
+        return NavigatorWebDriverType.EDGE
 
     def _get_account_credentials(self):
         return self.account_credentials
