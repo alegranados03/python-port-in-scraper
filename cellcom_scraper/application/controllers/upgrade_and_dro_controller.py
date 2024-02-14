@@ -5,6 +5,7 @@ from cellcom_scraper.application.controllers.base_controller import BaseControll
 import traceback
 import logging
 
+
 class UpgradeAndDroController(BaseController):
     def __init__(self) -> None:
         super().__init__()

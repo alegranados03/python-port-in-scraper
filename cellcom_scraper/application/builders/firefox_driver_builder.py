@@ -5,6 +5,7 @@ from cellcom_scraper.domain.interfaces.automation_driver_builder import (
     AutomationDriverBuilder,
 )
 from settings.navigator_default_configurations import get_webdriver_default_config
+import time
 
 
 class FirefoxDriverBuilder(AutomationDriverBuilder):
@@ -47,4 +48,5 @@ class FirefoxDriverBuilder(AutomationDriverBuilder):
     def initialize_driver(self):
         driver = webdriver.Firefox(options=self.options)
         self.driver = driver
+        time.sleep(5)
         self.driver.get(self.url)

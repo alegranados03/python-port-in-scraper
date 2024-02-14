@@ -1,10 +1,13 @@
 from dotenv import load_dotenv
 import os
 import time
+
 load_dotenv()
 
 from cellcom_scraper.domain.entities.account import AccountEntity
-from cellcom_scraper.application.strategies.fast_act.base_bellfast_strategy import BellFastActBaseStrategy
+from cellcom_scraper.application.strategies.fast_act.base_bellfast_strategy import (
+    BellFastActBaseStrategy,
+)
 from cellcom_scraper.application.enums import NavigatorWebDriverType
 from cellcom_scraper.application.selectors import get_webdriver_builder
 from cellcom_scraper.domain.entities import (
@@ -13,18 +16,18 @@ from cellcom_scraper.domain.entities import (
 )
 
 credentials = AccountEntity(
-            username=os.getenv("BELL_FAST_USERNAME"),
-            dealer_code=os.getenv("BELL_FAST_DEALER_CODE"),
-            password=os.getenv("BELL_FAST_PASSWORD"),
-        )
+    username=os.getenv("BELL_FAST_USERNAME"),
+    dealer_code=os.getenv("BELL_FAST_DEALER_CODE"),
+    password=os.getenv("BELL_FAST_PASSWORD"),
+)
 navigator = NavigatorWebDriverType.CHROME
 scraper = ScraperEntity(
-            id=1,
-            url=os.environ.get("FAST_ACT_URL"),
-            slug="port_in_scraper",
-            name="Port In Scraper",
-            available=1
-        )
+    id=1,
+    url=os.environ.get("FAST_ACT_URL"),
+    slug="port_in_scraper",
+    name="Port In Scraper",
+    available=1,
+)
 base_scraper = BellFastActBaseStrategy(credentials)
 
 builder = get_webdriver_builder(navigator, scraper.url)

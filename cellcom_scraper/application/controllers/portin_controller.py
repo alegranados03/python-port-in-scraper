@@ -5,6 +5,7 @@ from cellcom_scraper.application.controllers.base_controller import BaseControll
 import logging
 import traceback
 
+
 class PortInController(BaseController):
     def __init__(self) -> None:
         super().__init__()
@@ -48,7 +49,11 @@ class PortInController(BaseController):
                 )
                 logging.error(full_error_message)
                 logging.error(message)
-                self.handle_error(error_description=message, send_sms="yes", error_log=full_error_message)
+                self.handle_error(
+                    error_description=message,
+                    send_sms="yes",
+                    error_log=full_error_message,
+                )
 
         driver = self.builder.get_driver()
         driver.close()

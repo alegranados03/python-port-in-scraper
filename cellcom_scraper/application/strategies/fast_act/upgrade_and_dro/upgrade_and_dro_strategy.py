@@ -74,11 +74,13 @@ class UpgradeAndDroStrategy(BellFastActBaseStrategy):
             except (NoSuchElementException, TimeoutException) as e:
                 pass  # No error displayed
 
-
             section = self.wait10.until(
-                ec.presence_of_element_located((
-                    By.XPATH,"//body/div[@id='instant_activation']/div[2]/div[1]/div[1]/div[4]/form[1]/div[1]/div[3]/div[1]"
-                ))
+                ec.presence_of_element_located(
+                    (
+                        By.XPATH,
+                        "//body/div[@id='instant_activation']/div[2]/div[1]/div[1]/div[4]/form[1]/div[1]/div[3]/div[1]",
+                    )
+                )
             )
             self.driver.execute_script("arguments[0].scrollIntoView(true);", section)
 
@@ -113,7 +115,7 @@ class UpgradeAndDroStrategy(BellFastActBaseStrategy):
             except Exception as e:
                 self.dro = "No"
                 return
-            
+
             try:
                 device_description = self.wait30.until(
                     ec.visibility_of_element_located(
@@ -132,12 +134,12 @@ class UpgradeAndDroStrategy(BellFastActBaseStrategy):
                     )
                 )
                 due_date = self.wait30.until(
-                        ec.visibility_of_element_located(
-                            (
-                                By.XPATH,
-                                "/html[1]/body[1]/div[1]/div[2]/div[1]/div[1]/div[4]/form[1]/div[1]/div[3]/div[2]/div[1]/div[2]/div[1]/ul[1]/div[1]/div[2]/div[1]/li[3]/div[2]",
-                            )
+                    ec.visibility_of_element_located(
+                        (
+                            By.XPATH,
+                            "/html[1]/body[1]/div[1]/div[2]/div[1]/div[1]/div[4]/form[1]/div[1]/div[3]/div[2]/div[1]/div[2]/div[1]/ul[1]/div[1]/div[2]/div[1]/li[3]/div[2]",
                         )
+                    )
                 )
 
                 details = (

@@ -8,6 +8,7 @@ from cellcom_scraper.domain.interfaces.automation_driver_builder import (
     AutomationDriverBuilder,
 )
 from settings.navigator_default_configurations import get_webdriver_default_config
+import time
 
 
 class ChromeDriverBuilder(AutomationDriverBuilder):
@@ -44,4 +45,5 @@ class ChromeDriverBuilder(AutomationDriverBuilder):
         logging.info(self.options.experimental_options)
         driver = webdriver.Chrome(options=self.options)
         self.driver = driver
+        time.sleep(5)
         self.driver.get(self.url)
