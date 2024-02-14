@@ -32,7 +32,6 @@ CHROME_DRIVER_DEFAULT_CONFIGURATIONS: dict = {
             "credentials_enable_service": False,
             "permissions.default.stylesheet": 2,
         },
-        "addScriptToEvaluateOnNewDocument": "window.navigator.chrome = {runtime: {}};"
     },
 }
 
@@ -75,8 +74,6 @@ EDGE_DRIVER_DEFAULT_CONFIGURATIONS: dict = {
             "download.prompt_for_download": False,
             "download.directory_upgrade": True,
         },
-        "add_experimental_option": {"useAutomationExtension": False},
-        "addScriptToEvaluateOnNewDocument": "Object.defineProperty(navigator, 'webdriver', {get: () => undefined})"
     },
 }
 
