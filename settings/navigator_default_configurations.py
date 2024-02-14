@@ -32,6 +32,7 @@ CHROME_DRIVER_DEFAULT_CONFIGURATIONS: dict = {
             "credentials_enable_service": False,
             "permissions.default.stylesheet": 2,
         },
+        "addScriptToEvaluateOnNewDocument": "window.navigator.chrome = {runtime: {}};"
     },
 }
 
@@ -51,6 +52,9 @@ FIREFOX_DRIVER_DEFAULT_CONFIGURATIONS: dict = {
         "browser.startup.homepage_override.mstone": "ignore",
         "dom.webdriver.enabled": False,
         "useAutomationExtension": False,
+        "toolkit.telemetry.reportingpolicy.firstRun": False,
+        "webgl.disabled": True,
+        "media.peerconnection.enabled": False
     },
 }
 
@@ -71,6 +75,8 @@ EDGE_DRIVER_DEFAULT_CONFIGURATIONS: dict = {
             "download.prompt_for_download": False,
             "download.directory_upgrade": True,
         },
+        "add_experimental_option": {"useAutomationExtension": False},
+        "addScriptToEvaluateOnNewDocument": "Object.defineProperty(navigator, 'webdriver', {get: () => undefined})"
     },
 }
 
