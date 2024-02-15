@@ -83,7 +83,6 @@ class PortInNumberStrategy(BellFastActBaseStrategy):
             raise NoItemFoundException(message)
 
     def execute(self):
-        super().execute()
         self.port_in_number()
 
     def handle_results(self):

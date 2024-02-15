@@ -178,7 +178,6 @@ class PortInViaFicticeNumberStrategy(BellFastActBaseStrategy):
             raise e
 
     def execute(self):
-        super().execute()
         query: GetFictiveNumberPortIn = GetFictiveNumberPortIn(
             phone_number=self.phone_number
         )

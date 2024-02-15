@@ -115,7 +115,6 @@ class SimExtractionStrategy(BellFastActBaseStrategy):
         return sim_generic_xpath % values
 
     def execute(self):
-        super().execute()
         self.search_sim_number()
         self.sim_number = self.get_sim_value()
 
