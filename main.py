@@ -15,13 +15,9 @@ class Main:
         credentials = self.get_credentials()
         processor = Processor(uow, credentials)
         try:
-            with uow:
-                processor.set_requests(
-                    uow.get_repository("process_requests").filter(status="READY")
-                )
             processor.start_processor()
         except Exception as e:
-            message = "Connection could be unavailable, please check database"
+            message = ""
             logging.error(message)
             logging.error(e)
             print(message)
