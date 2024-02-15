@@ -104,7 +104,13 @@ class SQLAlchemyRepository(Repository):
             elif len(attr_operation) >= 2:
                 operator_str = operators.get(attr_operation[-1], "==")
                 field_name = ".".join(attr_operation[:-1])
-                mapped_filters.append(
-                    f"{self.get_model().__name__}.{field_name} {operator_str} {repr(value)}"
-                )
+                if operator_str == "in":
+                    value_list = ", ".join(repr(v) for v in value)
+                    mapped_filters.append(
+                        f"{self.get_model().__name__}.{field_name} {operator_str} ({value_list})"
+                    )
+                else:
+                    mapped_filters.append(
+                        f"{self.get_model().__name__}.{field_name} {operator_str} {repr(value)}"
+                    )
         return mapped_filters
