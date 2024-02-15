@@ -41,5 +41,7 @@ class Processor:
 
     def start_processor(self):
         for controller in self.controllers_list:
-            controller(self.uow)
-            controller.set_credentials(self._get_account_credentials())
+            c: Controller = controller(self.uow)
+            print(self._get_account_credentials())
+            c.set_credentials(self._get_account_credentials())
+            c.execute()

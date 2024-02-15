@@ -124,6 +124,7 @@ class FastActController(BaseController):
             raise NoItemFoundException(message)
 
     def execute(self):
+        self._get_requests()
         for request in self.requests:
             self.set_environment()
             request_type: RequestType = RequestType(request.type)

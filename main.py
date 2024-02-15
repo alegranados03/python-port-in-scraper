@@ -17,7 +17,7 @@ class Main:
         try:
             processor.start_processor()
         except Exception as e:
-            message = ""
+            message = "processor start failed"
             logging.error(message)
             logging.error(e)
             print(message)
