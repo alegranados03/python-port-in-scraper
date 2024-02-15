@@ -19,10 +19,6 @@ class Strategy(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    def login(self):
-        raise NotImplementedError
-
-    @abstractmethod
     def execute(self):
         raise NotImplementedError
 
@@ -31,7 +27,15 @@ class Strategy(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    def handle_results(self, aws_id: int):
+    def handle_results(self):
+        raise NotImplementedError
+
+    @abstractmethod
+    def handle_errors(self):
+        raise NotImplementedError
+
+    @abstractmethod
+    def set_aws_id(self, aws_id: int):
         raise NotImplementedError
 
     @staticmethod

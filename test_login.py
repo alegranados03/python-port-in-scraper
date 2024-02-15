@@ -4,9 +4,8 @@ import time
 
 load_dotenv()
 
-from cellcom_scraper.domain.entities.account import AccountEntity
-from cellcom_scraper.application.strategies.fast_act.base_bellfast_strategy import (
-    BellFastActBaseStrategy,
+from cellcom_scraper.application.controllers.fast_act_controller import (
+    FastActController,
 )
 from cellcom_scraper.application.enums import NavigatorWebDriverType
 from cellcom_scraper.application.selectors import get_webdriver_builder
@@ -14,6 +13,19 @@ from cellcom_scraper.domain.entities import (
     AccountEntity,
     ScraperEntity,
 )
+from cellcom_scraper.infrastructure.sqlalchemy.default_uow import DefaultUnitOfWork
+from selenium.common.exceptions import WebDriverException
+
+
+def webdriver_esta_activo(driver):
+    try:
+        if driver.window_handles:
+            return True
+        else:
+            return False
+    except WebDriverException:
+        return False
+
 
 credentials = AccountEntity(
     username=os.getenv("BELL_FAST_USERNAME"),
@@ -28,15 +40,17 @@ scraper = ScraperEntity(
     name="Port In Scraper",
     available=1,
 )
-base_scraper = BellFastActBaseStrategy(credentials)
+uow = DefaultUnitOfWork()
+controller = FastActController(uow)
 
-builder = get_webdriver_builder(navigator, scraper.url)
-builder.set_driver_options(options={})
-builder.initialize_driver()
-base_scraper.set_credentials(credentials)
-driver = builder.get_driver()
-base_scraper.set_driver(builder.get_driver())
+try:
+    controller.set_environment()
+    print("la ventana está abierta: ", webdriver_esta_activo(controller.driver))
+    raise Exception
+except Exception as e:
+    print("la ventana sigue abierta: ", webdriver_esta_activo(controller.driver))
 
+time.sleep(10)
 browser_info_script = """
     return {
         webdriver: navigator.webdriver,
@@ -52,11 +66,6 @@ browser_info_script = """
         }
         }
         """
-info = driver.execute_script(browser_info_script)
+info = controller.driver.execute_script(browser_info_script)
 print(info)
 
-
-base_scraper.login()
-
-time.sleep(10)
-builder.get_driver().close()

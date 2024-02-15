@@ -54,3 +54,11 @@ class Controller(ABC):
     @abstractmethod
     def set_driver(self) -> None:
         raise NotImplementedError
+
+    @abstractmethod
+    def set_environment(self) -> None:
+        raise NotImplementedError
+
+    @abstractmethod
+    def login(self):
+        raise NotImplementedError

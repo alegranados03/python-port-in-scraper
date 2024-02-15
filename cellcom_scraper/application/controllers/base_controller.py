@@ -19,6 +19,7 @@ from cellcom_scraper.domain.entities import (
     ScraperEntity,
 )
 from cellcom_scraper.application.enums import NavigatorWebDriverType
+from selenium.webdriver.support.ui import WebDriverWait
 
 
 class BaseController(Controller):
@@ -30,12 +31,15 @@ class BaseController(Controller):
         self.requests: Optional[List[ProcessQueueRequestEntity]] = None
         self.cache_scrapers: dict = {}
         self.uow: UnitOfWork = uow
+        self.wait30: Optional[WebDriverWait] = None
 
     def set_automation_driver_builder(self, builder: AutomationDriverBuilder) -> None:
         self.builder = builder
 
     def set_strategy(self, scraper_name: RequestType) -> None:
-        self.strategy = get_scraper_strategy(scraper_name)(self._get_account_credentials())
+        self.strategy = get_scraper_strategy(scraper_name)(
+            self._get_account_credentials()
+        )
 
     def set_credentials(self, credentials: AccountEntity) -> None:
         self.credentials = credentials
@@ -43,6 +47,7 @@ class BaseController(Controller):
     def set_driver(self):
         if self.builder:
             self.driver = self.builder.get_driver()
+            self.wait30 = WebDriverWait(self.driver, 10)
 
     def _get_account_credentials(self) -> AccountEntity:
         return self.credentials
@@ -74,4 +79,10 @@ class BaseController(Controller):
         raise NotImplementedError
 
     def execute(self):
+        raise NotImplementedError
+
+    def login(self):
+        raise NotImplementedError
+
+    def set_environment(self):
         raise NotImplementedError

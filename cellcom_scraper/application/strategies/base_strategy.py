@@ -26,6 +26,7 @@ class BaseScraperStrategy(Strategy):
         self.results: Any = None
         self.request_adapter: Any = None
         self.response_server_url: Optional[str] = None
+        self.aws_id: Optional[int] = None
 
     def set_credentials(self, credentials: AccountEntity):
         self.credentials = credentials
@@ -40,14 +41,17 @@ class BaseScraperStrategy(Strategy):
     def set_phone_number(self, phone_number: str):
         self.phone_number = phone_number
 
-    def login(self):
+    def handle_results(self):
+        raise NotImplementedError
+
+    def handle_errors(self):
         raise NotImplementedError
 
     def execute(self):
-        self.login()
-
-    def handle_results(self, aws_id: int):
         raise NotImplementedError
+
+    def set_aws_id(self, aws_id: int):
+        self.aws_id = aws_id
 
     def send_to_aws(self, data: dict, endpoint: str):
         try:

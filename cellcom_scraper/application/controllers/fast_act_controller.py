@@ -19,14 +19,34 @@ from cellcom_scraper.application.selectors import get_webdriver_builder
 from cellcom_scraper.domain.enums import RequestStatus, RequestType
 from cellcom_scraper.application.enums import NavigatorWebDriverType
 from datetime import datetime
+from cellcom_scraper.config import FORCE_STOP_ERRORS, MAX_ATTEMPTS
+from cellcom_scraper.domain.exceptions import ApplicationException
 import os
 import logging
+import traceback
+import time
+from selenium.common.exceptions import NoSuchElementException, TimeoutException
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support import expected_conditions as ec
+from cellcom_scraper.domain.exceptions import NoItemFoundException
+from selenium.common.exceptions import WebDriverException
 
 
 class FastActController(BaseController):
     def __init__(self, uow: UnitOfWork):
         super().__init__(uow)
         self.fast_act_url = os.environ.get("FAST_ACT_URL")
+
+    def webdriver_is_active(self):
+        if not self.driver:
+            return False
+        try:
+            if self.driver.window_handles:
+                return True
+            else:
+                return False
+        except WebDriverException:
+            return False
 
     def _get_requests(self) -> None:
         try:
@@ -35,10 +55,14 @@ class FastActController(BaseController):
                     status="READY", scraper_id__in=[1, 2]
                 )
         except Exception as e:
-            message = "Connection could be unavailable, please check database"
-            logging.error(message)
-            logging.error(e)
-            print(message)
+            error_message = str(e)
+            error_type = type(e).__name__
+            error_traceback = traceback.format_exc()
+            full_error_message = (
+                f"Exception Type:"
+                f"{error_type}\n Message: {error_message}\n Traceback:\n{error_traceback}"
+            )
+            logging.error(full_error_message)
 
     def _update_request_status(self, *, request, status):
         with self.uow:
@@ -50,21 +74,95 @@ class FastActController(BaseController):
             repository.update(request.id, update_data)
             self.uow.commit()
 
-    def start_environment(self):
-        navigator: NavigatorWebDriverType = self._get_navigator()
-        self.builder: AutomationDriverBuilder = get_webdriver_builder(
-            navigator, self.fast_act_url
-        )
-        self.builder.set_driver_options(options={})
-        self.builder.initialize_driver()
-        self.set_driver()
-        # here should log in and keep active while it's solving requests
+    def set_environment(self):
+        while not self.webdriver_is_active():
+            navigator: NavigatorWebDriverType = self._get_navigator()
+            self.builder: AutomationDriverBuilder = get_webdriver_builder(
+                navigator, self.fast_act_url
+            )
+            self.builder.set_driver_options(options={})
+            self.builder.initialize_driver()
+            self.set_driver()
+            try:
+                self.login()
+                pass
+            except ApplicationException as e:
+                logging.error(e.message)
+                print(e.message)
+                pass
+
+    def login(self):
+        try:
+            username_field = self.wait30.until(
+                ec.presence_of_element_located((By.XPATH, "//input[@id='myUser']"))
+            )
+
+            dealer_code_field = self.wait30.until(
+                ec.presence_of_element_located((By.XPATH, "//input[@id='dealercode']"))
+            )
+
+            password_field = self.wait30.until(
+                ec.presence_of_element_located((By.XPATH, "//input[@id='myPassword']"))
+            )
+
+            login_button = self.wait30.until(
+                ec.presence_of_element_located((By.XPATH, "//button[@id='myButton']"))
+            )
+
+            username_field.send_keys(self.credentials.username)
+            dealer_code_field.send_keys(self.credentials.dealer_code)
+            password_field.send_keys(self.credentials.password)
+            time.sleep(5)
+            login_button.click()
+            time.sleep(10)
+
+        except (NoSuchElementException, TimeoutException, Exception) as e:
+            message = "Failed during FastAct login"
+            logging.error(e)
+            logging.error(message)
+            self.driver.close()
+            raise NoItemFoundException(message)
+
     def execute(self):
         for request in self.requests:
-            # try catch for all this
+            self.set_environment()
             request_type: RequestType = RequestType(request.type)
             self.set_strategy(request_type)
             self.strategy.set_driver(self.builder.get_driver())
             self.strategy.set_phone_number(request.phone_number)
-            self.strategy.execute()
-            self.handle_results()
+            self.strategy.set_aws_id(request.aws_id)
+            tries = 0
+            while tries < MAX_ATTEMPTS:
+                try:
+                    self.strategy.execute()
+                    self.handle_results()
+                    tries = MAX_ATTEMPTS + 1
+                    self._update_request_status(
+                        request=request, status=RequestStatus.FINISHED
+                    )
+                except ApplicationException as e:
+                    for error in FORCE_STOP_ERRORS:
+                        if error in str(e):
+                            tries = MAX_ATTEMPTS
+                            break
+                    if tries == MAX_ATTEMPTS:
+                        self._update_request_status(
+                            request=request, status=RequestStatus.ERROR
+                        )
+                        self.handle_errors()
+                        raise ApplicationException("Scraper request failed", "E001")
+
+                except Exception as e:
+                    message = (
+                        "Another type of exception occurred please check what happened"
+                    )
+                    error_message = str(e)
+                    error_type = type(e).__name__
+                    error_traceback = traceback.format_exc()
+                    full_error_message = (
+                        f"Exception Type:"
+                        f"{error_type}\n Message: {error_message}\n Traceback:\n{error_traceback}"
+                    )
+                    logging.error(full_error_message)
+                    logging.error(message)
+                    self.handle_errors()
