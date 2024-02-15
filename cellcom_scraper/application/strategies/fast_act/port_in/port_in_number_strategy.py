@@ -64,12 +64,13 @@ class PortInNumberStrategy(BellFastActBaseStrategy):
                     error_number_indexes.append(i)
 
             if len(error_number_indexes) > 0:
-                pass
                 error_msg = self.driver.find_element(
                     By.XPATH,
                     "//body/div[@id='instant_activation']/div[2]/div[1]/div[1]/form[1]/div[1]/div[1]/div[1]/ul[1]/li[1]/font[1]",
                 )
-                raise PortInNumberException(error_msg.text)
+                self.handle_errors(error_description=error_msg.text, send_client_sms="yes", send_sms="yes")
+                #raise PortInNumberException(error_msg.text)
+
 
             else:
                 submit_btn = self.wait30.until(
