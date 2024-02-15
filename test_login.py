@@ -43,28 +43,30 @@ scraper = ScraperEntity(
 uow = DefaultUnitOfWork()
 controller = FastActController(uow)
 
-try:
-    controller.set_environment()
-    print("la ventana está abierta: ", webdriver_esta_activo(controller.driver))
-    raise Exception
-except Exception as e:
-    print("la ventana sigue abierta: ", webdriver_esta_activo(controller.driver))
+# try:
+#     controller.set_environment()
+#     print("la ventana está abierta: ", webdriver_esta_activo(controller.driver))
+#     raise Exception
+# except Exception as e:
+#     print("la ventana sigue abierta: ", webdriver_esta_activo(controller.driver))
 
-time.sleep(10)
-browser_info_script = """
-    return {
-        webdriver: navigator.webdriver,
-        languages: navigator.languages,
-        pluginsLength: navigator.plugins.length,
-        platform: navigator.platform,
-        userAgent: navigator.userAgent,
-        webdriver: !!navigator.webdriver,
-        areCookiesEnabled: navigator.cookieEnabled,
-        screenSize: {
-            width: screen.width,
-            height: screen.height
-        }
-        }
-        """
-info = controller.driver.execute_script(browser_info_script)
-print(info)
+# time.sleep(10)
+# browser_info_script = """
+#     return {
+#         webdriver: navigator.webdriver,
+#         languages: navigator.languages,
+#         pluginsLength: navigator.plugins.length,
+#         platform: navigator.platform,
+#         userAgent: navigator.userAgent,
+#         webdriver: !!navigator.webdriver,
+#         areCookiesEnabled: navigator.cookieEnabled,
+#         screenSize: {
+#             width: screen.width,
+#             height: screen.height
+#         }
+#         }
+#         """
+# info = controller.driver.execute_script(browser_info_script)
+# print(info)
+with uow:
+    print(uow.get_repository("process_requests").filter(status="READY", scraper_id=1))

@@ -93,6 +93,7 @@ class SQLAlchemyRepository(Repository):
             "gte": ">=",
             "eq": "==",
             "ne": "!=",
+            "in": "in",
         }
         mapped_filters: list[str] = []
         for filter_, value in filters.items():

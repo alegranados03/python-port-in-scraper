@@ -52,7 +52,7 @@ class FastActController(BaseController):
         try:
             with self.uow:
                 self.requests = self.uow.get_repository("process_requests").filter(
-                    status="READY", scraper_id__in=[1, 2]
+                    status="READY", scraper_id=1
                 )
         except Exception as e:
             error_message = str(e)
@@ -157,7 +157,9 @@ class FastActController(BaseController):
                         )
                         raise ApplicationException("Scraper request failed", "E001")
                     else:
-                        self.strategy.handle_errors(error_description=e.message, send_sms="no")
+                        self.strategy.handle_errors(
+                            error_description=e.message, send_sms="no"
+                        )
                 except Exception as e:
                     message = (
                         "Another type of exception occurred please check what happened"

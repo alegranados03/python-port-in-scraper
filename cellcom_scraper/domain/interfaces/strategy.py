@@ -31,7 +31,9 @@ class Strategy(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    def handle_errors(self, *, error_description, send_sms, send_client_sms="no", error_log=""):
+    def handle_errors(
+        self, *, error_description, send_sms, send_client_sms="no", error_log=""
+    ):
         raise NotImplementedError
 
     @abstractmethod
