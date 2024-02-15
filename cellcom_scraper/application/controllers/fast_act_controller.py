@@ -142,15 +142,27 @@ class FastActController(BaseController):
                         request=request, status=RequestStatus.FINISHED
                     )
                     if self.webdriver_is_active():
-                        close = self.wait30.until(
+                        try:
+                            close = self.wait30.until(
+                                ec.presence_of_element_located(
+                                    (
+                                        By.XPATH,
+                                        "/html[1]/body[1]/div[1]/div[1]/div[1]/div[3]/div[1]/ul[1]/li[3]/a[1]",
+                                    )
+                                )
+                            )
+                            close.click()
+                        except Exception: 
+                            close = self.wait30.until(
                             ec.presence_of_element_located(
                                 (
                                     By.XPATH,
-                                    "/html[1]/body[1]/div[1]/div[1]/div[1]/div[3]/div[1]/ul[1]/li[3]/a[1]",
+                                    "/html[1]/body[1]/div[1]/div[2]/div[1]/div[1]/div[1]/div[2]/div[1]/a[1]",
                                 )
                             )
                         )
                         close.click()
+                            
                 except ApplicationException as e:
                     for error in FORCE_STOP_ERRORS:
                         if error in str(e):
