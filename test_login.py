@@ -68,4 +68,3 @@ browser_info_script = """
         """
 info = controller.driver.execute_script(browser_info_script)
 print(info)
-

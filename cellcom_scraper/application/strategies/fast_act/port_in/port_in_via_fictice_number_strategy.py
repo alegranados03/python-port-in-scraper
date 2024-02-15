@@ -188,13 +188,30 @@ class PortInViaFicticeNumberStrategy(BellFastActBaseStrategy):
             raise UnknownFictiveNumberPortInException(message=message)
         self.port_in_number(configuration)
 
-    def handle_results(self, aws_id: int):
+    def handle_results(self):
         screenshot = self.take_screenshot()
         data = {
             "response": "Finished successfully",
             "error_filename": screenshot["filename"],
             "error_screenshot": screenshot["screenshot"],
-            "process_id": aws_id,
+            "process_id": self.aws_id,
         }
         endpoint: str = "reply-results"
+        self.send_to_aws(data, endpoint)
+
+    def handle_errors(
+        self, *, error_description, send_sms, send_client_sms="no", error_log=""
+    ):
+        screenshot: dict = self.take_screenshot()
+        data: dict = {
+            "error_description": error_description,
+            "error_log": error_log,
+            "result": "Fail",
+            "process_id": self.aws_id,
+            "error_filename": screenshot["filename"],
+            "error_screenshot": screenshot["screenshot"],
+            "send_sms": send_sms,
+            "send_client_sms": send_client_sms,
+        }
+        endpoint: str = "report-errors"
         self.send_to_aws(data, endpoint)

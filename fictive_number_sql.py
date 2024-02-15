@@ -1,7 +1,7 @@
 import pandas as pd
 
 
-archivo_excel = 'numbers.xlsx'
+archivo_excel = "numbers.xlsx"
 
 df = pd.read_excel(archivo_excel)
 
@@ -12,7 +12,7 @@ for index, row in df.iterrows():
     temporary = row["Temp #"]
     account = row["Account #"]
     rogers = "8821"
-    authorization_name="David Stewart"
+    authorization_name = "David Stewart"
     value_template = f"('{phone_number}','{temporary}','{account}','{authorization_name}','{rogers}')"
     values.append(value_template)
 

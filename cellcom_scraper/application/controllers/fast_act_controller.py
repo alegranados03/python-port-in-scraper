@@ -140,6 +140,7 @@ class FastActController(BaseController):
                     self._update_request_status(
                         request=request, status=RequestStatus.FINISHED
                     )
+                    self.driver.get(self.fast_act_url)
                 except ApplicationException as e:
                     for error in FORCE_STOP_ERRORS:
                         if error in str(e):
@@ -149,9 +150,14 @@ class FastActController(BaseController):
                         self._update_request_status(
                             request=request, status=RequestStatus.ERROR
                         )
-                        self.handle_errors()
+                        self.strategy.handle_errors(
+                            error_description=e.message,
+                            send_sms="yes",
+                            send_client_sms="yes",
+                        )
                         raise ApplicationException("Scraper request failed", "E001")
-
+                    else:
+                        self.strategy.handle_errors(error_description=e.message, send_sms="no")
                 except Exception as e:
                     message = (
                         "Another type of exception occurred please check what happened"
@@ -165,4 +171,8 @@ class FastActController(BaseController):
                     )
                     logging.error(full_error_message)
                     logging.error(message)
-                    self.handle_errors()
+                    self.strategy.handle_errors(
+                        error_description=message,
+                        send_sms="yes",
+                        error_log=full_error_message,
+                    )
