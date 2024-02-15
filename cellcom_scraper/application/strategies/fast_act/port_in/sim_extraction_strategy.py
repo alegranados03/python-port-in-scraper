@@ -57,7 +57,8 @@ class SimExtractionStrategy(BellFastActBaseStrategy):
             button_next.click()
 
         except Exception:
-            raise SimExtractionException("Failed searching SIM number")
+            #raise SimExtractionException("Failed searching SIM number")
+            self.handle_errors(error_description="Phone number not found", send_sms="no", send_client_sms="yes")
 
         try:
             self.wait30.until(
