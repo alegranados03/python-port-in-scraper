@@ -141,7 +141,14 @@ class FastActController(BaseController):
                     self._update_request_status(
                         request=request, status=RequestStatus.FINISHED
                     )
-                    close = self.wait30.until(ec.presence_of_element_located((By.XPATH, "/html[1]/body[1]/div[1]/div[1]/div[1]/div[3]/div[1]/ul[1]/li[3]/a[1]")))
+                    close = self.wait30.until(
+                        ec.presence_of_element_located(
+                            (
+                                By.XPATH,
+                                "/html[1]/body[1]/div[1]/div[1]/div[1]/div[3]/div[1]/ul[1]/li[3]/a[1]",
+                            )
+                        )
+                    )
                     close.click()
                 except ApplicationException as e:
                     for error in FORCE_STOP_ERRORS:

@@ -3,9 +3,10 @@ import os
 from datetime import datetime
 
 from cellcom_scraper.application.processor import Processor
-
+from cellcom_scraper.domain.exceptions import ApplicationException
 from cellcom_scraper.domain.entities.account import AccountEntity
 from cellcom_scraper.infrastructure.sqlalchemy.default_uow import DefaultUnitOfWork
+import traceback
 
 
 class Main:
@@ -16,11 +17,20 @@ class Main:
         processor = Processor(uow, credentials)
         try:
             processor.start_processor()
+        except ApplicationException as e:
+            logging.error(e.message)
+            print(e.message)
         except Exception as e:
-            message = "processor start failed"
+            message = "Another type of exception occurred please check what happened"
+            error_message = str(e)
+            error_type = type(e).__name__
+            error_traceback = traceback.format_exc()
+            full_error_message = (
+                f"Exception Type:"
+                f"{error_type}\n Message: {error_message}\n Traceback:\n{error_traceback}"
+            )
+            logging.error(full_error_message)
             logging.error(message)
-            logging.error(e)
-            print(message)
 
     @staticmethod
     def get_credentials():
