@@ -1,4 +1,5 @@
 import logging
+import time
 import traceback
 
 from cellcom_scraper.application.controllers.fast_act_controller import (
@@ -17,13 +18,11 @@ class PortInController(FastActController):
         super().__init__(uow)
 
     def _get_requests(self) -> None:
-        print("get requests")
         try:
             with self.uow:
                 self.requests = self.uow.get_repository("process_requests").filter(
                     status="READY", scraper_id=1
                 )
-                print("the requests",self.requests)
         except Exception as e:
             error_message = str(e)
             error_type = type(e).__name__
@@ -35,7 +34,6 @@ class PortInController(FastActController):
             logging.error(full_error_message)
 
     def execute(self):
-        print("exexcute port in")
         self._get_requests()
         while self.requests:
             for request in self.requests:
@@ -93,5 +91,6 @@ class PortInController(FastActController):
                         logging.error(full_error_message)
                         logging.error(message)
                         print(full_error_message)
-
+            
+            time.sleep(60)
             self._get_requests()
