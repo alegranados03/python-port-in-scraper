@@ -25,9 +25,10 @@ class Processor:
         for controller in self.controllers_list:
             c: Controller = controller(self.uow)
             c.set_credentials(self._get_account_credentials())
-            try:
-                c.execute()
+            #try:
+            print("start processor")
+            c.execute()
             # agregar manejo de excepciones por query a base de datos
-            except Exception as e:
-                print(handle_general_exception(e, "Controller failed at execute"))
+            # except Exception as e:
+            #     print(handle_general_exception(e, "Controller failed at execute"))
 

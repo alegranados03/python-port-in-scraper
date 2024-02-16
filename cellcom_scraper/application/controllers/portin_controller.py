@@ -10,18 +10,20 @@ from cellcom_scraper.domain.exceptions import (
     CloseButtonNotFoundException,
 )
 from cellcom_scraper.domain.enums import RequestStatus, RequestType
-
+from cellcom_scraper.domain.interfaces.uow import UnitOfWork
 
 class PortInController(FastActController):
-    def __init__(self) -> None:
-        super().__init__()
+    def __init__(self, uow: UnitOfWork):
+        super().__init__(uow)
 
     def _get_requests(self) -> None:
+        print("get requests")
         try:
             with self.uow:
                 self.requests = self.uow.get_repository("process_requests").filter(
                     status="READY", scraper_id=1
                 )
+                print("the requests",self.requests)
         except Exception as e:
             error_message = str(e)
             error_type = type(e).__name__
@@ -33,6 +35,7 @@ class PortInController(FastActController):
             logging.error(full_error_message)
 
     def execute(self):
+        print("exexcute port in")
         self._get_requests()
         while self.requests:
             for request in self.requests:

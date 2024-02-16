@@ -16,6 +16,7 @@ class Main:
         credentials = self.get_credentials()
         processor = Processor(uow, credentials)
         try:
+            print("antes de start processor")
             processor.start_processor()
         except ApplicationException as e:
             logging.error(e.message)
@@ -31,6 +32,7 @@ class Main:
             )
             logging.error(full_error_message)
             logging.error(message)
+            print(full_error_message)
 
     @staticmethod
     def get_credentials():
