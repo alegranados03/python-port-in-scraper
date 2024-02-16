@@ -68,12 +68,7 @@ class PortInNumberStrategy(BellFastActBaseStrategy):
                     By.XPATH,
                     "//body/div[@id='instant_activation']/div[2]/div[1]/div[1]/form[1]/div[1]/div[1]/div[1]/ul[1]/li[1]/font[1]",
                 )
-                self.handle_errors(
-                    error_description=error_msg.text,
-                    send_client_sms="yes",
-                    send_sms="yes",
-                )
-                # raise PortInNumberException(error_msg.text)
+                raise PortInNumberException(error_msg.text)
 
             else:
                 submit_btn = self.wait30.until(

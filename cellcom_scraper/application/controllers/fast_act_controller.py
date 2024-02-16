@@ -111,6 +111,7 @@ class FastActController(BaseController):
             "/html[1]/body[1]/div[1]/div[2]/div[1]/div[1]/div[1]/div[2]/div[1]/a[1]"
         )
 
+
         close_options = [option_1, option_2]
 
         for option in close_options:
@@ -126,10 +127,9 @@ class FastActController(BaseController):
                 close.click()
                 break
             except (NoSuchElementException, TimeoutException) as e:
-                message = "Close button not found"
+                message = f"{option} button not found"
                 logging.error(e)
                 logging.error(message)
-                continue
 
         if not close:
             raise CloseButtonNotFoundException(message)
