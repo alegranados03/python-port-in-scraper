@@ -1,4 +1,5 @@
 import traceback
+import logging
 
 
 class ApplicationException(Exception):
@@ -57,3 +58,21 @@ class UnknownFictiveNumberPortInException(ApplicationException):
 class UnknownControllerException(ApplicationException):
     def __init__(self, message):
         super().__init__(f"Unknown controller: {message}", "SEC010")
+
+
+class CloseButtonNotFoundException(ApplicationException):
+    def __init__(self, message):
+        super().__init__(f"Can't close process {message}", "SEC011")
+
+
+def handle_general_exception(exception: Exception, message: str) -> str:
+    error_message = str(exception)
+    error_type = type(exception).__name__
+    error_traceback = traceback.format_exc()
+    full_error_message = (
+        f"Exception Type:"
+        f"{error_type}\n Message: {error_message}\n Traceback:\n{error_traceback}"
+    )
+    logging.error(full_error_message)
+    logging.error(message)
+    return full_error_message

@@ -1,33 +1,12 @@
-import logging
-import os
-from datetime import datetime
-from typing import List, Optional
-
-from cellcom_scraper.application.controllers.fast_act_controller import (
-    FastActController,
+from cellcom_scraper.application.controllers.portin_controller import (
+    PortInController,
 )
-from cellcom_scraper.application.enums import NavigatorWebDriverType
-from cellcom_scraper.application.selectors import get_webdriver_builder
 from cellcom_scraper.domain.entities import (
     AccountEntity,
-    ProcessQueueRequestEntity,
-    ScraperEntity,
-)
-from cellcom_scraper.domain.entities.process_queue_request import (
-    ProcessQueueUpdateEntity,
-)
-from cellcom_scraper.domain.enums import (
-    RequestStatus,
-    RequestType,
-    ScraperControllerType,
-)
-from cellcom_scraper.domain.exceptions import UnknownControllerException
-from cellcom_scraper.domain.interfaces.automation_driver_builder import (
-    AutomationDriverBuilder,
 )
 from cellcom_scraper.domain.interfaces.controller import Controller
 from cellcom_scraper.domain.interfaces.uow import UnitOfWork
-
+from cellcom_scraper.domain.exceptions.exceptions import handle_general_exception
 
 class Processor:
     def __init__(
@@ -37,7 +16,7 @@ class Processor:
     ):
         self.uow: UnitOfWork = uow
         self.account_credentials: AccountEntity = account_credentials
-        self.controllers_list: list = [FastActController]
+        self.controllers_list: list = [PortInController]
 
     def _get_account_credentials(self):
         return self.account_credentials
@@ -46,4 +25,9 @@ class Processor:
         for controller in self.controllers_list:
             c: Controller = controller(self.uow)
             c.set_credentials(self._get_account_credentials())
-            c.execute()
+            try:
+                c.execute()
+            # agregar manejo de excepciones por query a base de datos
+            except Exception as e:
+                print(handle_general_exception(e, "Controller failed at execute"))
+
