@@ -1,10 +1,9 @@
-from typing import Optional
-
 import logging
+import random
 import re
 import time
-import random
 from datetime import datetime
+from typing import Optional
 
 from selenium.common.exceptions import NoSuchElementException, TimeoutException
 from selenium.webdriver.common.by import By
@@ -13,10 +12,8 @@ from selenium.webdriver.support import expected_conditions as ec
 from cellcom_scraper.application.strategies.fast_act.base_bellfast_strategy import (
     BellFastActBaseStrategy,
 )
-from cellcom_scraper.domain.exceptions import (
-    NoItemFoundException,
-)
 from cellcom_scraper.config import UPGRADE_AND_DRO_AWS_SERVER
+from cellcom_scraper.domain.exceptions import NoItemFoundException
 
 
 class UpgradeAndDroStrategy(BellFastActBaseStrategy):

@@ -6,11 +6,11 @@ from cellcom_scraper.application.queries.get_fictive_number_config import (
 from cellcom_scraper.application.strategies.fast_act.port_in.sim_extraction_strategy import (
     SimExtractionStrategy,
 )
+from cellcom_scraper.config import PORT_IN_AWS_SERVER
 from cellcom_scraper.domain.entities.process_queue_request import (
     FictiveNumberPortInEntity,
 )
 from cellcom_scraper.domain.exceptions import UnknownFictiveNumberPortInException
-from cellcom_scraper.config import PORT_IN_AWS_SERVER
 
 
 class SimExtractionFictiveNumberStrategy(SimExtractionStrategy):

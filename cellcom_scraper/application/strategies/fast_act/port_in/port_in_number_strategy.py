@@ -7,11 +7,11 @@ from selenium.webdriver.support import expected_conditions as ec
 from cellcom_scraper.application.strategies.fast_act.base_bellfast_strategy import (
     BellFastActBaseStrategy,
 )
+from cellcom_scraper.config import PORT_IN_AWS_SERVER
 from cellcom_scraper.domain.exceptions import (
     NoItemFoundException,
     PortInNumberException,
 )
-from cellcom_scraper.config import PORT_IN_AWS_SERVER
 
 
 class PortInNumberStrategy(BellFastActBaseStrategy):
@@ -68,9 +68,12 @@ class PortInNumberStrategy(BellFastActBaseStrategy):
                     By.XPATH,
                     "//body/div[@id='instant_activation']/div[2]/div[1]/div[1]/form[1]/div[1]/div[1]/div[1]/ul[1]/li[1]/font[1]",
                 )
-                self.handle_errors(error_description=error_msg.text, send_client_sms="yes", send_sms="yes")
-                #raise PortInNumberException(error_msg.text)
-
+                self.handle_errors(
+                    error_description=error_msg.text,
+                    send_client_sms="yes",
+                    send_sms="yes",
+                )
+                # raise PortInNumberException(error_msg.text)
 
             else:
                 submit_btn = self.wait30.until(

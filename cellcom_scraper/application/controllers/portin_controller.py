@@ -1,9 +1,9 @@
-from cellcom_scraper.config import FORCE_STOP_ERRORS, MAX_ATTEMPTS
-from cellcom_scraper.domain.exceptions import ApplicationException
-from cellcom_scraper.application.controllers.base_controller import BaseController
-
 import logging
 import traceback
+
+from cellcom_scraper.application.controllers.base_controller import BaseController
+from cellcom_scraper.config import FORCE_STOP_ERRORS, MAX_ATTEMPTS
+from cellcom_scraper.domain.exceptions import ApplicationException
 
 
 class PortInController(BaseController):

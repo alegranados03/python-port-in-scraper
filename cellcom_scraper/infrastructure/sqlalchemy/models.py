@@ -1,14 +1,14 @@
-from sqlalchemy import Boolean, BigInteger, Column, DateTime, String, ForeignKey
+from sqlalchemy import BigInteger, Boolean, Column, DateTime, ForeignKey, String
 from sqlalchemy.dialects.mysql import ENUM
+from sqlalchemy.orm import relationship
 
 from cellcom_scraper.domain.entities import (
     FictiveNumberPortInEntity,
     ProcessQueueRequestEntity,
     ScraperEntity,
 )
-from cellcom_scraper.domain.enums import RequestStatus, RequestType, ExecutionFrequency
+from cellcom_scraper.domain.enums import ExecutionFrequency, RequestStatus, RequestType
 from cellcom_scraper.infrastructure.sqlalchemy.database import Base
-from sqlalchemy.orm import relationship
 
 
 class Scraper(Base):

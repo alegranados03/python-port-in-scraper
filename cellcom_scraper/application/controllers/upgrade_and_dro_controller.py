@@ -1,9 +1,9 @@
+import logging
+import traceback
+
+from cellcom_scraper.application.controllers.base_controller import BaseController
 from cellcom_scraper.config import FORCE_STOP_ERRORS, UPGRADE_AND_DRO_MAX_ATTEMPTS
 from cellcom_scraper.domain.exceptions import ApplicationException
-from cellcom_scraper.application.controllers.base_controller import BaseController
-
-import traceback
-import logging
 
 
 class UpgradeAndDroController(BaseController):

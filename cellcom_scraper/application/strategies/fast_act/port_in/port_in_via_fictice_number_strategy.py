@@ -11,6 +11,7 @@ from cellcom_scraper.application.queries.get_fictive_number_config import (
 from cellcom_scraper.application.strategies.fast_act.base_bellfast_strategy import (
     BellFastActBaseStrategy,
 )
+from cellcom_scraper.config import PORT_IN_AWS_SERVER
 from cellcom_scraper.domain.entities.process_queue_request import (
     FictiveNumberPortInEntity,
 )
@@ -18,7 +19,6 @@ from cellcom_scraper.domain.exceptions import (
     PortInNumberException,
     UnknownFictiveNumberPortInException,
 )
-from cellcom_scraper.config import PORT_IN_AWS_SERVER
 
 
 class PortInViaFicticeNumberStrategy(BellFastActBaseStrategy):

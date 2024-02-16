@@ -1,6 +1,5 @@
 import pandas as pd
 
-
 archivo_excel = "numbers.xlsx"
 
 df = pd.read_excel(archivo_excel)

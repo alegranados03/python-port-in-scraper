@@ -1,11 +1,12 @@
+from selenium.common.exceptions import NoSuchElementException, TimeoutException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as ec
 
 from cellcom_scraper.application.strategies.fast_act.base_bellfast_strategy import (
     BellFastActBaseStrategy,
 )
-from cellcom_scraper.domain.exceptions import SimExtractionException
 from cellcom_scraper.config import PORT_IN_AWS_SERVER
+from cellcom_scraper.domain.exceptions import SimExtractionException
 
 
 class SimExtractionStrategy(BellFastActBaseStrategy):
@@ -56,9 +57,8 @@ class SimExtractionStrategy(BellFastActBaseStrategy):
             )
             button_next.click()
 
-        except Exception:
-            #raise SimExtractionException("Failed searching SIM number")
-            self.handle_errors(error_description="Phone number not found", send_sms="no", send_client_sms="yes")
+        except (NoSuchElementException, TimeoutException) as e:
+            raise SimExtractionException("Failed searching SIM number")
 
         try:
             self.wait30.until(

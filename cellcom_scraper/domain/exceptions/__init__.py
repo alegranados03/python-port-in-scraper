@@ -5,8 +5,8 @@ from cellcom_scraper.domain.exceptions.exceptions import (
     PortInNumberException,
     SimExtractionException,
     UnknownConfigurationException,
+    UnknownControllerException,
     UnknownFictiveNumberPortInException,
     UnknownNavigatorException,
     UnknownStrategyException,
-    UnknownControllerException,
 )

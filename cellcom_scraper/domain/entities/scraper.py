@@ -1,4 +1,5 @@
 from pydantic import BaseModel, Field
+
 from cellcom_scraper.domain.enums import ExecutionFrequency
 
 

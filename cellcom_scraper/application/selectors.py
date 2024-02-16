@@ -11,8 +11,8 @@ from cellcom_scraper.application.enums import NavigatorWebDriverType
 from cellcom_scraper.application.strategies.fast_act.port_in import (
     PortInNumberStrategy,
     PortInViaFicticeNumberStrategy,
-    SimExtractionStrategy,
     SimExtractionFictiveNumberStrategy,
+    SimExtractionStrategy,
 )
 from cellcom_scraper.application.strategies.fast_act.upgrade_and_dro import (
     UpgradeAndDroStrategy,

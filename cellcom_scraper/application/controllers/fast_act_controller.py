@@ -1,35 +1,30 @@
-from cellcom_scraper.config import FORCE_STOP_ERRORS, MAX_ATTEMPTS
-from cellcom_scraper.domain.exceptions import ApplicationException
-from cellcom_scraper.application.controllers.base_controller import BaseController
+import logging
+import os
+import time
+import traceback
+from datetime import datetime
 
-from cellcom_scraper.domain.interfaces.uow import UnitOfWork
-
-from cellcom_scraper.domain.entities import (
-    AccountEntity,
-    ProcessQueueRequestEntity,
-    ScraperEntity,
+from selenium.common.exceptions import (
+    NoSuchElementException,
+    TimeoutException,
+    WebDriverException,
 )
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support import expected_conditions as ec
+
+from cellcom_scraper.application.controllers.base_controller import BaseController
+from cellcom_scraper.application.enums import NavigatorWebDriverType
+from cellcom_scraper.application.selectors import get_webdriver_builder
+from cellcom_scraper.config import FORCE_STOP_ERRORS, MAX_ATTEMPTS
 from cellcom_scraper.domain.entities.process_queue_request import (
     ProcessQueueUpdateEntity,
 )
+from cellcom_scraper.domain.enums import RequestStatus, RequestType
+from cellcom_scraper.domain.exceptions import ApplicationException, NoItemFoundException
 from cellcom_scraper.domain.interfaces.automation_driver_builder import (
     AutomationDriverBuilder,
 )
-from cellcom_scraper.application.selectors import get_webdriver_builder
-from cellcom_scraper.domain.enums import RequestStatus, RequestType
-from cellcom_scraper.application.enums import NavigatorWebDriverType
-from datetime import datetime
-from cellcom_scraper.config import FORCE_STOP_ERRORS, MAX_ATTEMPTS
-from cellcom_scraper.domain.exceptions import ApplicationException
-import os
-import logging
-import traceback
-import time
-from selenium.common.exceptions import NoSuchElementException, TimeoutException
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support import expected_conditions as ec
-from cellcom_scraper.domain.exceptions import NoItemFoundException
-from selenium.common.exceptions import WebDriverException
+from cellcom_scraper.domain.interfaces.uow import UnitOfWork
 
 
 class FastActController(BaseController):
@@ -84,7 +79,7 @@ class FastActController(BaseController):
             self.builder.initialize_driver()
             self.set_driver()
             try:
-                self.login()
+                # self.login()
                 pass
             except ApplicationException as e:
                 logging.error(e.message)
@@ -123,6 +118,37 @@ class FastActController(BaseController):
             self.driver.close()
             raise NoItemFoundException(message)
 
+    def click_screen_close_button(self):
+        option_1 = (
+            "/html[1]/body[1]/div[1]/div[1]/div[1]/div[3]/div[1]/ul[1]/li[3]/a[1]"
+        )
+        option_2 = (
+            "/html[1]/body[1]/div[1]/div[2]/div[1]/div[1]/div[1]/div[2]/div[1]/a[1]"
+        )
+
+        close_options = [option_1, option_2]
+
+        for option in close_options:
+            try:
+                close = self.wait30.until(
+                    ec.presence_of_element_located(
+                        (
+                            By.XPATH,
+                            option,
+                        )
+                    )
+                )
+                close.click()
+                break
+            except (NoSuchElementException, TimeoutException) as e:
+                message = "Close button not found"
+                logging.error(e)
+                logging.error(message)
+                continue
+
+        if not close:
+            raise NoItemFoundException(message)
+
     def execute(self):
         self._get_requests()
         for request in self.requests:
@@ -142,27 +168,8 @@ class FastActController(BaseController):
                         request=request, status=RequestStatus.FINISHED
                     )
                     if self.webdriver_is_active():
-                        try:
-                            close = self.wait30.until(
-                                ec.presence_of_element_located(
-                                    (
-                                        By.XPATH,
-                                        "/html[1]/body[1]/div[1]/div[1]/div[1]/div[3]/div[1]/ul[1]/li[3]/a[1]",
-                                    )
-                                )
-                            )
-                            close.click()
-                        except Exception: 
-                            close = self.wait30.until(
-                            ec.presence_of_element_located(
-                                (
-                                    By.XPATH,
-                                    "/html[1]/body[1]/div[1]/div[2]/div[1]/div[1]/div[1]/div[2]/div[1]/a[1]",
-                                )
-                            )
-                        )
-                        close.click()
-                            
+                        self.click_screen_close_button()
+
                 except ApplicationException as e:
                     for error in FORCE_STOP_ERRORS:
                         if error in str(e):
@@ -177,7 +184,6 @@ class FastActController(BaseController):
                             send_sms="yes",
                             send_client_sms="yes",
                         )
-                        raise ApplicationException("Scraper request failed", "E001")
                     else:
                         self.strategy.handle_errors(
                             error_description=e.message, send_sms="no"
@@ -195,8 +201,4 @@ class FastActController(BaseController):
                     )
                     logging.error(full_error_message)
                     logging.error(message)
-                    self.strategy.handle_errors(
-                        error_description=message,
-                        send_sms="yes",
-                        error_log=full_error_message,
-                    )
+                    print(full_error_message)

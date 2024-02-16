@@ -1,4 +1,5 @@
 import logging
+import time
 
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
@@ -8,7 +9,6 @@ from cellcom_scraper.domain.interfaces.automation_driver_builder import (
     AutomationDriverBuilder,
 )
 from settings.navigator_default_configurations import get_webdriver_default_config
-import time
 
 
 class ChromeDriverBuilder(AutomationDriverBuilder):

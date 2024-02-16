@@ -1,8 +1,8 @@
 from abc import ABC, abstractmethod
 
-from cellcom_scraper.domain.enums import RequestType
-from cellcom_scraper.domain.entities import ScraperEntity
 from cellcom_scraper.application.enums import NavigatorWebDriverType
+from cellcom_scraper.domain.entities import ScraperEntity
+from cellcom_scraper.domain.enums import RequestType
 
 
 class Controller(ABC):

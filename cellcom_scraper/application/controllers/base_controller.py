@@ -1,25 +1,22 @@
-from typing import Optional, List
+from typing import List, Optional
 
 from selenium.webdriver.remote.webdriver import WebDriver
+from selenium.webdriver.support.ui import WebDriverWait
 
+from cellcom_scraper.application.enums import NavigatorWebDriverType
 from cellcom_scraper.application.selectors import get_scraper_strategy
-
-
+from cellcom_scraper.domain.entities import (
+    AccountEntity,
+    ProcessQueueRequestEntity,
+    ScraperEntity,
+)
 from cellcom_scraper.domain.enums import RequestType
-
 from cellcom_scraper.domain.interfaces.automation_driver_builder import (
     AutomationDriverBuilder,
 )
 from cellcom_scraper.domain.interfaces.controller import Controller
 from cellcom_scraper.domain.interfaces.strategy import Strategy
 from cellcom_scraper.domain.interfaces.uow import UnitOfWork
-from cellcom_scraper.domain.entities import (
-    AccountEntity,
-    ProcessQueueRequestEntity,
-    ScraperEntity,
-)
-from cellcom_scraper.application.enums import NavigatorWebDriverType
-from selenium.webdriver.support.ui import WebDriverWait
 
 
 class BaseController(Controller):
