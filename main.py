@@ -37,6 +37,6 @@ class Main:
     def log_init_message():
         current_date = datetime.now()
         init_message = f"Scraper requests processor, execution start at: {current_date}"
-        logging.basicConfig(filename="./scrapers.log", level=logging.DEBUG)
+        logging.basicConfig(filename="./scrapers.log", level=logging.WARNING)
         # logging.info(init_message)
         return init_message
