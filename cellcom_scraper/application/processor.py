@@ -1,5 +1,6 @@
-from cellcom_scraper.application.controllers.portin_controller import (
+from cellcom_scraper.application.controllers import (
     PortInController,
+    UpgradeAndDroController,
 )
 from cellcom_scraper.domain.entities import (
     AccountEntity,
@@ -17,7 +18,7 @@ class Processor:
     ):
         self.uow: UnitOfWork = uow
         self.account_credentials: AccountEntity = account_credentials
-        self.controllers_list: list = [PortInController]
+        self.controllers_list: list = [PortInController, UpgradeAndDroController]
 
     def _get_account_credentials(self):
         return self.account_credentials

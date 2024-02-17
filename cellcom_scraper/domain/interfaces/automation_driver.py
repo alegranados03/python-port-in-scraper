@@ -6,6 +6,7 @@ from selenium.webdriver.remote.webelement import WebElement
 
 Locator = Tuple[By, str]
 
+
 class AutomationDriver(ABC):
     @abstractmethod
     def wait_for_element(
@@ -15,7 +16,7 @@ class AutomationDriver(ABC):
         seconds: int = 30,
     ):
         pass
-    
+
     @abstractmethod
     def get_webdriver_wait(self, timeout: int):
         pass
