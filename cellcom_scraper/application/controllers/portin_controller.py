@@ -82,4 +82,4 @@ class PortInController(FastActController):
 
             time.sleep(60)
             self._get_requests()
-        self.driver.quit()
+        #self.driver.quit()
