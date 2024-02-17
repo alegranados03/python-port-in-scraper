@@ -27,7 +27,7 @@ class Controller(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    def handle_errors(self) -> None:
+    def handle_errors(self, **kwargs) -> None:
         raise NotImplementedError
 
     @abstractmethod

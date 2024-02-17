@@ -74,7 +74,7 @@ class BaseScraperStrategy(Strategy):
         except requests.RequestException as e:
             logging.error(f"Request to AWS failed: {e}")
 
-    def take_screenshot(self):
+    def take_screenshot(self) -> dict:
         path = os.getcwd()
         dt = datetime.now().strftime("%Y%m%d %H%M%S").split(" ")
         filename = "_".join([dt[0], self.phone_number, dt[1]])

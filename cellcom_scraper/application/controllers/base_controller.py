@@ -52,8 +52,8 @@ class BaseController(Controller):
     def handle_results(self):
         self.strategy.handle_results()
 
-    def handle_errors(self):
-        self.strategy.handle_errors()
+    def handle_errors(self, **kwargs):
+        self.strategy.handle_errors(**kwargs)
 
     def _get_scraper(self, scraper_id: int) -> ScraperEntity:
         if scraper_id in self.cache_scrapers:

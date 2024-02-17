@@ -111,7 +111,6 @@ class FastActController(BaseController):
             "/html[1]/body[1]/div[1]/div[2]/div[1]/div[1]/div[1]/div[2]/div[1]/a[1]"
         )
 
-
         close_options = [option_1, option_2]
 
         for option in close_options:

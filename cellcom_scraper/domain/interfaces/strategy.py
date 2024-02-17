@@ -23,17 +23,15 @@ class Strategy(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    def take_screenshot(self):
+    def take_screenshot(self) -> dict:
         raise NotImplementedError
 
     @abstractmethod
-    def handle_results(self):
+    def handle_results(self) -> None:
         raise NotImplementedError
 
     @abstractmethod
-    def handle_errors(
-        self, *, error_description, send_sms, send_client_sms="no", error_log=""
-    ):
+    def handle_errors(self, **kwargs) -> None:
         raise NotImplementedError
 
     @abstractmethod

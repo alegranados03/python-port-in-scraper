@@ -155,10 +155,9 @@ class UpgradeAndDroStrategy(BellFastActBaseStrategy):
             raise NoItemFoundException(message)
 
     def execute(self):
-        super().execute()
         self.check_upgrade_and_dro_status()
 
-    def handle_results(self, aws_id: int):
+    def handle_results(self):
         screenshot = self.take_screenshot()
         data = {
             "screenshot": screenshot["screenshot"],
@@ -167,8 +166,18 @@ class UpgradeAndDroStrategy(BellFastActBaseStrategy):
             "details": self.details,
             "description": "system completed the request",
         }
-        endpoint: str = f"phones/{aws_id}/logs/info"
+        endpoint: str = f"phones/{self.aws_id}/logs/info"
         self.send_to_aws(data, endpoint)
+
+    def handle_errors(self, *, description: str, details=""):
+        screenshot: dict = self.take_screenshot()
+        payload = {
+            "description": description,
+            "screenshot": screenshot["screenshot"],
+            "details": details,
+        }
+        endpoint: str = f"phones/{self.aws_id}/logs/error"
+        self.send_to_aws(data=payload, endpoint=endpoint)
 
     @staticmethod
     def extract_date(text):

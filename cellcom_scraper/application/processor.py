@@ -8,6 +8,7 @@ from cellcom_scraper.domain.interfaces.controller import Controller
 from cellcom_scraper.domain.interfaces.uow import UnitOfWork
 from cellcom_scraper.domain.exceptions.exceptions import handle_general_exception
 
+
 class Processor:
     def __init__(
         self,
@@ -29,4 +30,3 @@ class Processor:
                 c.execute()
             except Exception as e:
                 print(handle_general_exception(e, "Controller failed at execute"))
-

@@ -1,63 +1,73 @@
 import logging
 import traceback
 
-from cellcom_scraper.application.controllers.base_controller import BaseController
+from cellcom_scraper.application.controllers.fast_act_controller import (
+    FastActController,
+)
 from cellcom_scraper.config import FORCE_STOP_ERRORS, UPGRADE_AND_DRO_MAX_ATTEMPTS
-from cellcom_scraper.domain.exceptions import ApplicationException
+from cellcom_scraper.domain.exceptions import (
+    ApplicationException,
+    CloseButtonNotFoundException,
+)
+from cellcom_scraper.domain.exceptions.exceptions import handle_general_exception
+from cellcom_scraper.domain.interfaces.uow import UnitOfWork
+from cellcom_scraper.domain.enums import RequestStatus, RequestType
 
 
-class UpgradeAndDroController(BaseController):
-    def __init__(self) -> None:
-        super().__init__()
+class UpgradeAndDroController(FastActController):
+    def __init__(self, uow: UnitOfWork):
+        super().__init__(uow)
 
-    def execute(self, navigator_options=None) -> None:
-        tries = 0
-        while tries < UPGRADE_AND_DRO_MAX_ATTEMPTS:
-            tries += 1
-            self.builder.set_driver_options(options=navigator_options)
-            self.builder.initialize_driver()
+    def _get_requests(self) -> None:
+        try:
+            with self.uow:
+                self.requests = self.uow.get_repository("process_requests").filter(
+                    status="READY", scraper_id=2
+                )
+        except Exception as e:
+            print(
+                handle_general_exception(
+                    e, "Requests fetch on Upgrade and DRO Controller failed"
+                )
+            )
+
+    def execute(self):
+        self._get_requests()
+        for request in self.requests:
+            self.set_environment()
+            request_type: RequestType = RequestType(request.type)
+            self.set_strategy(request_type)
             self.strategy.set_driver(self.builder.get_driver())
-            self.strategy.set_phone_number(self.phone_number)
-            try:
-                self.strategy.execute()
-                self.handle_results()
-                tries = UPGRADE_AND_DRO_MAX_ATTEMPTS + 1
-            except ApplicationException as e:
-                for error in FORCE_STOP_ERRORS:
-                    if error in str(e):
-                        tries = UPGRADE_AND_DRO_MAX_ATTEMPTS
-                        break
-                if tries == UPGRADE_AND_DRO_MAX_ATTEMPTS:
-                    message = "Scraper request failed, max attempts reached"
-                    self.handle_error(aws_id=self.aws_id, description=message)
-                    raise ApplicationException(message, "E001")
-                else:
-                    message = f"attempt {tries} failed {e.message}"
-                    self.handle_error(aws_id=self.aws_id, description=message)
-            except Exception as e:
-                error_message = str(e)
-                error_type = type(e).__name__
-                error_traceback = traceback.format_exc()
-                full_error_message = (
-                    f"Exception Type:"
-                    f"{error_type}\n Message: {error_message}\n Traceback:\n{error_traceback}"
-                )
-                message = "Unknown error occurred, please notify this error to the administrator"
-                logging.error(message)
-                logging.error(full_error_message)
-                self.handle_error(
-                    aws_id=self.aws_id, description=message, details=full_error_message
-                )
-
-        driver = self.builder.get_driver()
-        driver.close()
-
-    def handle_error(self, *, aws_id: int, description: str, details=""):
-        screenshot: dict = self.strategy.take_screenshot()
-        payload = {
-            "description": description,
-            "screenshot": screenshot["screenshot"],
-            "details": details,
-        }
-        endpoint: str = f"phones/{aws_id}/logs/error"
-        self.strategy.send_to_aws(data=payload, endpoint=endpoint)
+            self.strategy.set_phone_number(request.number_to_port)
+            self.strategy.set_aws_id(request.aws_id)
+            tries = 0
+            while tries < UPGRADE_AND_DRO_MAX_ATTEMPTS:
+                try:
+                    self.strategy.execute()
+                    self.handle_results()
+                    tries = UPGRADE_AND_DRO_MAX_ATTEMPTS + 1
+                    self._update_request_status(
+                        request=request, status=RequestStatus.FINISHED
+                    )
+                    if self.webdriver_is_active():
+                        self.click_screen_close_button()
+                except CloseButtonNotFoundException as e:
+                    self.driver.close()
+                    self.handle_errors(description=e.message, details=e.traceback)
+                except ApplicationException as e:
+                    for error in FORCE_STOP_ERRORS:
+                        if error in str(e):
+                            tries = UPGRADE_AND_DRO_MAX_ATTEMPTS
+                            break
+                    if tries == UPGRADE_AND_DRO_MAX_ATTEMPTS:
+                        self._update_request_status(
+                            request=request, status=RequestStatus.ERROR
+                        )
+                    self.handle_errors(description=e.message, details=e.traceback)
+                except Exception as e:
+                    message = (
+                        "Another type of exception occurred please check what happened"
+                    )
+                    full_error_message = handle_general_exception(e, message)
+                    print(full_error_message)
+                    self.handle_errors(description=message, details=full_error_message)

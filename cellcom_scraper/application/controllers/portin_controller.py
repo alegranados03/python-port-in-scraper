@@ -1,6 +1,4 @@
-import logging
 import time
-import traceback
 
 from cellcom_scraper.application.controllers.fast_act_controller import (
     FastActController,
@@ -12,6 +10,8 @@ from cellcom_scraper.domain.exceptions import (
 )
 from cellcom_scraper.domain.enums import RequestStatus, RequestType
 from cellcom_scraper.domain.interfaces.uow import UnitOfWork
+from cellcom_scraper.domain.exceptions.exceptions import handle_general_exception
+
 
 class PortInController(FastActController):
     def __init__(self, uow: UnitOfWork):
@@ -24,14 +24,11 @@ class PortInController(FastActController):
                     status="READY", scraper_id=1
                 )
         except Exception as e:
-            error_message = str(e)
-            error_type = type(e).__name__
-            error_traceback = traceback.format_exc()
-            full_error_message = (
-                f"Exception Type:"
-                f"{error_type}\n Message: {error_message}\n Traceback:\n{error_traceback}"
+            print(
+                handle_general_exception(
+                    e, "Requests fetch on Port In Controller failed"
+                )
             )
-            logging.error(full_error_message)
 
     def execute(self):
         self._get_requests()
@@ -56,7 +53,7 @@ class PortInController(FastActController):
                             self.click_screen_close_button()
                     except CloseButtonNotFoundException as e:
                         self.driver.close()
-                        self.strategy.handle_errors(
+                        self.handle_errors(
                             error_description=e.message,
                             send_sms="no",
                             send_client_sms="no",
@@ -70,27 +67,19 @@ class PortInController(FastActController):
                             self._update_request_status(
                                 request=request, status=RequestStatus.ERROR
                             )
-                            self.strategy.handle_errors(
+                            self.handle_errors(
                                 error_description=e.message,
                                 send_sms="yes",
                                 send_client_sms="yes",
                             )
                         else:
-                            self.strategy.handle_errors(
+                            self.handle_errors(
                                 error_description=e.message, send_sms="no"
                             )
                     except Exception as e:
                         message = "Another type of exception occurred please check what happened"
-                        error_message = str(e)
-                        error_type = type(e).__name__
-                        error_traceback = traceback.format_exc()
-                        full_error_message = (
-                            f"Exception Type:"
-                            f"{error_type}\n Message: {error_message}\n Traceback:\n{error_traceback}"
-                        )
-                        logging.error(full_error_message)
-                        logging.error(message)
-                        print(full_error_message)
-            
+                        print(handle_general_exception(e, message))
+
             time.sleep(60)
             self._get_requests()
+        self.driver.quit()

@@ -7,6 +7,7 @@ from cellcom_scraper.application.processor import Processor
 from cellcom_scraper.domain.entities.account import AccountEntity
 from cellcom_scraper.domain.exceptions import ApplicationException
 from cellcom_scraper.infrastructure.sqlalchemy.default_uow import DefaultUnitOfWork
+from cellcom_scraper.domain.exceptions.exceptions import handle_general_exception
 
 
 class Main:
@@ -21,17 +22,8 @@ class Main:
             logging.error(e.message)
             print(e.message)
         except Exception as e:
-            message = "Another type of exception occurred please check what happened"
-            error_message = str(e)
-            error_type = type(e).__name__
-            error_traceback = traceback.format_exc()
-            full_error_message = (
-                f"Exception Type:"
-                f"{error_type}\n Message: {error_message}\n Traceback:\n{error_traceback}"
-            )
-            logging.error(full_error_message)
-            logging.error(message)
-            print(full_error_message)
+            message = "Another type of exception occurred at start"
+            print(handle_general_exception(e, message))
 
     @staticmethod
     def get_credentials():
