@@ -73,6 +73,7 @@ class PortInController(FastActController):
                                 send_client_sms="yes",
                             )
                         else:
+                            tries = tries + 1
                             self.handle_errors(
                                 error_description=e.message, send_sms="no"
                             )
