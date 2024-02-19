@@ -100,7 +100,7 @@ class FastActController(BaseController):
             message = "Failed during FastAct login"
             logging.error(e)
             logging.error(message)
-            self.driver.close()
+            self.driver.quit()
             raise NoItemFoundException(message)
 
     def click_screen_close_button(self):
