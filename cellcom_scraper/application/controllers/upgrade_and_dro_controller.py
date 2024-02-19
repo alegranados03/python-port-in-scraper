@@ -1,5 +1,4 @@
-import logging
-import traceback
+import time
 
 from cellcom_scraper.application.controllers.fast_act_controller import (
     FastActController,
@@ -71,3 +70,6 @@ class UpgradeAndDroController(FastActController):
                     full_error_message = handle_general_exception(e, message)
                     print(full_error_message)
                     self.handle_errors(description=message, details=full_error_message)
+
+            time.sleep(30)
+            self._get_requests()
