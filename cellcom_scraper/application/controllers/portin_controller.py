@@ -52,13 +52,14 @@ class PortInController(FastActController):
                         if self.webdriver_is_active():
                             self.click_screen_close_button()
                     except CloseButtonNotFoundException as e:
-                        self.driver.close()
                         self.handle_errors(
                             error_description=e.message,
                             send_sms="no",
                             send_client_sms="no",
                         )
+                        self.driver.close()
                     except ApplicationException as e:
+                        tries = tries + 1
                         for error in FORCE_STOP_ERRORS:
                             if error in str(e):
                                 tries = MAX_ATTEMPTS
@@ -67,19 +68,26 @@ class PortInController(FastActController):
                             self._update_request_status(
                                 request=request, status=RequestStatus.ERROR
                             )
+                        self.handle_errors(
+                            error_description=e.message,
+                            send_sms="yes",
+                            send_client_sms="yes",
+                        )
+                        try:
+                            if self.webdriver_is_active():
+                                self.click_screen_close_button()
+                        except CloseButtonNotFoundException as e:
                             self.handle_errors(
                                 error_description=e.message,
-                                send_sms="yes",
-                                send_client_sms="yes",
+                                send_sms="no",
+                                send_client_sms="no",
                             )
-                        else:
-                            tries = tries + 1
-                            self.handle_errors(
-                                error_description=e.message, send_sms="no"
-                            )
+                            self.driver.close()
                     except Exception as e:
+                        tries = tries + 1
                         message = "Another type of exception occurred please check what happened"
                         print(handle_general_exception(e, message))
+                    
 
             time.sleep(60)
             self._get_requests()

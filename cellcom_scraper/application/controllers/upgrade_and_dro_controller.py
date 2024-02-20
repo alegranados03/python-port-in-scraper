@@ -54,6 +54,7 @@ class UpgradeAndDroController(FastActController):
                     self.driver.close()
                     self.handle_errors(description=e.message, details=e.traceback)
                 except ApplicationException as e:
+                    tries = tries + 1
                     for error in FORCE_STOP_ERRORS:
                         if error in str(e):
                             tries = UPGRADE_AND_DRO_MAX_ATTEMPTS
@@ -63,7 +64,14 @@ class UpgradeAndDroController(FastActController):
                             request=request, status=RequestStatus.ERROR
                         )
                     self.handle_errors(description=e.message, details=e.traceback)
+                    try:
+                        if self.webdriver_is_active():
+                            self.click_screen_close_button()
+                    except CloseButtonNotFoundException as e:
+                        self.handle_errors(description=request.type + message, details=e.traceback)
+                        self.driver.close()
                 except Exception as e:
+                    tries = tries + 1
                     message = (
                         "Another type of exception occurred please check what happened"
                     )

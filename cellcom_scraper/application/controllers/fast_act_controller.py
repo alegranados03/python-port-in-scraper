@@ -20,7 +20,7 @@ from cellcom_scraper.domain.entities.process_queue_request import (
 )
 from cellcom_scraper.domain.exceptions import (
     ApplicationException,
-    NoItemFoundException,
+    LoginFailedException,
     CloseButtonNotFoundException,
 )
 from cellcom_scraper.domain.interfaces.automation_driver_builder import (
@@ -100,8 +100,8 @@ class FastActController(BaseController):
             message = "Failed during FastAct login"
             logging.error(e)
             logging.error(message)
-            self.driver.quit()
-            raise NoItemFoundException(message)
+            self.driver.close()
+            raise LoginFailedException(message)
 
     def click_screen_close_button(self):
         option_1 = (

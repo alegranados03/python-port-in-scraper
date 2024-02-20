@@ -76,3 +76,10 @@ def handle_general_exception(exception: Exception, message: str) -> str:
     logging.error(full_error_message)
     logging.error(message)
     return full_error_message
+
+
+class LoginFailedException(ApplicationException):
+    def __init__(self, message):
+        super().__init__(
+            f"Login failed: {message}", "SEC012"
+        )

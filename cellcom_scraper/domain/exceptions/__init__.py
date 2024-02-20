@@ -3,6 +3,7 @@ from cellcom_scraper.domain.exceptions.exceptions import (
     CloseButtonNotFoundException,
     ForcedStopException,
     NoItemFoundException,
+    LoginFailedException,
     PortInNumberException,
     SimExtractionException,
     UnknownConfigurationException,
