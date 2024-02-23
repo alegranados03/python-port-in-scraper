@@ -112,7 +112,7 @@ class FastActController(BaseController):
         )
 
         close_options = [option_1, option_2]
-
+        close = None
         for option in close_options:
             try:
                 close = self.wait30.until(
