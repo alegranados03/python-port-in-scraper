@@ -68,7 +68,9 @@ class UpgradeAndDroController(FastActController):
                         if self.webdriver_is_active():
                             self.click_screen_close_button()
                     except CloseButtonNotFoundException as e:
-                        self.handle_errors(description=request.type + message, details=e.traceback)
+                        self.handle_errors(
+                            description=request.type + message, details=e.traceback
+                        )
                         self.driver.close()
                 except Exception as e:
                     tries = tries + 1

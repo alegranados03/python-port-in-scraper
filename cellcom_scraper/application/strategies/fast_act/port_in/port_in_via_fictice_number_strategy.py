@@ -175,7 +175,7 @@ class PortInViaFicticeNumberStrategy(BellFastActBaseStrategy):
         except (NoSuchElementException, TimeoutException) as e:
             message = "Failed during fictice number port in strategy"
             logging.error(e)
-            logging.error(message)  
+            logging.error(message)
             raise NoItemFoundException(e.msg)
 
     def execute(self):

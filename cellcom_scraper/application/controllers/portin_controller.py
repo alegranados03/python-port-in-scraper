@@ -88,7 +88,6 @@ class PortInController(FastActController):
                         message = "Another type of exception occurred please check what happened"
                         print(handle_general_exception(e, message))
                         self.driver.close()
-                    
 
             time.sleep(60)
             self._get_requests()

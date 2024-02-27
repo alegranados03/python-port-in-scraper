@@ -27,7 +27,7 @@ from cellcom_scraper.domain.interfaces.automation_driver_builder import (
     AutomationDriverBuilder,
 )
 from cellcom_scraper.domain.interfaces.uow import UnitOfWork
-from selenium.webdriver.common.alert import Alert 
+from selenium.webdriver.common.alert import Alert
 from selenium.common.exceptions import NoAlertPresentException
 
 
@@ -138,7 +138,6 @@ class FastActController(BaseController):
                 message = f"{option} button not found"
                 logging.error(e)
                 logging.error(message)
-
 
         if not close:
             raise CloseButtonNotFoundException(message)
