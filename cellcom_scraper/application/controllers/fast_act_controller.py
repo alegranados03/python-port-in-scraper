@@ -27,6 +27,8 @@ from cellcom_scraper.domain.interfaces.automation_driver_builder import (
     AutomationDriverBuilder,
 )
 from cellcom_scraper.domain.interfaces.uow import UnitOfWork
+from selenium.webdriver.common.alert import Alert 
+from selenium.common.exceptions import NoAlertPresentException
 
 
 class FastActController(BaseController):
@@ -124,11 +126,18 @@ class FastActController(BaseController):
                     )
                 )
                 close.click()
+
+                try:
+                    alert = self.wait30.until(ec.alert_is_present())
+                    alert.accept()
+                except NoAlertPresentException:
+                    pass
                 break
             except (NoSuchElementException, TimeoutException) as e:
                 message = f"{option} button not found"
                 logging.error(e)
                 logging.error(message)
+
 
         if not close:
             raise CloseButtonNotFoundException(message)
