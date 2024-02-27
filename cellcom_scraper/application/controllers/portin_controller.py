@@ -34,6 +34,7 @@ class PortInController(FastActController):
         self._get_requests()
         while self.requests:
             for request in self.requests:
+                self.set_environment()
                 request_type: RequestType = RequestType(request.type)
                 self.set_strategy(request_type)
                 self.strategy.set_driver(self.builder.get_driver())
@@ -41,7 +42,6 @@ class PortInController(FastActController):
                 self.strategy.set_aws_id(request.aws_id)
                 tries = 0
                 while tries < MAX_ATTEMPTS:
-                    self.set_environment()
                     try:
                         self.strategy.execute()
                         self.handle_results()
