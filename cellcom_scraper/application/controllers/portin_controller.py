@@ -68,11 +68,11 @@ class PortInController(FastActController):
                             self._update_request_status(
                                 request=request, status=RequestStatus.ERROR
                             )
-                        self.handle_errors(
-                            error_description=e.message,
-                            send_sms="yes",
-                            send_client_sms="yes",
-                        )
+                            self.handle_errors(
+                                error_description=e.message,
+                                send_sms="yes",
+                                send_client_sms="yes",
+                            )
                         try:
                             if self.webdriver_is_active():
                                 self.click_screen_close_button()
@@ -87,6 +87,7 @@ class PortInController(FastActController):
                         tries = tries + 1
                         message = "Another type of exception occurred please check what happened"
                         print(handle_general_exception(e, message))
+                        self.driver.close()
                     
 
             time.sleep(60)

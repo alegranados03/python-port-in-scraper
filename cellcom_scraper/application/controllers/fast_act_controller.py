@@ -129,6 +129,7 @@ class FastActController(BaseController):
 
                 try:
                     alert = self.wait30.until(ec.alert_is_present())
+                    time.sleep(5)
                     alert.accept()
                 except NoAlertPresentException:
                     pass

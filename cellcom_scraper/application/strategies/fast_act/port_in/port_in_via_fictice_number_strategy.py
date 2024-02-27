@@ -1,6 +1,7 @@
 import logging
 
 from mediatr import Mediator
+from selenium.common.exceptions import NoSuchElementException, TimeoutException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as ec
 from selenium.webdriver.support.select import Select
@@ -17,6 +18,7 @@ from cellcom_scraper.domain.entities.process_queue_request import (
 )
 from cellcom_scraper.domain.exceptions import (
     PortInNumberException,
+    NoItemFoundException,
     UnknownFictiveNumberPortInException,
 )
 
@@ -170,12 +172,11 @@ class PortInViaFicticeNumberStrategy(BellFastActBaseStrategy):
             )
 
             quick_submit_button.click()
-
-        except Exception as e:
+        except (NoSuchElementException, TimeoutException) as e:
             message = "Failed during fictice number port in strategy"
             logging.error(e)
-            logging.error(message)
-            raise e
+            logging.error(message)  
+            raise NoItemFoundException(e.msg)
 
     def execute(self):
         query: GetFictiveNumberPortIn = GetFictiveNumberPortIn(
