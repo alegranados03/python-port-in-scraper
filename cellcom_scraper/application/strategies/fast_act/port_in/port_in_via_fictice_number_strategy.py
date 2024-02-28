@@ -176,7 +176,7 @@ class PortInViaFicticeNumberStrategy(BellFastActBaseStrategy):
             message = "Failed during fictice number port in strategy"
             logging.error(e)
             logging.error(message)
-            raise NoItemFoundException(e.msg)
+            raise NoItemFoundException(message)
 
     def execute(self):
         query: GetFictiveNumberPortIn = GetFictiveNumberPortIn(
