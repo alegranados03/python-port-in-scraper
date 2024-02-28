@@ -34,30 +34,31 @@ class PortInController(FastActController):
         self._get_requests()
         while self.requests:
             for request in self.requests:
-                self.set_environment()
                 request_type: RequestType = RequestType(request.type)
                 self.set_strategy(request_type)
-                self.strategy.set_driver(self.builder.get_driver())
                 self.strategy.set_phone_number(request.number_to_port)
                 self.strategy.set_aws_id(request.aws_id)
                 tries = 0
                 while tries < MAX_ATTEMPTS:
                     try:
+                        self.set_environment()
+                        self.strategy.set_driver(self.builder.get_driver())
                         self.strategy.execute()
                         self.handle_results()
                         tries = MAX_ATTEMPTS + 1
                         self._update_request_status(
                             request=request, status=RequestStatus.FINISHED
                         )
-                        if self.webdriver_is_active():
-                            self.click_screen_close_button()
-                    except CloseButtonNotFoundException as e:
-                        self.handle_errors(
-                            error_description=e.message,
-                            send_sms="no",
-                            send_client_sms="no",
-                        )
-                        self.driver.close()
+                        try:
+                            if self.webdriver_is_active():
+                                self.click_screen_close_button()
+                        except CloseButtonNotFoundException as e:
+                            self.handle_errors(
+                                error_description=e.message,
+                                send_sms="yes",
+                                send_client_sms="no",
+                            )
+                            self.driver.close()
                     except ApplicationException as e:
                         tries = tries + 1
                         for error in FORCE_STOP_ERRORS:
@@ -69,7 +70,7 @@ class PortInController(FastActController):
                                 request=request, status=RequestStatus.ERROR
                             )
                             self.handle_errors(
-                                error_description=e.message,
+                                error_description=f"After max attempts error: {e.message}",
                                 send_sms="yes",
                                 send_client_sms="yes",
                             )
@@ -78,7 +79,7 @@ class PortInController(FastActController):
                                 self.click_screen_close_button()
                         except CloseButtonNotFoundException as e:
                             self.handle_errors(
-                                error_description=e.message,
+                                error_description=f"After error: {e.message}",
                                 send_sms="no",
                                 send_client_sms="no",
                             )

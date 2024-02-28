@@ -75,7 +75,7 @@ def handle_general_exception(exception: Exception, message: str) -> str:
     )
     logging.error(full_error_message)
     logging.error(message)
-    return full_error_message
+    return message + full_error_message
 
 
 class LoginFailedException(ApplicationException):
