@@ -33,15 +33,15 @@ class UpgradeAndDroController(FastActController):
     def execute(self):
         self._get_requests()
         for request in self.requests:
-            self.set_environment()
             request_type: RequestType = RequestType(request.type)
             self.set_strategy(request_type)
-            self.strategy.set_driver(self.builder.get_driver())
             self.strategy.set_phone_number(request.number_to_port)
             self.strategy.set_aws_id(request.aws_id)
             tries = 0
             while tries < UPGRADE_AND_DRO_MAX_ATTEMPTS:
                 try:
+                    self.set_environment()
+                    self.strategy.set_driver(self.builder.get_driver())
                     self.strategy.execute()
                     self.handle_results()
                     tries = UPGRADE_AND_DRO_MAX_ATTEMPTS + 1
