@@ -69,11 +69,11 @@ class PortInController(FastActController):
                             self._update_request_status(
                                 request=request, status=RequestStatus.ERROR
                             )
-                            self.handle_errors(
-                                error_description=f"After max attempts error: {e.message}",
-                                send_sms="yes",
-                                send_client_sms="yes",
-                            )
+                        self.handle_errors(
+                            error_description=f"Error ocurred: attempt {tries} {e.message}",
+                            send_sms="yes",
+                            send_client_sms="yes" if tries == MAX_ATTEMPTS else "no",
+                        )
                         try:
                             if self.webdriver_is_active():
                                 self.click_screen_close_button()
