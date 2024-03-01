@@ -1,10 +1,9 @@
-from typing import Optional
-
 import logging
+import random
 import re
 import time
-import random
 from datetime import datetime
+from typing import Optional
 
 from selenium.common.exceptions import NoSuchElementException, TimeoutException
 from selenium.webdriver.common.by import By
@@ -13,10 +12,8 @@ from selenium.webdriver.support import expected_conditions as ec
 from cellcom_scraper.application.strategies.fast_act.base_bellfast_strategy import (
     BellFastActBaseStrategy,
 )
-from cellcom_scraper.domain.exceptions import (
-    NoItemFoundException,
-)
 from cellcom_scraper.config import UPGRADE_AND_DRO_AWS_SERVER
+from cellcom_scraper.domain.exceptions import NoItemFoundException
 
 
 class UpgradeAndDroStrategy(BellFastActBaseStrategy):
@@ -74,11 +71,13 @@ class UpgradeAndDroStrategy(BellFastActBaseStrategy):
             except (NoSuchElementException, TimeoutException) as e:
                 pass  # No error displayed
 
-
             section = self.wait10.until(
-                ec.presence_of_element_located((
-                    By.XPATH,"//body/div[@id='instant_activation']/div[2]/div[1]/div[1]/div[4]/form[1]/div[1]/div[3]/div[1]"
-                ))
+                ec.presence_of_element_located(
+                    (
+                        By.XPATH,
+                        "//body/div[@id='instant_activation']/div[2]/div[1]/div[1]/div[4]/form[1]/div[1]/div[3]/div[1]",
+                    )
+                )
             )
             self.driver.execute_script("arguments[0].scrollIntoView(true);", section)
 
@@ -113,7 +112,7 @@ class UpgradeAndDroStrategy(BellFastActBaseStrategy):
             except Exception as e:
                 self.dro = "No"
                 return
-            
+
             try:
                 device_description = self.wait30.until(
                     ec.visibility_of_element_located(
@@ -132,12 +131,12 @@ class UpgradeAndDroStrategy(BellFastActBaseStrategy):
                     )
                 )
                 due_date = self.wait30.until(
-                        ec.visibility_of_element_located(
-                            (
-                                By.XPATH,
-                                "/html[1]/body[1]/div[1]/div[2]/div[1]/div[1]/div[4]/form[1]/div[1]/div[3]/div[2]/div[1]/div[2]/div[1]/ul[1]/div[1]/div[2]/div[1]/li[3]/div[2]",
-                            )
+                    ec.visibility_of_element_located(
+                        (
+                            By.XPATH,
+                            "/html[1]/body[1]/div[1]/div[2]/div[1]/div[1]/div[4]/form[1]/div[1]/div[3]/div[2]/div[1]/div[2]/div[1]/ul[1]/div[1]/div[2]/div[1]/li[3]/div[2]",
                         )
+                    )
                 )
 
                 details = (
@@ -156,10 +155,9 @@ class UpgradeAndDroStrategy(BellFastActBaseStrategy):
             raise NoItemFoundException(message)
 
     def execute(self):
-        super().execute()
         self.check_upgrade_and_dro_status()
 
-    def handle_results(self, aws_id: int):
+    def handle_results(self):
         screenshot = self.take_screenshot()
         data = {
             "screenshot": screenshot["screenshot"],
@@ -168,8 +166,18 @@ class UpgradeAndDroStrategy(BellFastActBaseStrategy):
             "details": self.details,
             "description": "system completed the request",
         }
-        endpoint: str = f"phones/{aws_id}/logs/info"
+        endpoint: str = f"phones/{self.aws_id}/logs/info"
         self.send_to_aws(data, endpoint)
+
+    def handle_errors(self, *, description: str, details=""):
+        screenshot: dict = self.take_screenshot()
+        payload = {
+            "description": description,
+            "screenshot": screenshot["screenshot"],
+            "details": details,
+        }
+        endpoint: str = f"phones/{self.aws_id}/logs/error"
+        self.send_to_aws(data=payload, endpoint=endpoint)
 
     @staticmethod
     def extract_date(text):

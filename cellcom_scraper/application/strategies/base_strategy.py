@@ -1,8 +1,7 @@
 import base64
+import json
 import logging
 import os
-
-import json
 from datetime import datetime
 from typing import Any, Optional
 
@@ -26,6 +25,7 @@ class BaseScraperStrategy(Strategy):
         self.results: Any = None
         self.request_adapter: Any = None
         self.response_server_url: Optional[str] = None
+        self.aws_id: Optional[int] = None
 
     def set_credentials(self, credentials: AccountEntity):
         self.credentials = credentials
@@ -40,14 +40,17 @@ class BaseScraperStrategy(Strategy):
     def set_phone_number(self, phone_number: str):
         self.phone_number = phone_number
 
-    def login(self):
+    def handle_results(self):
+        raise NotImplementedError
+
+    def handle_errors(self):
         raise NotImplementedError
 
     def execute(self):
-        self.login()
-
-    def handle_results(self, aws_id: int):
         raise NotImplementedError
+
+    def set_aws_id(self, aws_id: int):
+        self.aws_id = aws_id
 
     def send_to_aws(self, data: dict, endpoint: str):
         try:
@@ -71,7 +74,7 @@ class BaseScraperStrategy(Strategy):
         except requests.RequestException as e:
             logging.error(f"Request to AWS failed: {e}")
 
-    def take_screenshot(self):
+    def take_screenshot(self) -> dict:
         path = os.getcwd()
         dt = datetime.now().strftime("%Y%m%d %H%M%S").split(" ")
         filename = "_".join([dt[0], self.phone_number, dt[1]])

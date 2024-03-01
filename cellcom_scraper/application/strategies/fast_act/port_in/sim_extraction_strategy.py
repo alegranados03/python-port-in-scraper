@@ -1,11 +1,12 @@
+from selenium.common.exceptions import NoSuchElementException, TimeoutException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as ec
 
 from cellcom_scraper.application.strategies.fast_act.base_bellfast_strategy import (
     BellFastActBaseStrategy,
 )
-from cellcom_scraper.domain.exceptions import SimExtractionException
 from cellcom_scraper.config import PORT_IN_AWS_SERVER
+from cellcom_scraper.domain.exceptions import SimExtractionException
 
 
 class SimExtractionStrategy(BellFastActBaseStrategy):
@@ -56,7 +57,7 @@ class SimExtractionStrategy(BellFastActBaseStrategy):
             )
             button_next.click()
 
-        except Exception:
+        except (NoSuchElementException, TimeoutException) as e:
             raise SimExtractionException("Failed searching SIM number")
 
         try:
@@ -115,17 +116,33 @@ class SimExtractionStrategy(BellFastActBaseStrategy):
         return sim_generic_xpath % values
 
     def execute(self):
-        super().execute()
         self.search_sim_number()
         self.sim_number = self.get_sim_value()
 
-    def handle_results(self, aws_id: int):
+    def handle_results(self):
         sim_card: str = self.sim_number.strip()
         data: dict = {
             "response": "Finished successfully",
             "result": "Ok",
-            "process_id": aws_id,
+            "process_id": self.aws_id,
             "sim_card": sim_card,
         }
         endpoint: str = "request-sim-confirmation"
+        self.send_to_aws(data, endpoint)
+
+    def handle_errors(
+        self, *, error_description, send_sms, send_client_sms="no", error_log=""
+    ):
+        screenshot: dict = self.take_screenshot()
+        data: dict = {
+            "error_description": error_description,
+            "error_log": error_log,
+            "result": "Fail",
+            "process_id": self.aws_id,
+            "error_filename": screenshot["filename"],
+            "error_screenshot": screenshot["screenshot"],
+            "send_sms": send_sms,
+            "send_client_sms": send_client_sms,
+        }
+        endpoint: str = "report-errors"
         self.send_to_aws(data, endpoint)

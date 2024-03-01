@@ -1,3 +1,5 @@
+import time
+
 from selenium import webdriver
 
 from cellcom_scraper.application.enums import NavigatorWebDriverType
@@ -47,4 +49,5 @@ class FirefoxDriverBuilder(AutomationDriverBuilder):
     def initialize_driver(self):
         driver = webdriver.Firefox(options=self.options)
         self.driver = driver
+        time.sleep(5)
         self.driver.get(self.url)

@@ -53,7 +53,7 @@ FIREFOX_DRIVER_DEFAULT_CONFIGURATIONS: dict = {
         "useAutomationExtension": False,
         "toolkit.telemetry.reportingpolicy.firstRun": False,
         "webgl.disabled": True,
-        "media.peerconnection.enabled": False
+        "media.peerconnection.enabled": False,
     },
 }
 
@@ -64,7 +64,7 @@ EDGE_DRIVER_DEFAULT_CONFIGURATIONS: dict = {
         "--disable-blink-features=AutomationControlled",
         "--disable-infobars",
         "--disable-webgl",
-        "--disable-rtc-smoothness-algorithm"
+        "--disable-rtc-smoothness-algorithm",
     ],
     "experimental_options": {
         "excludeSwitches": ["enable-automation"],

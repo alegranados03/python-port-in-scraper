@@ -7,10 +7,7 @@ Create Date: 2024-02-03 08:05:05.311413
 """
 from typing import Sequence, Union
 
-from alembic import op
 import sqlalchemy as sa
-from typing import Sequence, Union
-
 from alembic import op
 from sqlalchemy import Boolean, Enum, Integer, String
 from sqlalchemy.sql import column, table

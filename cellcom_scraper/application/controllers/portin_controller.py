@@ -1,71 +1,100 @@
+import time
+
+from cellcom_scraper.application.controllers.fast_act_controller import (
+    FastActController,
+)
 from cellcom_scraper.config import FORCE_STOP_ERRORS, MAX_ATTEMPTS
-from cellcom_scraper.domain.exceptions import ApplicationException
-from cellcom_scraper.application.controllers.base_controller import BaseController
+from cellcom_scraper.domain.exceptions import (
+    ApplicationException,
+    CloseButtonNotFoundException,
+)
+from cellcom_scraper.domain.enums import RequestStatus, RequestType
+from cellcom_scraper.domain.interfaces.uow import UnitOfWork
+from cellcom_scraper.domain.exceptions.exceptions import handle_general_exception
 
-import logging
-import traceback
 
-class PortInController(BaseController):
-    def __init__(self) -> None:
-        super().__init__()
+class PortInController(FastActController):
+    def __init__(self, uow: UnitOfWork):
+        super().__init__(uow)
 
-    def execute(self, navigator_options=None) -> None:
-        tries = 0
-        while tries < MAX_ATTEMPTS:
-            tries += 1
-            self.builder.set_driver_options(options=navigator_options)
-            self.builder.initialize_driver()
-            self.strategy.set_driver(self.builder.get_driver())
-            self.strategy.set_phone_number(self.phone_number)
-            try:
-                self.strategy.execute()
-                self.handle_results()
-                tries = MAX_ATTEMPTS + 1
-            except ApplicationException as e:
-                for error in FORCE_STOP_ERRORS:
-                    if error in str(e):
-                        tries = MAX_ATTEMPTS
-                        break
-                if tries == MAX_ATTEMPTS:
-                    self.handle_error(
-                        error_description=e.message,
-                        send_sms="yes",
-                        send_client_sms="yes",
-                    )
-                    raise ApplicationException("Scraper request failed", "E001")
-                else:
-                    self.handle_error(error_description=e.message, send_sms="no")
-            except Exception as e:
-                message = (
-                    "Another type of exception occurred please check what happened"
+    def _get_requests(self) -> None:
+        try:
+            with self.uow:
+                self.requests = self.uow.get_repository("process_requests").filter(
+                    status="READY", scraper_id=1
                 )
-                error_message = str(e)
-                error_type = type(e).__name__
-                error_traceback = traceback.format_exc()
-                full_error_message = (
-                    f"Exception Type:"
-                    f"{error_type}\n Message: {error_message}\n Traceback:\n{error_traceback}"
+        except Exception as e:
+            print(
+                handle_general_exception(
+                    e, "Requests fetch on Port In Controller failed"
                 )
-                logging.error(full_error_message)
-                logging.error(message)
-                self.handle_error(error_description=message, send_sms="yes", error_log=full_error_message)
+            )
 
-        driver = self.builder.get_driver()
-        driver.close()
+    def execute(self):
+        self._get_requests()
+        while self.requests:
+            for request in self.requests:
+                request_type: RequestType = RequestType(request.type)
+                self.set_strategy(request_type)
+                self.strategy.set_phone_number(request.number_to_port)
+                self.strategy.set_aws_id(request.aws_id)
+                tries = 0
+                while tries < MAX_ATTEMPTS:
+                    try:
+                        self.set_environment()
+                        self.strategy.set_driver(self.builder.get_driver())
+                        self.strategy.execute()
+                        self.handle_results()
+                        tries = MAX_ATTEMPTS + 1
+                        self._update_request_status(
+                            request=request, status=RequestStatus.FINISHED
+                        )
+                        try:
+                            if self.webdriver_is_active():
+                                self.click_screen_close_button()
+                        except CloseButtonNotFoundException as e:
+                            self.handle_errors(
+                                error_description=e.message,
+                                send_sms="yes",
+                                send_client_sms="no",
+                            )
+                            self.driver.close()
+                    except ApplicationException as e:
+                        tries = tries + 1
+                        for error in FORCE_STOP_ERRORS:
+                            if error in str(e):
+                                tries = MAX_ATTEMPTS
+                                break
+                        if tries == MAX_ATTEMPTS:
+                            self._update_request_status(
+                                request=request, status=RequestStatus.ERROR
+                            )
+                            self.handle_errors(
+                                error_description=f"After max attempts error: {e.message}",
+                                send_sms="yes",
+                                send_client_sms="yes",
+                            )
+                        try:
+                            if self.webdriver_is_active():
+                                self.click_screen_close_button()
+                        except CloseButtonNotFoundException as e:
+                            self.handle_errors(
+                                error_description=f"After error: {e.message}",
+                                send_sms="no",
+                                send_client_sms="no",
+                            )
+                            self.driver.close()
+                    except Exception as e:
+                        tries = tries + 1
+                        message = "Another type of exception occurred please check what happened"
+                        complete_error_message = handle_general_exception(e, message)
+                        print(complete_error_message)
+                        self.handle_errors(
+                                error_description=complete_error_message,
+                                send_sms="yes",
+                                send_client_sms="no",
+                            )
+                        self.driver.close()
 
-    def handle_error(
-        self, *, error_description, send_sms, send_client_sms="no", error_log=""
-    ):
-        screenshot: dict = self.strategy.take_screenshot()
-        data: dict = {
-            "error_description": error_description,
-            "error_log": error_log,
-            "result": "Fail",
-            "process_id": self.aws_id,
-            "error_filename": screenshot["filename"],
-            "error_screenshot": screenshot["screenshot"],
-            "send_sms": send_sms,
-            "send_client_sms": send_client_sms,
-        }
-        endpoint: str = "report-errors"
-        self.strategy.send_to_aws(data, endpoint)
+            time.sleep(60)
+            self._get_requests()

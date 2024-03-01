@@ -1,11 +1,13 @@
 import logging
 import os
+import traceback
 from datetime import datetime
 
 from cellcom_scraper.application.processor import Processor
-
 from cellcom_scraper.domain.entities.account import AccountEntity
+from cellcom_scraper.domain.exceptions import ApplicationException
 from cellcom_scraper.infrastructure.sqlalchemy.default_uow import DefaultUnitOfWork
+from cellcom_scraper.domain.exceptions.exceptions import handle_general_exception
 
 
 class Main:
@@ -15,16 +17,13 @@ class Main:
         credentials = self.get_credentials()
         processor = Processor(uow, credentials)
         try:
-            with uow:
-                processor.set_requests(
-                    uow.get_repository("process_requests").filter(status="READY")
-                )
             processor.start_processor()
+        except ApplicationException as e:
+            logging.error(e.message)
+            print(e.message)
         except Exception as e:
-            message = "Connection could be unavailable, please check database"
-            logging.error(message)
-            logging.error(e)
-            print(message)
+            message = "Another type of exception occurred at start"
+            print(handle_general_exception(e, message))
 
     @staticmethod
     def get_credentials():
@@ -38,6 +37,6 @@ class Main:
     def log_init_message():
         current_date = datetime.now()
         init_message = f"Scraper requests processor, execution start at: {current_date}"
-        logging.basicConfig(filename="./scrapers.log", level=logging.DEBUG)
+        logging.basicConfig(filename="./scrapers.log", level=logging.WARNING)
         # logging.info(init_message)
         return init_message

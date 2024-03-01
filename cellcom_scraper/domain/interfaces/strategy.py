@@ -19,19 +19,23 @@ class Strategy(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    def login(self):
-        raise NotImplementedError
-
-    @abstractmethod
     def execute(self):
         raise NotImplementedError
 
     @abstractmethod
-    def take_screenshot(self):
+    def take_screenshot(self) -> dict:
         raise NotImplementedError
 
     @abstractmethod
-    def handle_results(self, aws_id: int):
+    def handle_results(self) -> None:
+        raise NotImplementedError
+
+    @abstractmethod
+    def handle_errors(self, **kwargs) -> None:
+        raise NotImplementedError
+
+    @abstractmethod
+    def set_aws_id(self, aws_id: int):
         raise NotImplementedError
 
     @staticmethod
