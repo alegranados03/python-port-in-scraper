@@ -21,6 +21,7 @@ from cellcom_scraper.domain.exceptions import (
     NoItemFoundException,
     UnknownFictiveNumberPortInException,
 )
+from cellcom_scraper.domain.exceptions.exceptions import handle_general_exception
 
 
 class PortInViaFicticeNumberStrategy(BellFastActBaseStrategy):
@@ -97,15 +98,22 @@ class PortInViaFicticeNumberStrategy(BellFastActBaseStrategy):
 
             number_to_port_input.send_keys(configuration.number_to_port)
 
-            check_elegibility_button = self.wait30.until(
-                ec.presence_of_element_located(
-                    (
-                        By.XPATH,
-                        "/html[1]/body[1]/div[1]/div[2]/div[1]/div[2]/div[1]/div[4]/div[1]/div[2]/form[1]/div[3]/div[1]/div[3]/div[4]/div[1]/div[1]/div[1]/button[1]",
+            check_elegibility_path = "/html[1]/body[1]/div[1]/div[2]/div[1]/div[2]/div[1]/div[4]/div[1]/div[2]/form[1]/div[3]/div[1]/div[3]/div[4]/div[1]/div[1]/div[1]/button[1]"
+            try:
+                check_elegibility_button = self.wait30.until(
+                    ec.presence_of_element_located(
+                        (
+                            By.XPATH,
+                            check_elegibility_path,
+                        )
                     )
                 )
-            )
-            check_elegibility_button.click()
+                check_elegibility_button.click()
+            except Exception as e:
+                message = handle_general_exception(e)
+                logging.info(message)
+                message = f"{check_elegibility_path} check elegibility button not found"
+                raise NoItemFoundException(message=message)
 
             try:
                 error_message = self.wait10.until(
@@ -122,56 +130,63 @@ class PortInViaFicticeNumberStrategy(BellFastActBaseStrategy):
             if error_message is not None:
                 raise PortInNumberException(error_message.text)
 
-            current_billing_provider_dropdown = Select(
-                self.wait30.until(
-                    ec.presence_of_element_located(
-                        (
-                            By.XPATH,
-                            "//body/div[@id='instant_activation']/div[2]/div[1]/div[2]/div[1]/div[4]/div[1]/div[2]/form[1]/div[3]/div[1]/div[4]/div[1]/div[4]/div[2]/select[1]",
+            try:
+                current_billing_provider_dropdown = Select(
+                    self.wait30.until(
+                        ec.presence_of_element_located(
+                            (
+                                By.XPATH,
+                                "//body/div[@id='instant_activation']/div[2]/div[1]/div[2]/div[1]/div[4]/div[1]/div[2]/form[1]/div[3]/div[1]/div[4]/div[1]/div[4]/div[2]/select[1]",
+                            )
                         )
                     )
                 )
-            )
-            current_billing_provider_dropdown.select_by_value(
-                configuration.current_billing_provider_value
-            )
-
-            account_number_input = self.wait10.until(
-                ec.presence_of_element_located(
-                    (By.XPATH, "//input[@id='accountNumber']")
+                current_billing_provider_dropdown.select_by_value(
+                    configuration.current_billing_provider_value
                 )
-            )
 
-            account_number_input.send_keys(
-                configuration.current_provider_account_number
-            )
-
-            customer_authorization = self.wait10.until(
-                ec.presence_of_element_located(
-                    (
-                        By.XPATH,
-                        "//body/div[@id='instant_activation']/div[2]/div[1]/div[2]/div[1]/div[4]/div[1]/div[2]/form[1]/div[3]/div[1]/div[4]/div[1]/div[10]/div[2]/input[1]",
+                account_number_input = self.wait10.until(
+                    ec.presence_of_element_located(
+                        (By.XPATH, "//input[@id='accountNumber']")
                     )
                 )
-            )
-            customer_authorization.click()
 
-            customer_name_input = self.wait10.until(
-                ec.presence_of_element_located(
-                    (
-                        By.XPATH,
-                        "//body/div[@id='instant_activation']/div[2]/div[1]/div[2]/div[1]/div[4]/div[1]/div[2]/form[1]/div[3]/div[1]/div[4]/div[1]/div[11]/div[2]/input[1]",
+                account_number_input.send_keys(
+                    configuration.current_provider_account_number
+                )
+
+                customer_authorization = self.wait10.until(
+                    ec.presence_of_element_located(
+                        (
+                            By.XPATH,
+                            "//body/div[@id='instant_activation']/div[2]/div[1]/div[2]/div[1]/div[4]/div[1]/div[2]/form[1]/div[3]/div[1]/div[4]/div[1]/div[10]/div[2]/input[1]",
+                        )
                     )
                 )
-            )
+                customer_authorization.click()
 
-            customer_name_input.send_keys(configuration.client_authorization_name)
+                customer_name_input = self.wait10.until(
+                    ec.presence_of_element_located(
+                        (
+                            By.XPATH,
+                            "//body/div[@id='instant_activation']/div[2]/div[1]/div[2]/div[1]/div[4]/div[1]/div[2]/form[1]/div[3]/div[1]/div[4]/div[1]/div[11]/div[2]/input[1]",
+                        )
+                    )
+                )
 
-            quick_submit_button = self.wait10.until(
-                ec.presence_of_element_located((By.XPATH, "//button[@id='fSubmitBtn']"))
-            )
+                customer_name_input.send_keys(configuration.client_authorization_name)
 
-            quick_submit_button.click()
+                quick_submit_button = self.wait10.until(
+                    ec.presence_of_element_located((By.XPATH, "//button[@id='fSubmitBtn']"))
+                )
+
+                quick_submit_button.click()
+            except (NoSuchElementException, TimeoutException) as e:
+                message = "Final port in form not found"
+                logging.error(e)
+                logging.error(message)
+                raise NoItemFoundException(message)
+
         except (NoSuchElementException, TimeoutException) as e:
             message = "Failed during fictice number port in strategy"
             logging.error(e)
