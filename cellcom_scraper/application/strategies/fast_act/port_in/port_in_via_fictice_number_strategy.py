@@ -101,7 +101,7 @@ class PortInViaFicticeNumberStrategy(BellFastActBaseStrategy):
                 ec.presence_of_element_located(
                     (
                         By.XPATH,
-                        "//body/div[@id='instant_activation']/div[2]/div[1]/div[2]/div[1]/div[4]/div[1]/div[2]/form[1]/div[3]/div[1]/div[3]/div[4]/div[1]/div[1]/div[1]/button[1]",
+                        "/html[1]/body[1]/div[1]/div[2]/div[1]/div[2]/div[1]/div[4]/div[1]/div[2]/form[1]/div[3]/div[1]/div[3]/div[4]/div[1]/div[1]/div[1]/button[1]",
                     )
                 )
             )
