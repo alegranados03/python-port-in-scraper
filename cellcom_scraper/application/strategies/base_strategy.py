@@ -53,22 +53,22 @@ class BaseScraperStrategy(Strategy):
         self.aws_id = aws_id
 
     def send_to_aws(self, data: dict, endpoint: str):
+        complete_uri = f"{self.response_server_url}/{endpoint}"
         try:
-            response = requests.post(
-                f"{self.response_server_url}/{endpoint}", json=data, timeout=20
-            )
+            response = requests.post(complete_uri, json=data, timeout=60)
 
             if response.status_code == 200:
-                logging.info("Request to AWS sent successfully")
+                logging.info(f"Request to AWS {complete_uri} sent successfully")
             else:
                 # Intenta parsear la respuesta como JSON
                 error_info = response.json()
-                error_message = f"Request to AWS failed with status code {response.status_code}: {error_info}"
+                error_message = f"Request to AWS {complete_uri} failed with status code {response.status_code}: {error_info}"
+                endpoint: self.re
                 logging.error(error_message)
 
         except json.JSONDecodeError:
             logging.error(
-                f"Request to AWS failed with status code {response.status_code}: {response.text}"
+                f"Request to AWS {complete_uri} failed with status code {response.status_code}: {response.text}"
             )
 
         except requests.RequestException as e:
