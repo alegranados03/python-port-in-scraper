@@ -1,4 +1,5 @@
 import time
+import logging
 
 from cellcom_scraper.application.controllers.fast_act_controller import (
     FastActController,
@@ -52,7 +53,6 @@ class UpgradeAndDroController(FastActController):
                         self.click_screen_close_button()
                 except CloseButtonNotFoundException as e:
                     self.driver.close()
-                    self.handle_errors(description=e.message, details=e.traceback)
                 except ApplicationException as e:
                     tries = tries + 1
                     for error in FORCE_STOP_ERRORS:
@@ -63,23 +63,21 @@ class UpgradeAndDroController(FastActController):
                         self._update_request_status(
                             request=request, status=RequestStatus.ERROR
                         )
-                    self.handle_errors(description=e.message, details=e.traceback)
+                        self.handle_errors(description=e.message, details=e.traceback)
                     try:
                         if self.webdriver_is_active():
                             self.click_screen_close_button()
                     except CloseButtonNotFoundException as e:
-                        self.handle_errors(
-                            description=request.type + message, details=e.traceback
-                        )
                         self.driver.close()
                 except Exception as e:
                     tries = tries + 1
                     message = (
-                        "Another type of exception occurred please check what happened"
+                        "Another type of exception occurred please report this to the administrator"
                     )
                     full_error_message = handle_general_exception(e, message)
                     print(full_error_message)
-                    self.handle_errors(description=message, details=full_error_message)
+                    logging.error(full_error_message)
+                    #self.handle_errors(description=message, details=full_error_message)
 
             time.sleep(30)
             self._get_requests()
