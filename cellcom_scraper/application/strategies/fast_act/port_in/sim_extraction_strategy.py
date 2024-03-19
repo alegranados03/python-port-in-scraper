@@ -109,6 +109,26 @@ class SimExtractionStrategy(BellFastActBaseStrategy):
             raise SimExtractionException("SIM number not found")
         return sim_card
 
+    def get_sim_value2(self):
+        users = self.driver.find_elements(By.CSS_SELECTOR, '#user_data')
+        for user in users:
+            labels = user.find_elements(By.CLASS_NAME, 'fLabel2')
+            for label in labels:
+                if 'Phone Number:' in label.text:
+                    phone_number_element = label.find_element(By.XPATH, 'following-sibling::div[@class="fWidget"]')
+                    phone_number = phone_number_element.text.strip().replace("(", "").replace(")", "").replace(" ", "").replace("-", "")
+
+                    if self.remove_phone_number_format(phone_number) == self.phone_number:
+                        sim_label = user.find_element(By.XPATH, ".//div[contains(., 'SIM:')]/following-sibling::div[@class='fWidget']")
+                        sim_number = sim_label.text.strip()
+                        return sim_number
+        return None
+
+    @staticmethod
+    def remove_phone_number_format(phone_number: str):
+        phone_number = phone_number.replace("(", "").replace(")", "").replace(" ", "").replace("-", "")
+        return phone_number.strip()
+
     @staticmethod
     def get_sim_field_xpath(div1: str, div2: str, div3: str):
         sim_generic_xpath = "/html[1]/body[1]/div[1]/div[2]/div[1]/div[2]/div[1]/div[3]/div[1]/div[2]/form[1]/div[%(div1)s]/div[1]/div[1]/div[1]/div[%(div2)s]/div[%(div3)s]/div[2]"
@@ -117,7 +137,8 @@ class SimExtractionStrategy(BellFastActBaseStrategy):
 
     def execute(self):
         self.search_sim_number()
-        self.sim_number = self.get_sim_value()
+        self.sim_number = self.get_sim_value2()
+        # self.sim_number = self.get_sim_value()
 
     def handle_results(self):
         sim_card: str = self.sim_number.strip()
