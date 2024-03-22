@@ -108,7 +108,7 @@ class UpgradeAndDroStrategy(BellFastActBaseStrategy):
                 )
                 device_description_button.click()
                 self.dro = "Yes"
-                time.sleep(random.randint(5, 15))
+                #time.sleep(random.randint(5, 15))
             except Exception as e:
                 self.dro = "No"
                 return
