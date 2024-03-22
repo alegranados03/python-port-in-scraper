@@ -174,7 +174,7 @@ class UpgradeAndDroStrategy(BellFastActBaseStrategy):
         payload = {
             "description": description,
             "screenshot": screenshot["screenshot"],
-            "details": details,
+            "details": "",
         }
         endpoint: str = f"phones/{self.aws_id}/logs/error"
         self.send_to_aws(data=payload, endpoint=endpoint)
