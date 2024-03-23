@@ -96,7 +96,7 @@ class UpgradeAndDroStrategy(BellFastActBaseStrategy):
             elif "Eligible" == upgrade_status_text:
                 self.upgrade = "Yes"
             else:
-                self.upgrade = "Check"
+                self.upgrade = "No"
 
             # check dro
             try:
