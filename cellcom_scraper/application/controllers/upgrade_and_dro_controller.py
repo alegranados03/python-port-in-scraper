@@ -81,7 +81,7 @@ class UpgradeAndDroController(FastActController):
                         self._update_request_status(
                                 request=request, status=RequestStatus.ERROR
                             )
-                        #self.handle_errors(description=message, details=full_error_message)
+                        self.handle_errors(description=message, details=full_error_message)
 
             time.sleep(30)
             self._get_requests()
