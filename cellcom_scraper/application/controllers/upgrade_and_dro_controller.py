@@ -64,7 +64,9 @@ class UpgradeAndDroController(FastActController):
                             self._update_request_status(
                                 request=request, status=RequestStatus.ERROR
                             )
-                            self.handle_errors(description=e.message, details=e.traceback)
+                            self.handle_errors(
+                                description=e.message, details=e.traceback
+                            )
                         try:
                             if self.webdriver_is_active():
                                 self.click_screen_close_button()
@@ -72,16 +74,18 @@ class UpgradeAndDroController(FastActController):
                             self.driver.close()
                     except Exception as e:
                         tries = tries + 1
-                        message = (
-                            "Another type of exception occurred please report this to the administrator"
-                        )
+                        message = f"Another type of exception occurred for this request id: {request.id}, please report this to the administrator if it occurs more than one time"
                         full_error_message = handle_general_exception(e, message)
                         print(full_error_message)
+                        logging.error(message)
                         logging.error(full_error_message)
-                        self._update_request_status(
+                        if tries == UPGRADE_AND_DRO_MAX_ATTEMPTS:
+                            self._update_request_status(
                                 request=request, status=RequestStatus.ERROR
                             )
-                        self.handle_errors(description=message, details=full_error_message)
+                            self.handle_errors(
+                                description=message, details=full_error_message
+                            )
 
             time.sleep(30)
             self._get_requests()
