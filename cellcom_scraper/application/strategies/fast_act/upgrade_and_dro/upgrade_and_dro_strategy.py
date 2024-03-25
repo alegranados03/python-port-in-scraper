@@ -165,7 +165,7 @@ class UpgradeAndDroStrategy(BellFastActBaseStrategy):
             "screenshot": screenshot["screenshot"],
             "upgrade": self.upgrade,
             "device_return_option": self.dro,
-            "details": self.details,
+            "details": "",
             "description": "system completed the request",
         }
         endpoint: str = f"phones/{self.aws_id}/logs/info"
