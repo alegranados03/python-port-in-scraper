@@ -165,7 +165,7 @@ class UpgradeAndDroStrategy(BellFastActBaseStrategy):
             "screenshot": screenshot["screenshot"],
             "upgrade": self.upgrade,
             "device_return_option": self.dro,
-            "details": "",
+            "details": self.details,
             "description": "system completed the request",
         }
         endpoint: str = f"phones/{self.aws_id}/logs/info"
@@ -176,7 +176,7 @@ class UpgradeAndDroStrategy(BellFastActBaseStrategy):
         payload = {
             "description": description,
             "screenshot": screenshot["screenshot"],
-            "details": "",
+            "details": details,
         }
         endpoint: str = f"phones/{self.aws_id}/logs/error"
         self.send_to_aws(data=payload, endpoint=endpoint)
