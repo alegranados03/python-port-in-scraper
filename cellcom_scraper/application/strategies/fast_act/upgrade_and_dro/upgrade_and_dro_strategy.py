@@ -42,7 +42,7 @@ class UpgradeAndDroStrategy(BellFastActBaseStrategy):
             )
             mobile_number_field.send_keys(self.phone_number)
 
-            next_step_button = self.wait30.until(
+            next_step_button = self.wait10.until(
                 ec.presence_of_element_located(
                     (
                         By.XPATH,
@@ -54,7 +54,7 @@ class UpgradeAndDroStrategy(BellFastActBaseStrategy):
 
             # check if alert appears, if appears set upgrade = NO and DRO = NO
             try:
-                cant_open_profile_error = self.wait60.until(
+                cant_open_profile_error = self.wait10.until(
                     ec.presence_of_element_located(
                         (
                             By.XPATH,
@@ -81,7 +81,7 @@ class UpgradeAndDroStrategy(BellFastActBaseStrategy):
             )
             self.driver.execute_script("arguments[0].scrollIntoView(true);", section)
 
-            upgrade_status = self.wait30.until(
+            upgrade_status = self.wait10.until(
                 ec.presence_of_element_located(
                     (
                         By.XPATH,
@@ -100,7 +100,7 @@ class UpgradeAndDroStrategy(BellFastActBaseStrategy):
 
             # check dro
             try:
-                device_description_button = self.wait30.until(
+                device_description_button = self.wait10.until(
                     ec.presence_of_element_located(
                         (
                             By.XPATH,
@@ -116,7 +116,7 @@ class UpgradeAndDroStrategy(BellFastActBaseStrategy):
                 return
 
             try:
-                device_description = self.wait30.until(
+                device_description = self.wait10.until(
                     ec.visibility_of_element_located(
                         (
                             By.XPATH,
@@ -124,7 +124,7 @@ class UpgradeAndDroStrategy(BellFastActBaseStrategy):
                         )
                     )
                 )
-                deferred_amount = self.wait30.until(
+                deferred_amount = self.wait10.until(
                     ec.visibility_of_element_located(
                         (
                             By.XPATH,
@@ -132,7 +132,7 @@ class UpgradeAndDroStrategy(BellFastActBaseStrategy):
                         )
                     )
                 )
-                due_date = self.wait30.until(
+                due_date = self.wait10.until(
                     ec.visibility_of_element_located(
                         (
                             By.XPATH,
