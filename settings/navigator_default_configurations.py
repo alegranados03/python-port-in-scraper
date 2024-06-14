@@ -64,7 +64,9 @@ EDGE_DRIVER_DEFAULT_CONFIGURATIONS: dict = {
         "--disable-blink-features=AutomationControlled",
         "--disable-infobars",
         "--disable-webgl",
+        "--disable-dev-shm-usage",
         "--disable-rtc-smoothness-algorithm",
+        "--no-sandbox",
     ],
     "experimental_options": {
         "excludeSwitches": ["enable-automation"],
@@ -73,6 +75,7 @@ EDGE_DRIVER_DEFAULT_CONFIGURATIONS: dict = {
             "download.default_directory": DEFAULT_DOWNLOAD_FOLDER_PATH,
             "download.prompt_for_download": False,
             "download.directory_upgrade": True,
+            "profile.default_content_settings.popups": 0,
         },
     },
 }
