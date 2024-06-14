@@ -26,7 +26,7 @@ class UpgradeAndDroStrategy(BellFastActBaseStrategy):
 
     def check_upgrade_and_dro_status(self):
         try:
-            hardware_upgrade_link = self.wait10.until(
+            hardware_upgrade_link = self.wait120.until(
                 ec.presence_of_element_located(
                     (
                         By.XPATH,
