@@ -40,3 +40,7 @@ class Main:
         logging.basicConfig(filename="./scrapers.log", level=logging.WARNING)
         # logging.info(init_message)
         return init_message
+
+
+main = Main()
+main.start()

@@ -45,7 +45,7 @@ class Controller(ABC):
 
     @staticmethod
     @abstractmethod
-    def check_system_resources() -> bool:
+    def system_resources_limit_surpassed() -> bool:
         raise NotImplementedError
     
     @abstractmethod

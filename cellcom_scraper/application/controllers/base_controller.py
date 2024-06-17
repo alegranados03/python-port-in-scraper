@@ -1,4 +1,5 @@
 import psutil
+import logging
 import os
 
 from typing import List, Optional
@@ -69,17 +70,18 @@ class BaseController(Controller):
             return scraper
 
     @staticmethod  
-    def check_system_resources():
+    def system_resources_limit_surpassed():
         process = psutil.Process(os.getpid())
         cpu_usage = psutil.cpu_percent(interval=1)
         memory_usage = process.memory_info().rss / (1024 * 1024 * 1024)  # GB
 
-        max_cpu_usage = 90  # 90%
+        max_cpu_usage = 35  # 90%
         max_memory_usage = 0.5 * psutil.virtual_memory().total / (1024 * 1024 * 1024)  # 50% del total de memoria
 
         if cpu_usage > max_cpu_usage or memory_usage > max_memory_usage:
-            print(f"Resource limit exceeded. CPU: {cpu_usage}%, Memory: {memory_usage}GB")
+            logging.error(f"Resource limit exceeded. CPU: {cpu_usage}%, Memory: {memory_usage}GB")
             return True
+        logging.info(f"Current resources usage. CPU: {cpu_usage}%, Memory: {memory_usage}GB")
         return False
 
     @staticmethod

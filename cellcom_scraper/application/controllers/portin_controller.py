@@ -1,4 +1,5 @@
 import time
+import sys
 
 from cellcom_scraper.application.controllers.fast_act_controller import (
     FastActController,

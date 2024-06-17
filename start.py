@@ -2,15 +2,19 @@ from dotenv import load_dotenv
 
 load_dotenv()
 import time
-
+import subprocess
 import schedule
+import sys
 
-from main import Main
+# from main import Main
 
 
 def fetch():
-    main_app = Main()
-    main_app.start()
+    result = subprocess.run([sys.executable, "main.py"])
+    if result.returncode == 100:
+        print("Script exited with an error due to resources. Restarting...")
+    else:
+        print("Script finished with exit code {}".format(result.returncode))
 
 
 if __name__ == "__main__":

@@ -1,7 +1,7 @@
 import logging
 import os
 import time
-import traceback
+import sys
 from datetime import datetime
 
 from selenium.common.exceptions import (
@@ -59,6 +59,8 @@ class FastActController(BaseController):
 
     def set_environment(self):
         while not self.webdriver_is_active():
+            if self.system_resources_limit_surpassed():
+                sys.exit(100)
             navigator: NavigatorWebDriverType = self._get_navigator()
             self.builder: AutomationDriverBuilder = get_webdriver_builder(
                 navigator, self.fast_act_url
