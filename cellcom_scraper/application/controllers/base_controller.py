@@ -1,3 +1,6 @@
+import psutil
+import os
+
 from typing import List, Optional
 
 from selenium.webdriver.remote.webdriver import WebDriver
@@ -64,6 +67,20 @@ class BaseController(Controller):
             )
             self.cache_scrapers[scraper_id] = scraper
             return scraper
+
+    @staticmethod  
+    def check_system_resources():
+        process = psutil.Process(os.getpid())
+        cpu_usage = psutil.cpu_percent(interval=1)
+        memory_usage = process.memory_info().rss / (1024 * 1024 * 1024)  # GB
+
+        max_cpu_usage = 90  # 90%
+        max_memory_usage = 0.5 * psutil.virtual_memory().total / (1024 * 1024 * 1024)  # 50% del total de memoria
+
+        if cpu_usage > max_cpu_usage or memory_usage > max_memory_usage:
+            print(f"Resource limit exceeded. CPU: {cpu_usage}%, Memory: {memory_usage}GB")
+            return True
+        return False
 
     @staticmethod
     def _get_navigator() -> NavigatorWebDriverType:

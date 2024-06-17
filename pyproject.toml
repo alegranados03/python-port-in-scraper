@@ -22,6 +22,7 @@ requests = "^2.31.0"
 schedule = "^1.2.1"
 mediatr = "^1.3.2"
 dependency-injector = "^4.41.0"
+psutil = "^5.9.8"
 
 [tool.poetry.group.dev.dependencies]
 sqlalchemy-stubs = "^0.4"

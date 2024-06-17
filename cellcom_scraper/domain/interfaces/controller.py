@@ -43,6 +43,11 @@ class Controller(ABC):
     def _get_navigator() -> NavigatorWebDriverType:
         raise NotImplementedError
 
+    @staticmethod
+    @abstractmethod
+    def check_system_resources() -> bool:
+        raise NotImplementedError
+    
     @abstractmethod
     def _update_request_status(self, *, request, status) -> None:
         raise NotImplementedError
