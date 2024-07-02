@@ -75,7 +75,7 @@ class BaseController(Controller):
         cpu_usage = psutil.cpu_percent(interval=1)
         memory_usage = process.memory_info().rss / (1024 * 1024 * 1024)  # GB
 
-        max_cpu_usage = 35  # 90%
+        max_cpu_usage = 65  # 65%
         max_memory_usage = 0.5 * psutil.virtual_memory().total / (1024 * 1024 * 1024)  # 50% del total de memoria
 
         if cpu_usage > max_cpu_usage or memory_usage > max_memory_usage:

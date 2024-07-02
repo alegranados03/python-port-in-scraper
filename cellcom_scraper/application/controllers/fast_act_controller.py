@@ -142,4 +142,4 @@ class FastActController(BaseController):
                 logging.error(message)
 
         if not close:
-            raise CloseButtonNotFoundException(message)
+            raise CloseButtonNotFoundException("Finished without close button")
