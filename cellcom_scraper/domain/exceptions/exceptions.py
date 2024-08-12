@@ -78,6 +78,11 @@ def handle_general_exception(exception: Exception, message: str) -> str:
     return message + full_error_message
 
 
+class UpgradeStatusException(ApplicationException):
+    def __init__(self, message):
+        super().__init__(message, "SEC0012")
+
+
 class LoginFailedException(ApplicationException):
     def __init__(self, message):
         super().__init__(f"Login failed: {message}", "SEC012")

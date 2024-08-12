@@ -13,7 +13,7 @@ from cellcom_scraper.application.strategies.fast_act.base_bellfast_strategy impo
     BellFastActBaseStrategy,
 )
 from cellcom_scraper.config import UPGRADE_AND_DRO_AWS_SERVER
-from cellcom_scraper.domain.exceptions import NoItemFoundException
+from cellcom_scraper.domain.exceptions import NoItemFoundException, UpgradeStatusException
 
 
 class UpgradeAndDroStrategy(BellFastActBaseStrategy):
@@ -81,16 +81,29 @@ class UpgradeAndDroStrategy(BellFastActBaseStrategy):
             )
             self.driver.execute_script("arguments[0].scrollIntoView(true);", section)
 
-            upgrade_status = self.wait10.until(
-                ec.presence_of_element_located(
-                    (
-                        By.XPATH,
-                        "//body/div[@id='instant_activation']/div[2]/div[1]/div[1]/div[4]/form[1]/div[1]/div[3]/div[2]/div[1]/div[1]/div[1]/ul[1]/li[11]/div[2]",
+            upgrade_paths = [
+                "//body/div[@id='instant_activation']/div[2]/div[1]/div[1]/div[4]/form[1]/div[1]/div[3]/div[2]/div[1]/div[1]/div[1]/ul[1]/li[11]/div[2]",
+                "/html[1]/body[1]/div[1]/div[2]/div[1]/div[1]/div[4]/form[1]/div[1]/div[3]/div[2]/div[1]/div[1]/div[1]/ul[1]/li[10]/div[2]",
+                # "/html[1]/body[1]/div[1]/div[2]/div[1]/div[1]/div[4]/form[1]/div[1]/div[3]/div[2]/div[1]/div[1]/div[1]/ul[1]/li[11]/div[2]" es equivalente al primero de esta lista
+            ]
+            upgrade_status_text: str = ""
+            for upgrade_path in upgrade_paths:
+                try:
+                    upgrade_status = self.wait10.until(
+                        ec.presence_of_element_located(
+                            (
+                                By.XPATH,
+                                upgrade_path,
+                            )
+                        )
                     )
-                )
-            )
+                    upgrade_status_text = upgrade_status.text
+                except Exception:
+                    continue
 
-            upgrade_status_text = upgrade_status.text
+            if not upgrade_status_text:
+                raise UpgradeStatusException("Upgrade status field not found")
+
             if "Eligible as of" in upgrade_status_text:
                 self.upgrade = self.extract_date(upgrade_status_text)
             elif "Eligible" == upgrade_status_text:
