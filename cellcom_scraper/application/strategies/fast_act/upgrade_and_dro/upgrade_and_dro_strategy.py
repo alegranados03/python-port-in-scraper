@@ -1,7 +1,5 @@
 import logging
-import random
 import re
-import time
 from datetime import datetime
 from typing import Optional
 
@@ -84,7 +82,7 @@ class UpgradeAndDroStrategy(BellFastActBaseStrategy):
             upgrade_paths = [
                 "//body/div[@id='instant_activation']/div[2]/div[1]/div[1]/div[4]/form[1]/div[1]/div[3]/div[2]/div[1]/div[1]/div[1]/ul[1]/li[11]/div[2]",
                 "/html[1]/body[1]/div[1]/div[2]/div[1]/div[1]/div[4]/form[1]/div[1]/div[3]/div[2]/div[1]/div[1]/div[1]/ul[1]/li[10]/div[2]",
-                # "/html[1]/body[1]/div[1]/div[2]/div[1]/div[1]/div[4]/form[1]/div[1]/div[3]/div[2]/div[1]/div[1]/div[1]/ul[1]/li[11]/div[2]" es equivalente al primero de esta lista
+                "/html[1]/body[1]/div[1]/div[2]/div[1]/div[1]/div[4]/form[1]/div[1]/div[3]/div[2]/div[1]/div[1]/div[1]/ul[1]/li[11]/div[2]"
             ]
             upgrade_status_text: str = ""
             for upgrade_path in upgrade_paths:
@@ -98,6 +96,8 @@ class UpgradeAndDroStrategy(BellFastActBaseStrategy):
                         )
                     )
                     upgrade_status_text = upgrade_status.text
+                    if not upgrade_status_text:
+                        raise Exception
                 except Exception:
                     continue
 
