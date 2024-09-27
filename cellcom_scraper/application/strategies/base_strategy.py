@@ -63,7 +63,7 @@ class BaseScraperStrategy(Strategy):
                 # Intenta parsear la respuesta como JSON
                 error_info = response.json()
                 error_message = f"Request to AWS {complete_uri} failed with status code {response.status_code}: {error_info}"
-                endpoint: self.re
+                logging.error("the url that failed", complete_uri)
                 logging.error(error_message)
 
         except json.JSONDecodeError:
