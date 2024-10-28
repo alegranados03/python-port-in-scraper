@@ -17,3 +17,4 @@ for index, row in df.iterrows():
 
 
 print(SQL + (", ").join(values))
+#test
