@@ -63,6 +63,7 @@ EDGE_DRIVER_DEFAULT_CONFIGURATIONS: dict = {
         "--start-maximized",
         "--disable-blink-features=AutomationControlled",
         "--disable-infobars",
+        "--enable-unsafe-swiftshader",
         "--disable-webgl",
         "--disable-dev-shm-usage",
         "--disable-rtc-smoothness-algorithm",
