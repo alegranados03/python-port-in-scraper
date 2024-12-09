@@ -27,7 +27,6 @@ from cellcom_scraper.domain.interfaces.automation_driver_builder import (
     AutomationDriverBuilder,
 )
 from cellcom_scraper.domain.interfaces.uow import UnitOfWork
-from selenium.webdriver.common.alert import Alert
 from selenium.common.exceptions import NoAlertPresentException
 
 
@@ -48,14 +47,12 @@ class FastActController(BaseController):
             return False
 
     def _update_request_status(self, *, request, status):
-        with self.uow:
-            repository = self.uow.get_repository("process_requests")
-            end_date = datetime.now()
-            update_data = ProcessQueueUpdateEntity(
-                status=status, end_timestamp=end_date.strftime("%Y-%m-%d %H:%M:%S")
-            )
-            repository.update(request.id, update_data)
-            self.uow.commit()
+        repository = self.uow.get_repository("process_requests")
+        end_date = datetime.now()
+        update_data = ProcessQueueUpdateEntity(
+            status=status, end_timestamp=end_date.strftime("%Y-%m-%d %H:%M:%S")
+        )
+        repository.update(request.id, update_data)
 
     def set_environment(self):
         while not self.webdriver_is_active():

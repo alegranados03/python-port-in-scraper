@@ -43,3 +43,7 @@ class Repository(ABC):
     @abstractmethod
     def filter(self, **filters) -> list[Entity]:
         raise NotImplementedError
+    
+    @abstractmethod
+    def filter_with_skip_locked(self, **filters) -> Entity | None:
+        raise NotImplementedError

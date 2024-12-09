@@ -62,6 +62,9 @@ def get_scraper_strategy(strategy_name: RequestType):
         RequestType.UPGRADE_STATUS_AND_DRO: lambda credentials: UpgradeAndDroStrategy(
             credentials
         ),
+        RequestType.VIRGIN_UPGRADE_STATUS_AND_DRO: lambda credentials: UpgradeAndDroStrategy(
+            credentials
+        ),
     }
 
     if strategy_name in strategies_list:
