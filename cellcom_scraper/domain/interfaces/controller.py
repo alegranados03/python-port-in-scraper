@@ -53,7 +53,7 @@ class Controller(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    def _get_requests(self) -> None:
+    def _get_request(self) -> None:
         raise NotImplementedError
 
     @abstractmethod

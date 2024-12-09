@@ -29,7 +29,7 @@ class BaseController(Controller):
         self.strategy: Optional[Strategy] = None
         self.driver: Optional[WebDriver] = None
         self.credentials: Optional[AccountEntity] = None
-        self.requests: Optional[List[ProcessQueueRequestEntity]] = None
+        self.request: Optional[ProcessQueueRequestEntity] = None
         self.cache_scrapers: dict = {}
         self.uow: UnitOfWork = uow
         self.wait30: Optional[WebDriverWait] = None
@@ -88,7 +88,7 @@ class BaseController(Controller):
     def _get_navigator() -> NavigatorWebDriverType:
         return NavigatorWebDriverType.EDGE
 
-    def _get_requests(self) -> None:
+    def _get_request(self) -> None:
         raise NotImplementedError
 
     def _update_request_status(self, *, request, status):

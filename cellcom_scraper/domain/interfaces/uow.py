@@ -1,10 +1,12 @@
 from abc import ABC, abstractmethod
 
 from cellcom_scraper.domain.interfaces.repository import Repository
+from sqlalchemy.orm import Session
 
 
 class UnitOfWork(ABC):
     """Abstract unit of work."""
+    session: Session
 
     def __enter__(self) -> "UnitOfWork":
         """Context manager method for the UnitOfWork setup phase.
