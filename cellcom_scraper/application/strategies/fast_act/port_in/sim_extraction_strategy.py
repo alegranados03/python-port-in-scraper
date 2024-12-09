@@ -1,3 +1,5 @@
+import logging
+
 from selenium.common.exceptions import NoSuchElementException, TimeoutException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as ec
@@ -103,6 +105,7 @@ class SimExtractionStrategy(BellFastActBaseStrategy):
                     sim_card = table_text
                     break
             except Exception:
+                logging.error(f"{possibility} to get SIM didn't work")
                 continue
 
         if not sim_card:
