@@ -91,9 +91,10 @@ class SimExtractionStrategy(BellFastActBaseStrategy):
         sim_p_4 = self.get_sim_field_xpath("5", "9", "4")
         sim_p_5 = self.get_sim_field_xpath("6", "9", "5")
         sim_p_6 = self.get_sim_field_xpath("5", "7", "5")
-        sim_p_7 = "/html[1]/body[1]/div[1]/div[2]/div[1]/div[2]/div[1]/div[3]/div[1]/div[2]/form[1]/div[3]/div[1]/div[4]/div[1]/div[4]/div[2]"
+        sim_p_7 = "/html[1]/body[1]/div[1]/div[2]/div[1]/div[2]/div[1]/div[3]/div[1]/div[2]/form[1]/div[3]/div[1]/div[4]/div[2]/div[4]/div[2]"
+        sim_p_8 = "/html[1]/body[1]/div[1]/div[2]/div[1]/div[2]/div[1]/div[3]/div[1]/div[2]/form[1]/div[3]/div[1]/div[4]/div[1]/div[4]/div[2]"
 
-        possibilities = [sim_p_1, sim_p_2, sim_p_3, sim_p_4, sim_p_5, sim_p_6, sim_p_7]
+        possibilities = [sim_p_1, sim_p_2, sim_p_3, sim_p_4, sim_p_5, sim_p_6, sim_p_7, sim_p_8]
         sim_card = ""
         for possibility in possibilities:
             try:
@@ -141,7 +142,8 @@ class SimExtractionStrategy(BellFastActBaseStrategy):
     def execute(self):
         self.search_sim_number()
         self.sim_number = self.get_sim_value2()
-        # self.sim_number = self.get_sim_value()
+        if self.sim_number is None:
+            self.sim_number = self.get_sim_value()
 
     def handle_results(self):
         sim_card: str = self.sim_number.strip()
