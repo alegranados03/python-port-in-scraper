@@ -24,7 +24,7 @@ class PortInController(FastActController):
                 "process_requests"
             ).filter_with_skip_locked(
                 limit=1,
-                status=RequestStatus.READY,
+                status=RequestStatus.READY.value,
                 scraper_id=1,
             )
         except Exception as e:

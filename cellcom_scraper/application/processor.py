@@ -39,12 +39,12 @@ class Processor:
         self.controllers_list: list = [PortInController, UpgradeAndDroController, VirginUpgradeAndDroController]
 
     def _get_account_credentials(self, controller: Controller):
-        return self.account_credentials_dict[controller.__class__.__name__]
+        return self.account_credentials_dict[controller.__name__]
 
     def start_processor(self):
         for controller in self.controllers_list:
             for i in range(1):
-                thread = threading.Thread(target=self._execute_controller_process, args=(controller,))
+                thread = threading.Thread(target=self._execute_controller_process, args=(controller,), daemon=False)
                 thread.start()
 
     def _execute_controller_process(self, controller):

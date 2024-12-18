@@ -4,7 +4,6 @@ import traceback
 from datetime import datetime
 
 from cellcom_scraper.application.processor import Processor
-from cellcom_scraper.domain.entities.account import AccountEntity
 from cellcom_scraper.domain.exceptions import ApplicationException
 from cellcom_scraper.domain.exceptions.exceptions import handle_general_exception
 
