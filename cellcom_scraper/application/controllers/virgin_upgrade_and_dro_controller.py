@@ -12,9 +12,9 @@ class VirginUpgradeAndDroController(UpgradeAndDroController):
                 "process_requests"
             ).filter_with_skip_locked(
                 limit=1,
-                status=RequestStatus.READY,
+                status=RequestStatus.READY.value,
                 scraper_id=2,
-                type=RequestType.VIRGIN_UPGRADE_STATUS_AND_DRO
+                type=RequestType.VIRGIN_UPGRADE_STATUS_AND_DRO.value
             )
         except Exception as e:
             print(
