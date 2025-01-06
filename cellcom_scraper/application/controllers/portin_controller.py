@@ -33,20 +33,21 @@ class PortInController(FastActController):
                     e, "Requests fetch on Port In Controller failed"
                 )
             )
+            logging.error(f"Requests fetch on {self.__class__.__name__} failed")
 
     def execute(self):
-        print(f"PortInController ready to start.")
+        # print(f"PortInController ready to start.")
         while True:
             with self.uow:
-                print(f"PortInController started a session.")
+                # print(f"PortInController started a session.")
                 try:
                     transaction = self.uow.session.begin()
-                    print(f"PortInController started a database transaction.")
+                    # print(f"PortInController started a database transaction.")
                     self._get_request()
                     if not self.request:
                         break
 
-                    print(f"PortInController is processing record {self.request.id}")
+                    # print(f"PortInController is processing record {self.request.id}")
 
                     request_type: RequestType = RequestType(self.request.type)
                     self.set_strategy(request_type)
@@ -75,44 +76,44 @@ class PortInController(FastActController):
                                 )
                                 self.driver.close()
                         except ApplicationException as e:
-                                tries = tries + 1
-                                for error in FORCE_STOP_ERRORS:
-                                    if error in str(e):
-                                        tries = MAX_ATTEMPTS
-                                        break
-                                if tries == MAX_ATTEMPTS:
-                                    self._update_request_status(
-                                        request=self.request, status=RequestStatus.ERROR
-                                    )
-                                self.handle_errors(
-                                    error_description=f"Error ocurred: attempt {tries} {e.message}",
-                                    send_sms="yes",
-                                    send_client_sms="yes" if tries == MAX_ATTEMPTS else "no",
+                            tries = tries + 1
+                            for error in FORCE_STOP_ERRORS:
+                                if error in str(e):
+                                    tries = MAX_ATTEMPTS
+                                    break
+                            if tries == MAX_ATTEMPTS:
+                                self._update_request_status(
+                                    request=self.request, status=RequestStatus.ERROR
                                 )
-                                try:
-                                    if self.webdriver_is_active():
-                                        self.click_screen_close_button()
-                                except CloseButtonNotFoundException as e:
-                                    self.handle_errors(
-                                        error_description=f"After error: {e.message}",
-                                        send_sms="no",
-                                        send_client_sms="no",
-                                    )
-                                    self.driver.close()
-                        except Exception as e:
-                                tries = tries + 1
-                                message = "Another type of exception occurred please check what happened"
-                                complete_error_message = handle_general_exception(e, message)
-                                print(complete_error_message)
+                            self.handle_errors(
+                                error_description=f"Error occurred: attempt {tries} {e.message}",
+                                send_sms="yes",
+                                send_client_sms="yes" if tries == MAX_ATTEMPTS else "no",
+                            )
+                            try:
+                                if self.webdriver_is_active():
+                                    self.click_screen_close_button()
+                            except CloseButtonNotFoundException as e:
                                 self.handle_errors(
-                                        error_description=complete_error_message,
-                                        send_sms="yes",
-                                        send_client_sms="no",
-                                    )
+                                    error_description=f"After error: {e.message}",
+                                    send_sms="no",
+                                    send_client_sms="no",
+                                )
                                 self.driver.close()
+                        except Exception as e:
+                            tries = tries + 1
+                            message = "Another type of exception occurred please check what happened"
+                            complete_error_message = handle_general_exception(e, message)
+                            print(complete_error_message)
+                            self.handle_errors(
+                                error_description=complete_error_message,
+                                send_sms="yes",
+                                send_client_sms="no",
+                            )
+                            self.driver.close()
                 except Exception as e:
                     logging.error(f"PortInController: Thread error: {e}")
                     transaction.rollback()
                 finally:
-                    print(f"PortInController: Thread FINISHED.")
+                    # print(f"PortInController: Thread FINISHED.")
                     transaction.close()

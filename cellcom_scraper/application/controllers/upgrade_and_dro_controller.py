@@ -34,20 +34,21 @@ class UpgradeAndDroController(FastActController):
                     e, f"Requests fetch on {self.__class__.__name__} failed"
                 )
             )
+            logging.error(f"Requests fetch on {self.__class__.__name__} failed")
 
     def execute(self):
-        print(f"{self.__class__.__name__} thread ready to start.")
+        # print(f"{self.__class__.__name__} thread ready to start.")
         while True:
             with self.uow:
-                print(f"{self.__class__.__name__} thread started a session.")
+                # print(f"{self.__class__.__name__} thread started a session.")
                 try:
                     transaction = self.uow.session.begin()
-                    print(f"{self.__class__.__name__} thread started a database transaction.")
+                    # print(f"{self.__class__.__name__} thread started a database transaction.")
                     self._get_request()
                     if not self.request:
                         break
 
-                    print(f"{self.__class__.__name__} thread is processing record {self.request.id}")
+                    # print(f"{self.__class__.__name__} thread is processing record {self.request.id}")
 
                     request_type: RequestType = RequestType(self.request.type)
                     self.set_strategy(request_type)

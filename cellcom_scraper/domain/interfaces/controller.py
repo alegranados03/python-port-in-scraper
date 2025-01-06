@@ -38,10 +38,6 @@ class Controller(ABC):
     def _get_scraper(self, scraper_id) -> ScraperEntity:
         raise NotImplementedError
 
-    @abstractmethod
-    def stop(self) -> None:
-        raise NotImplementedError
-
     @staticmethod
     @abstractmethod
     def _get_navigator() -> NavigatorWebDriverType:
