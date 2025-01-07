@@ -108,5 +108,5 @@ class UpgradeAndDroController(FastActController):
                     transaction.rollback()
                 finally:
                     print(f"{self.__class__.__name__}: Thread FINISHED.")
-                    time.sleep(60)
+                    time.sleep(10)
                     transaction.close()
