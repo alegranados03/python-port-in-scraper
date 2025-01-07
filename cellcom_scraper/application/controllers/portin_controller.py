@@ -80,7 +80,6 @@ class PortInController(FastActController):
                             for error in FORCE_STOP_ERRORS:
                                 if error in str(e):
                                     tries = MAX_ATTEMPTS
-                                    break
                             if tries == MAX_ATTEMPTS:
                                 self._update_request_status(
                                     request=self.request, status=RequestStatus.ERROR

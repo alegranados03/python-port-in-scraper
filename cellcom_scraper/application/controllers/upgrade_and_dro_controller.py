@@ -76,7 +76,6 @@ class UpgradeAndDroController(FastActController):
                             for error in FORCE_STOP_ERRORS:
                                 if error in str(e):
                                     tries = UPGRADE_AND_DRO_MAX_ATTEMPTS
-                                    break
                             if tries == UPGRADE_AND_DRO_MAX_ATTEMPTS:
                                 self._update_request_status(
                                     request=self.request, status=RequestStatus.ERROR
