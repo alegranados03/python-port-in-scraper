@@ -116,4 +116,5 @@ class PortInController(FastActController):
                     transaction.rollback()
                 finally:
                     # print(f"PortInController: Thread FINISHED.")
+                    time.sleep(60)
                     transaction.close()

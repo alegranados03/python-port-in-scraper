@@ -1,3 +1,4 @@
+import time
 import logging
 
 
@@ -107,4 +108,5 @@ class UpgradeAndDroController(FastActController):
                     transaction.rollback()
                 finally:
                     print(f"{self.__class__.__name__}: Thread FINISHED.")
+                    time.sleep(60)
                     transaction.close()
