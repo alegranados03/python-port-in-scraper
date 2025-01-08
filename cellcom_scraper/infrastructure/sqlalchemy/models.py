@@ -51,7 +51,7 @@ class ProcessQueueRequest(Base):
     )
     start_timestamp = Column(DateTime, nullable=False)
     end_timestamp = Column(DateTime, nullable=True)
-    status = Column(ENUM("READY", "FINISHED", "ERROR"), nullable=False, default="READY")
+    status = Column(ENUM("READY", "IN PROGRESS", "FINISHED", "ERROR"), nullable=False, default="READY")
     scraper_id = Column(BigInteger, ForeignKey("scrapers.id"), nullable=True)
     scraper = relationship("Scraper", back_populates="requests")
 
