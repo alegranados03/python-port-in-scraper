@@ -14,6 +14,7 @@ class RequestStatus(str, Enum):
     READY = "READY"
     FINISHED = "FINISHED"
     ERROR = "ERROR"
+    IN_PROGRESS = "IN PROGRESS"
 
 
 class ExecutionFrequency(str, Enum):

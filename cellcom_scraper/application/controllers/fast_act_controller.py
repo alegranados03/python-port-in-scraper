@@ -47,12 +47,14 @@ class FastActController(BaseController):
             return False
 
     def _update_request_status(self, *, request, status):
-        repository = self.uow.get_repository("process_requests")
-        end_date = datetime.now()
-        update_data = ProcessQueueUpdateEntity(
-            status=status, end_timestamp=end_date.strftime("%Y-%m-%d %H:%M:%S")
-        )
-        repository.update(request.id, update_data)
+        with self.uow:
+            repository = self.uow.get_repository("process_requests")
+            end_date = datetime.now()
+            update_data = ProcessQueueUpdateEntity(
+                status=status, end_timestamp=end_date.strftime("%Y-%m-%d %H:%M:%S")
+            )
+            repository.update(request.id, update_data)
+            self.uow.commit()
 
     def set_environment(self):
         while not self.webdriver_is_active():
