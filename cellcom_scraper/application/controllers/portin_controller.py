@@ -20,13 +20,24 @@ class PortInController(FastActController):
 
     def _get_request(self) -> None:
         try:
-            self.request = self.uow.get_repository(
-                "process_requests"
-            ).filter_with_skip_locked(
-                limit=1,
-                status=RequestStatus.READY.value,
-                scraper_id=1,
-            )
+            with self.uow:
+                transaction = self.uow.session.begin()
+                try:
+                    self.request = self.uow.get_repository(
+                        "process_requests"
+                    ).filter_with_skip_locked(
+                        limit=1,
+                        status=RequestStatus.READY.value,
+                        scraper_id=1,
+                    )
+                    if self.request:
+                        self._update_request_status_without_commit(
+                            request=self.request, status=RequestStatus.IN_PROGRESS
+                        )
+                    transaction.commit()
+                except Exception as e:
+                    logging.error("Error occurred on request transaction")
+                    transaction.close()
         except Exception as e:
             print(
                 handle_general_exception(
@@ -37,21 +48,9 @@ class PortInController(FastActController):
 
     def execute(self):
         while True:
-            with self.uow:
-                try:
-                    transaction = self.uow.session.begin()
-                    self._get_request()
-                    if not self.request:
-                        break
-                    self._update_request_status(
-                        request=self.request, status=RequestStatus.IN_PROGRESS
-                    )
-                    transaction.commit()
-                except Exception as e:
-                    logging.error("Error occurred on request transaction")
-                    logging.error(f"PortInController: Thread error: {e}")
-                    transaction.close()
-
+            self._get_request()
+            if not self.request:
+                break
             try:
                 request_type: RequestType = RequestType(self.request.type)
                 self.set_strategy(request_type)

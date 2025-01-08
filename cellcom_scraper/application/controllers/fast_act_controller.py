@@ -56,6 +56,15 @@ class FastActController(BaseController):
             repository.update(request.id, update_data)
             self.uow.commit()
 
+    def _update_request_status_without_commit(self, *, request, status):
+        repository = self.uow.get_repository("process_requests")
+        end_date = datetime.now()
+        update_data = ProcessQueueUpdateEntity(
+            status=status, end_timestamp=end_date.strftime("%Y-%m-%d %H:%M:%S")
+        )
+        repository.update(request.id, update_data)
+
+
     def set_environment(self):
         while not self.webdriver_is_active():
             if self.system_resources_limit_surpassed():
