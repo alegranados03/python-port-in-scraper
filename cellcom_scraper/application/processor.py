@@ -59,4 +59,4 @@ class Processor:
         try:
             c.execute()
         except Exception as e:
-            print(handle_general_exception(e, "Controller failed at execute"))
+            print(handle_general_exception(e, f"{controller.__name__} failed at execute"))
