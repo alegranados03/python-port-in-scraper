@@ -30,9 +30,9 @@ class Processor:
                 password=os.getenv("BELL_FAST_PASSWORD"),
             ),
             VirginUpgradeAndDroController.__name__: AccountEntity(
-                username=os.getenv("BELL_FAST_USERNAME"),
-                dealer_code=os.getenv("BELL_FAST_DEALER_CODE"),
-                password=os.getenv("BELL_FAST_PASSWORD"),
+                username=os.getenv("VIRGIN_USERNAME"),
+                dealer_code=os.getenv("VIRGIN_DEALER_CODE"),
+                password=os.getenv("VIRGIN_PASSWORD"),
             )
         }
 
