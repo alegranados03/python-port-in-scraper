@@ -14,7 +14,7 @@ from cellcom_scraper.config import UPGRADE_AND_DRO_AWS_SERVER
 from cellcom_scraper.domain.exceptions import NoItemFoundException, UpgradeStatusException
 
 
-class UpgradeAndDroStrategy(BellFastActBaseStrategy):
+class VirginUpgradeAndDroStrategy(BellFastActBaseStrategy):
     def __init__(self, credentials):
         super().__init__(credentials)
         self.response_server_url = UPGRADE_AND_DRO_AWS_SERVER
@@ -28,7 +28,7 @@ class UpgradeAndDroStrategy(BellFastActBaseStrategy):
                 ec.presence_of_element_located(
                     (
                         By.XPATH,
-                        "//body/div[@id='instant_activation']/div[2]/div[1]/div[2]/div[1]/div[3]/div[1]/div[2]/form[2]/div[1]/div[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[1]/div[1]/ul[1]/li[1]/a[1]",
+                        "/html/body/div/div[2]/div/div[2]/div/div[3]/div[1]/div[2]/form[2]/div/div[1]/div/div[1]/div[2]/div/div/div/div[1]/ul/li[1]/a",
                     )
                 )
             )
@@ -36,7 +36,7 @@ class UpgradeAndDroStrategy(BellFastActBaseStrategy):
             hardware_upgrade_link.click()
 
             mobile_number_field = self.wait60.until(
-                ec.presence_of_element_located((By.XPATH, "//input[@id='currentMin']"))
+                ec.presence_of_element_located((By.XPATH, "/html/body/div/div[2]/div/div[2]/div/div[3]/div[1]/div[2]/form/div[1]/div/div[5]/div[2]/input"))
             )
             mobile_number_field.send_keys(self.phone_number)
 
@@ -44,7 +44,7 @@ class UpgradeAndDroStrategy(BellFastActBaseStrategy):
                 ec.presence_of_element_located(
                     (
                         By.XPATH,
-                        "//body/div[@id='instant_activation']/div[2]/div[1]/div[2]/div[1]/div[3]/div[1]/div[2]/form[1]/div[3]/div[1]/div[1]/div[1]/button[1]",
+                        "/html/body/div/div[2]/div/div[2]/div/div[3]/div[1]/div[2]/form/div[3]/div/div/div/button",
                     )
                 )
             )
@@ -56,7 +56,7 @@ class UpgradeAndDroStrategy(BellFastActBaseStrategy):
                     ec.presence_of_element_located(
                         (
                             By.XPATH,
-                            "//body/div[@id='instant_activation']/div[2]/div[1]/div[2]/div[1]/div[3]/div[1]/div[2]/div[1]/div[1]/div[1]/ul[1]/li[1]/font[1]",
+                            "/html/body/div/div[2]/div/div[2]/div/div[3]/div[1]/div[2]/div/div/div/ul/li/font",
                         )
                     )
                 )
@@ -73,16 +73,14 @@ class UpgradeAndDroStrategy(BellFastActBaseStrategy):
                 ec.presence_of_element_located(
                     (
                         By.XPATH,
-                        "//body/div[@id='instant_activation']/div[2]/div[1]/div[1]/div[4]/form[1]/div[1]/div[3]/div[1]",
+                        "/html/body/div/div[2]/div/div[1]/div[4]/form/div/div[3]/div[1]",
                     )
                 )
             )
             self.driver.execute_script("arguments[0].scrollIntoView(true);", section)
 
             upgrade_paths = [
-                "//body/div[@id='instant_activation']/div[2]/div[1]/div[1]/div[4]/form[1]/div[1]/div[3]/div[2]/div[1]/div[1]/div[1]/ul[1]/li[11]/div[2]",
-                "/html[1]/body[1]/div[1]/div[2]/div[1]/div[1]/div[4]/form[1]/div[1]/div[3]/div[2]/div[1]/div[1]/div[1]/ul[1]/li[10]/div[2]",
-                "/html[1]/body[1]/div[1]/div[2]/div[1]/div[1]/div[4]/form[1]/div[1]/div[3]/div[2]/div[1]/div[1]/div[1]/ul[1]/li[11]/div[2]"
+                "/html/body/div/div[2]/div/div[1]/div[4]/form/div/div[3]/div[2]/div[1]/div[1]/div/ul/li[11]/div[2]",
             ]
             upgrade_status_text: str = ""
             for upgrade_path in upgrade_paths:
@@ -111,57 +109,8 @@ class UpgradeAndDroStrategy(BellFastActBaseStrategy):
             else:
                 self.upgrade = "No"
 
-            # check dro
-            try:
-                device_description_button = self.wait10.until(
-                    ec.presence_of_element_located(
-                        (
-                            By.XPATH,
-                            "/html[1]/body[1]/div[1]/div[2]/div[1]/div[1]/div[4]/form[1]/div[1]/div[3]/div[2]/div[1]/div[2]/div[1]/ul[1]/div[1]/div[2]/a[1]",
-                        )
-                    )
-                )
-                device_description_button.click()
-                self.dro = "Yes"
-                #time.sleep(random.randint(5, 15))
-            except Exception as e:
-                self.dro = "No"
-                return
-
-            try:
-                device_description = self.wait10.until(
-                    ec.visibility_of_element_located(
-                        (
-                            By.XPATH,
-                            "//body/div[@id='instant_activation']/div[2]/div[1]/div[1]/div[4]/form[1]/div[1]/div[3]/div[2]/div[1]/div[2]/div[1]/ul[1]/div[1]/div[2]/div[1]/li[1]/div[2]",
-                        )
-                    )
-                )
-                deferred_amount = self.wait10.until(
-                    ec.visibility_of_element_located(
-                        (
-                            By.XPATH,
-                            "/html[1]/body[1]/div[1]/div[2]/div[1]/div[1]/div[4]/form[1]/div[1]/div[3]/div[2]/div[1]/div[2]/div[1]/ul[1]/div[1]/div[2]/div[1]/li[2]/div[2]",
-                        )
-                    )
-                )
-                due_date = self.wait10.until(
-                    ec.visibility_of_element_located(
-                        (
-                            By.XPATH,
-                            "/html[1]/body[1]/div[1]/div[2]/div[1]/div[1]/div[4]/form[1]/div[1]/div[3]/div[2]/div[1]/div[2]/div[1]/ul[1]/div[1]/div[2]/div[1]/li[3]/div[2]",
-                        )
-                    )
-                )
-
-                details = (
-                    f"Device description: {device_description.text} \n"
-                    f"Deferred amount:{deferred_amount.text} \n"
-                    f"Due date:{self.extract_date(due_date.text)}"
-                )
-            except Exception as e:
-                details = "Couldn't obtain exact details"
-            self.details = details
+            self.dro = "No"
+            return
 
         except (NoSuchElementException, TimeoutException) as e:
             self.dro = "No"
