@@ -16,6 +16,7 @@ from cellcom_scraper.application.strategies.fast_act.port_in import (
 )
 from cellcom_scraper.application.strategies.fast_act.upgrade_and_dro import (
     UpgradeAndDroStrategy,
+    VirginUpgradeAndDroStrategy,
 )
 from cellcom_scraper.domain.enums import RequestType
 from cellcom_scraper.domain.exceptions import (
@@ -30,7 +31,7 @@ DriverBuilder = TypeVar("DriverBuilder", bound=AutomationDriverBuilder)
 
 
 def get_webdriver_builder(
-    navigator_name: NavigatorWebDriverType, url: str
+        navigator_name: NavigatorWebDriverType, url: str
 ) -> AutomationDriverBuilder:
     builders = {
         NavigatorWebDriverType.CHROME: ChromeDriverBuilder,
@@ -62,7 +63,7 @@ def get_scraper_strategy(strategy_name: RequestType):
         RequestType.UPGRADE_STATUS_AND_DRO: lambda credentials: UpgradeAndDroStrategy(
             credentials
         ),
-        RequestType.VIRGIN_UPGRADE_STATUS_AND_DRO: lambda credentials: UpgradeAndDroStrategy(
+        RequestType.VIRGIN_UPGRADE_STATUS_AND_DRO: lambda credentials: VirginUpgradeAndDroStrategy(
             credentials
         ),
     }
