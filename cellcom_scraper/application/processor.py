@@ -39,7 +39,7 @@ class Processor:
         self.controllers_list: list = [
             PortInController,
             UpgradeAndDroController,
-            # VirginUpgradeAndDroController
+            VirginUpgradeAndDroController
         ]
 
     def _get_account_credentials(self, controller: Controller):
