@@ -20,20 +20,32 @@ import logging
 class VirginUpgradeAndDroController(UpgradeAndDroController):
     def _get_request(self) -> None:
         try:
-            self.request = self.uow.get_repository(
-                "process_requests"
-            ).filter_with_skip_locked(
-                limit=1,
-                status=RequestStatus.READY.value,
-                scraper_id=2,
-                type=RequestType.VIRGIN_UPGRADE_STATUS_AND_DRO.value,
-            )
+            with self.uow:
+                transaction = self.uow.session.begin()
+                try:
+                    self.request = self.uow.get_repository(
+                        "process_requests"
+                    ).filter_with_skip_locked(
+                        limit=1,
+                        status=RequestStatus.READY.value,
+                        scraper_id=2,
+                        type=RequestType.VIRGIN_UPGRADE_STATUS_AND_DRO.value
+                    )
+                    if self.request:
+                        self._update_request_status_without_commit(
+                            request=self.request, status=RequestStatus.IN_PROGRESS
+                        )
+                    transaction.commit()
+                except Exception as e:
+                    logging.error("Error occurred on request transaction")
+                    transaction.close()
         except Exception as e:
             print(
                 handle_general_exception(
-                    e, "Requests fetch on VirginUpgradeAndDroController failed"
+                    e, f"Requests fetch on {self.__class__.__name__} failed"
                 )
             )
+            logging.error(f"Requests fetch on {self.__class__.__name__} failed")
 
     def click_screen_close_button(self):
         option_1 = (
