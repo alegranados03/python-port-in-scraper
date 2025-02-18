@@ -49,10 +49,13 @@ class VirginUpgradeAndDroController(UpgradeAndDroController):
 
     def click_screen_close_button(self):
         option_1 = (
-            "/html/body/div/div[2]/div/div[1]/div[1]/div[2]/div/a[1]"
+            "/html[1]/body[1]/div[1]/div[1]/div[1]/div[3]/div[1]/ul[1]/li[3]/a[1]"
+        )
+        option_2 = (
+            "/html[1]/body[1]/div[1]/div[2]/div[1]/div[1]/div[1]/div[2]/div[1]/a[1]"
         )
 
-        close_options = [option_1]
+        close_options = [option_1, option_2]
         close = None
         for option in close_options:
             try:
