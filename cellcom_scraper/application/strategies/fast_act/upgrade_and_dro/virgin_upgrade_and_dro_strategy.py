@@ -28,7 +28,7 @@ class VirginUpgradeAndDroStrategy(BellFastActBaseStrategy):
                 ec.presence_of_element_located(
                     (
                         By.XPATH,
-                        "/html/body/div/div[2]/div/div[2]/div/div[3]/div[1]/div[2]/form[2]/div/div[1]/div/div[1]/div[2]/div/div/div/div[1]/ul/li[1]/a",
+                        "/html[1]/body[1]/div[1]/div[2]/div[1]/div[2]/div[1]/div[3]/div[1]/div[2]/form[2]/div[1]/div[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[1]/div[1]/ul[1]/li[1]/a[1]/span[1]",
                     )
                 )
             )
@@ -36,7 +36,7 @@ class VirginUpgradeAndDroStrategy(BellFastActBaseStrategy):
             hardware_upgrade_link.click()
 
             mobile_number_field = self.wait60.until(
-                ec.presence_of_element_located((By.XPATH, "/html/body/div/div[2]/div/div[2]/div/div[3]/div[1]/div[2]/form/div[1]/div/div[5]/div[2]/input"))
+                ec.presence_of_element_located((By.XPATH, "/html[1]/body[1]/div[1]/div[2]/div[1]/div[2]/div[1]/div[3]/div[1]/div[2]/form[1]/div[1]/div[1]/div[5]/div[2]/input[1]"))
             )
             mobile_number_field.send_keys(self.phone_number)
 
@@ -44,7 +44,7 @@ class VirginUpgradeAndDroStrategy(BellFastActBaseStrategy):
                 ec.presence_of_element_located(
                     (
                         By.XPATH,
-                        "/html/body/div/div[2]/div/div[2]/div/div[3]/div[1]/div[2]/form/div[3]/div/div/div/button",
+                        "/html[1]/body[1]/div[1]/div[2]/div[1]/div[2]/div[1]/div[3]/div[1]/div[2]/form[1]/div[3]/div[1]/div[1]/div[1]/button[1]",
                     )
                 )
             )
@@ -56,7 +56,7 @@ class VirginUpgradeAndDroStrategy(BellFastActBaseStrategy):
                     ec.presence_of_element_located(
                         (
                             By.XPATH,
-                            "/html/body/div/div[2]/div/div[2]/div/div[3]/div[1]/div[2]/div/div/div/ul/li/font",
+                            "/html[1]/body[1]/div[1]/div[2]/div[1]/div[2]/div[1]/div[3]/div[1]/div[2]/div[1]/div[1]/div[1]/ul[1]/li[1]/font[1]",
                         )
                     )
                 )
@@ -73,14 +73,15 @@ class VirginUpgradeAndDroStrategy(BellFastActBaseStrategy):
                 ec.presence_of_element_located(
                     (
                         By.XPATH,
-                        "/html/body/div/div[2]/div/div[1]/div[4]/form/div/div[3]/div[1]",
+                        "/html[1]/body[1]/div[1]/div[2]/div[1]/div[1]/div[4]/form[1]/div[1]/div[3]/div[1]"
                     )
                 )
             )
             self.driver.execute_script("arguments[0].scrollIntoView(true);", section)
 
             upgrade_paths = [
-                "/html/body/div/div[2]/div/div[1]/div[4]/form/div/div[3]/div[2]/div[1]/div[1]/div/ul/li[11]/div[2]",
+                "/html[1]/body[1]/div[1]/div[2]/div[1]/div[1]/div[4]/form[1]/div[1]/div[3]/div[2]/div[1]/div[1]/div[1]/ul[1]/li[11]/div[2]",
+                "/html[1]/body[1]/div[1]/div[2]/div[1]/div[1]/div[4]/form[1]/div[1]/div[3]/div[2]/div[1]/div[1]/div[1]/ul[1]/li[10]/div[2]"
             ]
             upgrade_status_text: str = ""
             for upgrade_path in upgrade_paths:
