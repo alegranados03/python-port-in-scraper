@@ -79,4 +79,5 @@ class VirginUpgradeAndDroController(UpgradeAndDroController):
                 logging.error(message)
 
         if not close:
+            logging.error("Close button not found, forced close")
             raise CloseButtonNotFoundException("Finished without close button")

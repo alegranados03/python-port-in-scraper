@@ -72,7 +72,9 @@ class UpgradeAndDroController(FastActController):
                         if self.webdriver_is_active():
                             self.click_screen_close_button()
                     except CloseButtonNotFoundException as e:
+                        logging.error("Close button not found, closing driver")
                         self.driver.close()
+                        logging.error("Driver closed")
                     except ApplicationException as e:
                         tries = tries + 1
                         for error in FORCE_STOP_ERRORS:
