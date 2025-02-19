@@ -95,10 +95,11 @@ class UpgradeAndDroStrategy(BellFastActBaseStrategy):
                             )
                         )
                     )
-                    upgrade_status_text = upgrade_status.text
-                    if not upgrade_status_text:
-                        raise Exception
-                except Exception:
+                    upgrade_status_text = upgrade_status.text.strip()
+                    if upgrade_status_text:
+                        break
+                except Exception as e:
+                    logging.error(str(e))
                     continue
 
             if not upgrade_status_text:

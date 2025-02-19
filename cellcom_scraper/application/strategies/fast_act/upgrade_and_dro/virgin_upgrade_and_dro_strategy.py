@@ -80,8 +80,9 @@ class VirginUpgradeAndDroStrategy(BellFastActBaseStrategy):
             self.driver.execute_script("arguments[0].scrollIntoView(true);", section)
 
             upgrade_paths = [
-                "/html[1]/body[1]/div[1]/div[2]/div[1]/div[1]/div[4]/form[1]/div[1]/div[3]/div[2]/div[1]/div[1]/div[1]/ul[1]/li[11]/div[2]",
-                "/html[1]/body[1]/div[1]/div[2]/div[1]/div[1]/div[4]/form[1]/div[1]/div[3]/div[2]/div[1]/div[1]/div[1]/ul[1]/li[10]/div[2]"
+            "/html[1]/body[1]/div[1]/div[2]/div[1]/div[1]/div[4]/form[1]/div[1]/div[3]/div[2]/div[1]/div[1]/div[1]/ul[1]/li[11]/div[2]",
+            "/html[1]/body[1]/div[1]/div[2]/div[1]/div[1]/div[4]/form[1]/div[1]/div[3]/div[2]/div[1]/div[1]/div[1]/ul[1]/li[10]/div[2]",
+            "/html/body/div/div[2]/div/div[1]/div[4]/form/div/div[3]/div[2]/div[1]/div[1]/div/ul/li[11]/div[2]",
             ]
             upgrade_status_text: str = ""
             for upgrade_path in upgrade_paths:
@@ -94,10 +95,11 @@ class VirginUpgradeAndDroStrategy(BellFastActBaseStrategy):
                             )
                         )
                     )
-                    upgrade_status_text = upgrade_status.text
-                    if not upgrade_status_text:
-                        raise Exception
-                except Exception:
+                    upgrade_status_text = upgrade_status.text.strip()
+                    if upgrade_status_text:
+                        break
+                except Exception as e:
+                    logging.error(str(e))
                     continue
 
             if not upgrade_status_text:
