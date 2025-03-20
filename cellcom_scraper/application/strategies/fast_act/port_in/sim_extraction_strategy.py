@@ -90,8 +90,8 @@ class SimExtractionStrategy(BellFastActBaseStrategy):
         sim_p_5 = self.get_sim_field_xpath("6", "9", "5")
         sim_p_6 = self.get_sim_field_xpath("5", "7", "5")
         sim_p_7 = "/html[1]/body[1]/div[1]/div[2]/div[1]/div[2]/div[1]/div[3]/div[1]/div[2]/form[1]/div[3]/div[1]/div[4]/div[1]/div[4]/div[2]"
-
-        possibilities = [sim_p_1, sim_p_2, sim_p_3, sim_p_4, sim_p_5, sim_p_6, sim_p_7]
+        sim_p_8 = "/html[1]/body[1]/div[1]/div[2]/div[1]/div[2]/div[1]/div[3]/div[1]/div[2]/form[1]/div[3]/div[1]/div[4]/div[2]/div[5]/div[2]"
+        possibilities = [sim_p_1, sim_p_2, sim_p_3, sim_p_4, sim_p_5, sim_p_6, sim_p_7, sim_p_8]
         sim_card = ""
         for possibility in possibilities:
             try:
