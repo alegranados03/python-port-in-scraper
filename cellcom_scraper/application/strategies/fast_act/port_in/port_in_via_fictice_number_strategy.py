@@ -110,7 +110,7 @@ class PortInViaFicticeNumberStrategy(BellFastActBaseStrategy):
                 )
                 check_elegibility_button.click()
             except Exception as e:
-                message = handle_general_exception(e)
+                message = handle_general_exception(e, "Exception trying to find elegibility button")
                 logging.info(message)
                 message = f"{check_elegibility_path} check elegibility button not found"
                 raise NoItemFoundException(message=message)
