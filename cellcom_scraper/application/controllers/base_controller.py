@@ -86,7 +86,7 @@ class BaseController(Controller):
 
     @staticmethod
     def _get_navigator() -> NavigatorWebDriverType:
-        return NavigatorWebDriverType.EDGE
+        return NavigatorWebDriverType.CHROME
 
     def _get_request(self) -> None:
         raise NotImplementedError
