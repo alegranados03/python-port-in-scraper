@@ -70,11 +70,19 @@ class VirginUpgradeAndDroStrategy(BellFastActBaseStrategy):
                 pass
 
             try:
-                error_message = self.wait120.until(
+                self.wait120.until(
                     ec.presence_of_element_located(
                         (
                             By.XPATH,
                             "/html/body/app-root/div[1]/div[1]/div[2]/app-landing-page/div/div/div[1]/div[2]/div[1]/div[1]/app-existing-customer-search/div/form/div[2]",
+                        )
+                    )
+                )
+                self.wait120.until(
+                    ec.presence_of_element_located(
+                        (
+                            By.XPATH,
+                            "/html/body/app-root/div[1]/div[1]/div[2]/app-customer-homepage/div[1]/div[1]/div/div[3]/div[1]",
                         )
                     )
                 )
@@ -113,7 +121,8 @@ class VirginUpgradeAndDroStrategy(BellFastActBaseStrategy):
             self.driver.execute_script("arguments[0].scrollIntoView(true);", section)
 
             upgrade_paths = [
-                "/html/body/app-root/div[1]/div[1]/div[2]/app-customer-homepage/div[1]/div[1]/div/div[3]/div[3]/div/div[2]/div/div/div/div/div/div/div[3]/div/div/div/div/div[2]/div[1]/app-mobility-device-details/div[1]/div/table/tr[3]/td[1]/div/p"
+                "/html/body/app-root/div[1]/div[1]/div[2]/app-customer-homepage/div[1]/div[1]/div/div[3]/div[3]/div/div[2]/div/div/div/div/div/div/div[3]/div/div/div/div/div[2]/div[1]/app-mobility-device-details/div[1]/div/table/tr[3]/td[1]/div/p",
+                "/html/body/app-root/div[1]/div[1]/div[2]/app-customer-homepage/div[1]/div[1]/div/div[3]/div[3]/div/div[2]/div/div/div/div/div/div/div[3]/div/div/div/div/div[2]/div[1]/app-mobility-device-details/div[1]/div/table/tr[2]/td[1]/div/p"
             ]
             upgrade_status_text: str = ""
             for upgrade_path in upgrade_paths:
