@@ -11,7 +11,10 @@ from cellcom_scraper.application.strategies.fast_act.base_bellfast_strategy impo
     BellFastActBaseStrategy,
 )
 from cellcom_scraper.config import UPGRADE_AND_DRO_AWS_SERVER
-from cellcom_scraper.domain.exceptions import NoItemFoundException, UpgradeStatusException
+from cellcom_scraper.domain.exceptions import (
+    NoItemFoundException,
+    UpgradeStatusException,
+)
 
 
 class VirginUpgradeAndDroStrategy(BellFastActBaseStrategy):
@@ -24,65 +27,93 @@ class VirginUpgradeAndDroStrategy(BellFastActBaseStrategy):
 
     def check_upgrade_and_dro_status(self):
         try:
-            hardware_upgrade_link = self.wait120.until(
+            search_input = self.wait120.until(
                 ec.presence_of_element_located(
                     (
                         By.XPATH,
-                        "/html[1]/body[1]/div[1]/div[2]/div[1]/div[2]/div[1]/div[3]/div[1]/div[2]/form[2]/div[1]/div[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[1]/div[1]/ul[1]/li[1]/a[1]/span[1]",
+                        "/html/body/app-root/div[1]/div[1]/div[2]/app-landing-page/div/div/div[1]/div[2]/div[1]/div[1]/app-existing-customer-search/div/form/div[1]/div[1]/div/input",
                     )
                 )
             )
+            search_input.send_keys(self.phone_number)
 
-            hardware_upgrade_link.click()
-
-            mobile_number_field = self.wait60.until(
-                ec.presence_of_element_located((By.XPATH, "/html[1]/body[1]/div[1]/div[2]/div[1]/div[2]/div[1]/div[3]/div[1]/div[2]/form[1]/div[1]/div[1]/div[5]/div[2]/input[1]"))
-            )
-            mobile_number_field.send_keys(self.phone_number)
-
-            next_step_button = self.wait10.until(
+            search_button = self.wait60.until(
                 ec.presence_of_element_located(
                     (
                         By.XPATH,
-                        "/html[1]/body[1]/div[1]/div[2]/div[1]/div[2]/div[1]/div[3]/div[1]/div[2]/form[1]/div[3]/div[1]/div[1]/div[1]/button[1]",
+                        "/html/body/app-root/div[1]/div[1]/div[2]/app-landing-page/div/div/div[1]/div[2]/div[1]/div[1]/app-existing-customer-search/div/button",
                     )
                 )
             )
-            next_step_button.click()
+            search_button.click()
 
-            # check if alert appears, if appears set upgrade = NO and DRO = NO
             try:
-                cant_open_profile_error = self.wait10.until(
+                modal_selector = self.wait120.until(
                     ec.presence_of_element_located(
                         (
                             By.XPATH,
-                            "/html[1]/body[1]/div[1]/div[2]/div[1]/div[2]/div[1]/div[3]/div[1]/div[2]/div[1]/div[1]/div[1]/ul[1]/li[1]/font[1]",
+                            "/html/body/app-root/div[1]/div[1]/div[2]/app-landing-page/div/div/div[1]/div[2]/div[1]/div[1]/app-existing-customer-search/div/form/div[1]/div[3]/div/div/div/div/app-fuzzy-match-lightbox/div/div/div/div[2]/div/div[2]/div[1]/label[1]",
                         )
                     )
                 )
+                modal_selector.click()
+                select_option_button = self.wait120.until(
+                    ec.presence_of_element_located(
+                        (
+                            By.XPATH,
+                            "/html/body/app-root/div[1]/div[1]/div[2]/app-landing-page/div/div/div[1]/div[2]/div[1]/div[1]/app-existing-customer-search/div/form/div[1]/div[3]/div/div/div/div/app-fuzzy-match-lightbox/div/div/div/div[3]/button[1]",
+                        )
+                    )
+                )
+                select_option_button.click()
+            except NoSuchElementException:
+                pass
 
+            try:
+                error_message = self.wait120.until(
+                    ec.presence_of_element_located(
+                        (
+                            By.XPATH,
+                            "/html/body/app-root/div[1]/div[1]/div[2]/app-landing-page/div/div/div[1]/div[2]/div[1]/div[1]/app-existing-customer-search/div/form/div[2]",
+                        )
+                    )
+                )
                 self.dro = "No"
                 self.upgrade = "No"
-                self.details = cant_open_profile_error.text
-                return
+                self.details = "FIELD NOT FOUND"
+            except NoSuchElementException:
+                pass # error message no deployed
 
-            except (NoSuchElementException, TimeoutException) as e:
-                pass  # No error displayed
+            try:
+                #email request modal, ignore.
+                modal_discard = "/html/body/app-root/div[1]/div[1]/div[2]/app-customer-homepage/div[1]/div[1]/div/div[3]/app-customer-services-available/div/div/div[10]/div/div/div[3]/button[2]"
+                modal_button = self.wait120.until(
+                    ec.presence_of_element_located(
+                        (
+                            By.XPATH,
+                            modal_discard,
+                        )
+                    )
+                )
+                modal_button.click()
+
+            except:
+                #didn't appear
+                pass
+
 
             section = self.wait10.until(
                 ec.presence_of_element_located(
                     (
                         By.XPATH,
-                        "/html[1]/body[1]/div[1]/div[2]/div[1]/div[1]/div[4]/form[1]/div[1]/div[3]/div[1]"
+                        "/html/body/app-root/div[1]/div[1]/div[2]/app-customer-homepage/div[1]/div[1]/div/div[3]/div[3]/div/div[2]/div/div/div/div/div/div/div[3]/div/div/div/div/div[2]/div[1]/app-mobility-device-details",
                     )
                 )
             )
             self.driver.execute_script("arguments[0].scrollIntoView(true);", section)
 
             upgrade_paths = [
-            "/html[1]/body[1]/div[1]/div[2]/div[1]/div[1]/div[4]/form[1]/div[1]/div[3]/div[2]/div[1]/div[1]/div[1]/ul[1]/li[11]/div[2]",
-            "/html[1]/body[1]/div[1]/div[2]/div[1]/div[1]/div[4]/form[1]/div[1]/div[3]/div[2]/div[1]/div[1]/div[1]/ul[1]/li[10]/div[2]",
-            "/html/body/div/div[2]/div/div[1]/div[4]/form/div/div[3]/div[2]/div[1]/div[1]/div/ul/li[11]/div[2]",
+                "/html/body/app-root/div[1]/div[1]/div[2]/app-customer-homepage/div[1]/div[1]/div/div[3]/div[3]/div/div[2]/div/div/div/div/div/div/div[3]/div/div/div/div/div[2]/div[1]/app-mobility-device-details/div[1]/div/table/tr[3]/td[1]/div/p"
             ]
             upgrade_status_text: str = ""
             for upgrade_path in upgrade_paths:
@@ -105,13 +136,13 @@ class VirginUpgradeAndDroStrategy(BellFastActBaseStrategy):
             if not upgrade_status_text:
                 raise UpgradeStatusException("Upgrade status field not found")
 
-            if "Eligible as of" in upgrade_status_text:
+            if "Eligible as of" in upgrade_status_text or "Admissible à partir du" in upgrade_status_text:
                 self.upgrade = self.extract_date(upgrade_status_text)
-            elif "Eligible" == upgrade_status_text:
+            elif "Eligible" == upgrade_status_text or "Admissible" == upgrade_status_text:
                 self.upgrade = "Yes"
             else:
                 self.upgrade = "No"
-
+            #TODO: FINISH DRO
             self.dro = "No"
             return
 
