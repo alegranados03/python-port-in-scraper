@@ -121,10 +121,12 @@ class VirginUpgradeAndDroStrategy(BellFastActBaseStrategy):
             self.driver.execute_script("arguments[0].scrollIntoView(true);", section)
 
             upgrade_paths = [
+                "/html/body/app-root/div[1]/div[1]/div[2]/app-customer-homepage/div[1]/div[1]/div/div[3]/div[3]/div/div[2]/div/div/div/div/div/div/div[3]/div/div/div/div/div[2]/div[1]/app-mobility-device-details/div[1]/div/table/tr[2]/td[1]/div/p",
                 "/html/body/app-root/div[1]/div[1]/div[2]/app-customer-homepage/div[1]/div[1]/div/div[3]/div[3]/div/div[2]/div/div/div/div/div/div/div[3]/div/div/div/div/div[2]/div[1]/app-mobility-device-details/div[1]/div/table/tr[3]/td[1]/div/p",
-                "/html/body/app-root/div[1]/div[1]/div[2]/app-customer-homepage/div[1]/div[1]/div/div[3]/div[3]/div/div[2]/div/div/div/div/div/div/div[3]/div/div/div/div/div[2]/div[1]/app-mobility-device-details/div[1]/div/table/tr[2]/td[1]/div/p"
             ]
-            upgrade_status_text: str = ""
+            
+            self.upgrade = "No"
+            
             for upgrade_path in upgrade_paths:
                 try:
                     upgrade_status = self.wait10.until(
@@ -137,20 +139,17 @@ class VirginUpgradeAndDroStrategy(BellFastActBaseStrategy):
                     )
                     upgrade_status_text = upgrade_status.text.strip()
                     if upgrade_status_text:
-                        break
+                        if "Eligible as of" in upgrade_status_text or "Admissible à partir du" in upgrade_status_text:
+                            self.upgrade = self.extract_date(upgrade_status_text)
+                            break
+                        elif "Eligible" == upgrade_status_text or "Admissible" == upgrade_status_text:
+                            self.upgrade = "Yes"
+                            break
+                            
                 except Exception as e:
                     logging.error(str(e))
                     continue
 
-            if not upgrade_status_text:
-                raise UpgradeStatusException("Upgrade status field not found")
-
-            if "Eligible as of" in upgrade_status_text or "Admissible à partir du" in upgrade_status_text:
-                self.upgrade = self.extract_date(upgrade_status_text)
-            elif "Eligible" == upgrade_status_text or "Admissible" == upgrade_status_text:
-                self.upgrade = "Yes"
-            else:
-                self.upgrade = "No"
             #TODO: FINISH DRO
             self.dro = "No"
             return
