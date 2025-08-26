@@ -186,11 +186,37 @@ class VirginUpgradeAndDroStrategy(BellFastActBaseStrategy):
 
     @staticmethod
     def extract_date(text):
-        match = re.search(
+        # English months
+        english_match = re.search(
             r"\b(?:January|February|March|April|May|June|July|August|September|October|November|December)\s+\d{1,2},\s+\d{4}\b",
             text,
         )
-        if match:
-            date_str = match.group(0)
+        if english_match:
+            date_str = english_match.group(0)
             return datetime.strptime(date_str, "%B %d, %Y").date().isoformat()
+        
+        # French months
+        french_months = {
+            "janvier": "January", "février": "February", "mars": "March", "avril": "April",
+            "mai": "May", "juin": "June", "juillet": "July", "août": "August",
+            "septembre": "September", "octobre": "October", "novembre": "November", "décembre": "December"
+        }
+        
+        french_match = re.search(
+            r"\b(?:janvier|février|mars|avril|mai|juin|juillet|août|septembre|octobre|novembre|décembre)\s+\d{1,2},\s+\d{4}\b",
+            text,
+            re.IGNORECASE
+        )
+        if french_match:
+            french_date = french_match.group(0)
+            # Replace French month with English equivalent
+            for french_month, english_month in french_months.items():
+                if french_month in french_date.lower():
+                    english_date = french_date.lower().replace(french_month, english_month)
+                    # Capitalize first letter of month
+                    parts = english_date.split()
+                    parts[0] = parts[0].capitalize()
+                    english_date = " ".join(parts)
+                    return datetime.strptime(english_date, "%B %d, %Y").date().isoformat()
+        
         return None
