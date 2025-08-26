@@ -88,8 +88,9 @@ class VirginUpgradeAndDroStrategy(BellFastActBaseStrategy):
                 )
                 self.dro = "No"
                 self.upgrade = "No"
-                self.details = "FIELD NOT FOUND"
-            except NoSuchElementException:
+                self.details = "WARNING FIELD OR NO PROFILE DISPLAYED"
+            except NoSuchElementException as e:
+                print(str(e))
                 pass # error message no deployed
 
             try:
@@ -137,7 +138,7 @@ class VirginUpgradeAndDroStrategy(BellFastActBaseStrategy):
                             )
                         )
                     )
-                    upgrade_status_text = upgrade_status.text.strip()
+                    upgrade_status_text = upgrade_status.text.strip() if upgrade_status is not None else ""
                     if upgrade_status_text:
                         if "Eligible as of" in upgrade_status_text or "Admissible à partir du" in upgrade_status_text:
                             self.upgrade = self.extract_date(upgrade_status_text)
@@ -155,6 +156,7 @@ class VirginUpgradeAndDroStrategy(BellFastActBaseStrategy):
             return
 
         except (NoSuchElementException, TimeoutException) as e:
+            print(str(e))
             self.dro = "No"
             self.upgrade = "No"
             self.details = "FIELD NOT FOUND"
