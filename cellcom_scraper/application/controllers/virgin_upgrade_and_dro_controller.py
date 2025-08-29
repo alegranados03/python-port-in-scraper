@@ -48,36 +48,5 @@ class VirginUpgradeAndDroController(UpgradeAndDroController):
             logging.error(f"Requests fetch on {self.__class__.__name__} failed")
 
     def click_screen_close_button(self):
-        option_1 = (
-            "/html/body/app-root/div[1]/div[1]/div[2]/app-customer-homepage/div[1]/div[1]/div/div[2]/div/div[1]/nav/ol/li[1]/a"
-        )
-
-        close_options = [option_1]
-        close = None
-        for option in close_options:
-            try:
-                close = self.wait30.until(
-                    ec.presence_of_element_located(
-                        (
-                            By.XPATH,
-                            option,
-                        )
-                    )
-                )
-                close.click()
-
-                try:
-                    alert = self.wait30.until(ec.alert_is_present())
-                    time.sleep(5)
-                    alert.accept()
-                except NoAlertPresentException:
-                    pass
-                break
-            except (NoSuchElementException, TimeoutException) as e:
-                message = f"{option} button not found"
-                logging.error(e)
-                logging.error(message)
-
-        if not close:
-            logging.error("Close button not found, forced close")
-            raise CloseButtonNotFoundException("Finished without close button")
+        print("redirect")
+        self.driver.get("https://oneview.virginplus.ca/RFEApp/Shared/Ng9Index.html#/HouseHoldLanding")
