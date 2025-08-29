@@ -11,10 +11,6 @@ from cellcom_scraper.application.strategies.fast_act.base_bellfast_strategy impo
     BellFastActBaseStrategy,
 )
 from cellcom_scraper.config import UPGRADE_AND_DRO_AWS_SERVER
-from cellcom_scraper.domain.exceptions import (
-    NoItemFoundException,
-    UpgradeStatusException,
-)
 
 
 class VirginUpgradeAndDroStrategy(BellFastActBaseStrategy):
@@ -49,7 +45,7 @@ class VirginUpgradeAndDroStrategy(BellFastActBaseStrategy):
 
             try:
                 print("checking if modal exists")
-                modal_selector = self.wait60.until(
+                modal_selector = self.wait30.until(
                     ec.presence_of_element_located(
                         (
                             By.XPATH,
@@ -59,8 +55,7 @@ class VirginUpgradeAndDroStrategy(BellFastActBaseStrategy):
                 )
                 print("it exists")
                 modal_selector.click()
-                print("selecting option")
-                select_option_button = self.wait60.until(
+                select_option_button = self.wait30.until(
                     ec.presence_of_element_located(
                         (
                             By.XPATH,
@@ -74,8 +69,7 @@ class VirginUpgradeAndDroStrategy(BellFastActBaseStrategy):
                 pass
 
             try:
-                print("checking if profile exists")
-                self.wait60.until(
+                self.wait30.until(
                     ec.presence_of_element_located(
                         (
                             By.XPATH,
@@ -83,7 +77,7 @@ class VirginUpgradeAndDroStrategy(BellFastActBaseStrategy):
                         )
                     )
                 )
-                self.wait60.until(
+                self.wait30.until(
                     ec.presence_of_element_located(
                         (
                             By.XPATH,
@@ -103,7 +97,7 @@ class VirginUpgradeAndDroStrategy(BellFastActBaseStrategy):
                 # email request modal, ignore.
                 print("email request modal to ignore")
                 modal_discard = "/html/body/app-root/div[1]/div[1]/div[2]/app-customer-homepage/div[1]/div[1]/div/div[3]/app-customer-services-available/div/div/div[10]/div/div/div[3]/button[2]"
-                modal_button = self.wait60.until(
+                modal_button = self.wait30.until(
                     ec.presence_of_element_located(
                         (
                             By.XPATH,
@@ -169,10 +163,9 @@ class VirginUpgradeAndDroStrategy(BellFastActBaseStrategy):
 
             # TODO: FINISH DRO
             self.dro = "No"
-            return
 
         except (NoSuchElementException, TimeoutException) as e:
-            print(str(e))
+            logging.error(str(e))
             self.dro = "No"
             self.upgrade = "No"
             self.details = "FIELD NOT FOUND"
@@ -185,7 +178,6 @@ class VirginUpgradeAndDroStrategy(BellFastActBaseStrategy):
             "dro": self.dro,
             "details": self.details
         }
-        print(details)
         logging.info(details)
 
 
