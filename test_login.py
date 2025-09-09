@@ -56,7 +56,7 @@ wait30 = WebDriverWait(controller.driver, 30)
 controller.set_credentials(credentials)
 controller.set_environment()
 strategy = VirginUpgradeAndDroStrategy(credentials)
-number = '4384629029'
+number = '4372247632'
 strategy.set_driver(controller.driver)
 strategy.set_phone_number(number)
 
@@ -82,4 +82,6 @@ def search_sim():
 
 
 strategy.execute()
+#time.sleep(10)
+controller.click_screen_close_button()
 time.sleep(10)
