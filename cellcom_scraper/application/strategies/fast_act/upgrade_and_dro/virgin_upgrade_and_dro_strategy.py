@@ -23,6 +23,7 @@ class VirginUpgradeAndDroStrategy(BellFastActBaseStrategy):
 
     def check_upgrade_and_dro_status(self):
         try:
+            time.sleep(15)
             search_input = self.wait120.until(
                 ec.presence_of_element_located(
                     (
