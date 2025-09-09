@@ -11,6 +11,7 @@ from selenium.webdriver.support import expected_conditions as ec
 from cellcom_scraper.application.strategies.fast_act.base_bellfast_strategy import \
     BellFastActBaseStrategy
 from cellcom_scraper.config import UPGRADE_AND_DRO_AWS_SERVER
+from selenium.webdriver.common.keys import Keys
 
 
 class VirginUpgradeAndDroStrategy(BellFastActBaseStrategy):
@@ -24,6 +25,7 @@ class VirginUpgradeAndDroStrategy(BellFastActBaseStrategy):
     def check_upgrade_and_dro_status(self):
         try:
             time.sleep(15)
+            print(f"phone number to search: {self.phone_number}")
             search_input = self.wait120.until(
                 ec.presence_of_element_located(
                     (
@@ -32,6 +34,9 @@ class VirginUpgradeAndDroStrategy(BellFastActBaseStrategy):
                     )
                 )
             )
+            print("search input found")
+            search_input.send_keys(Keys.CONTROL, "a")
+            search_input.send_keys(Keys.BACK_SPACE)
             search_input.send_keys(self.phone_number)
 
             search_button = self.wait60.until(
@@ -90,7 +95,6 @@ class VirginUpgradeAndDroStrategy(BellFastActBaseStrategy):
                 select_option_button.click()
             except Exception:
                 print("no modal or couldn't select option")
-                pass
 
             try:
                 # email request modal, ignore.
@@ -108,7 +112,6 @@ class VirginUpgradeAndDroStrategy(BellFastActBaseStrategy):
 
             except:
                 logging.warning("no email modal")
-                pass
 
             try:
                 print("looking phone section")
