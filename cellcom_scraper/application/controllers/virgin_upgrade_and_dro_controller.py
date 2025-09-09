@@ -49,4 +49,4 @@ class VirginUpgradeAndDroController(UpgradeAndDroController):
 
     def click_screen_close_button(self):
         print("redirect")
-        self.driver.get("https://oneview.virginplus.ca/RFEApp/Shared/Ng9Index.html#/HouseHoldLanding")
+        self.driver.get("https://oneview.virginplus.ca/RFEApp/Shared/Ng9Index.html")
