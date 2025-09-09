@@ -69,19 +69,25 @@ class BaseController(Controller):
             self.cache_scrapers[scraper_id] = scraper
             return scraper
 
-    @staticmethod  
+    @staticmethod
     def system_resources_limit_surpassed():
         process = psutil.Process(os.getpid())
         cpu_usage = psutil.cpu_percent(interval=1)
         memory_usage = process.memory_info().rss / (1024 * 1024 * 1024)  # GB
 
         max_cpu_usage = 65  # 65%
-        max_memory_usage = 0.5 * psutil.virtual_memory().total / (1024 * 1024 * 1024)  # 50% del total de memoria
+        max_memory_usage = (
+            0.5 * psutil.virtual_memory().total / (1024 * 1024 * 1024)
+        )  # 50% del total de memoria
 
         if cpu_usage > max_cpu_usage or memory_usage > max_memory_usage:
-            logging.error(f"Resource limit exceeded. CPU: {cpu_usage}%, Memory: {memory_usage}GB")
+            logging.error(
+                f"Resource limit exceeded. CPU: {cpu_usage}%, Memory: {memory_usage}GB"
+            )
             return True
-        logging.info(f"Current resources usage. CPU: {cpu_usage}%, Memory: {memory_usage}GB")
+        logging.info(
+            f"Current resources usage. CPU: {cpu_usage}%, Memory: {memory_usage}GB"
+        )
         return False
 
     @staticmethod

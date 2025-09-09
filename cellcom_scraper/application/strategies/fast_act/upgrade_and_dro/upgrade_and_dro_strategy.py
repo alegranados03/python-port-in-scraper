@@ -11,7 +11,10 @@ from cellcom_scraper.application.strategies.fast_act.base_bellfast_strategy impo
     BellFastActBaseStrategy,
 )
 from cellcom_scraper.config import UPGRADE_AND_DRO_AWS_SERVER
-from cellcom_scraper.domain.exceptions import NoItemFoundException, UpgradeStatusException
+from cellcom_scraper.domain.exceptions import (
+    NoItemFoundException,
+    UpgradeStatusException,
+)
 
 
 class UpgradeAndDroStrategy(BellFastActBaseStrategy):
@@ -82,7 +85,7 @@ class UpgradeAndDroStrategy(BellFastActBaseStrategy):
             upgrade_paths = [
                 "//body/div[@id='instant_activation']/div[2]/div[1]/div[1]/div[4]/form[1]/div[1]/div[3]/div[2]/div[1]/div[1]/div[1]/ul[1]/li[11]/div[2]",
                 "/html[1]/body[1]/div[1]/div[2]/div[1]/div[1]/div[4]/form[1]/div[1]/div[3]/div[2]/div[1]/div[1]/div[1]/ul[1]/li[10]/div[2]",
-                "/html[1]/body[1]/div[1]/div[2]/div[1]/div[1]/div[4]/form[1]/div[1]/div[3]/div[2]/div[1]/div[1]/div[1]/ul[1]/li[11]/div[2]"
+                "/html[1]/body[1]/div[1]/div[2]/div[1]/div[1]/div[4]/form[1]/div[1]/div[3]/div[2]/div[1]/div[1]/div[1]/ul[1]/li[11]/div[2]",
             ]
             upgrade_status_text: str = ""
             for upgrade_path in upgrade_paths:
@@ -124,7 +127,7 @@ class UpgradeAndDroStrategy(BellFastActBaseStrategy):
                 )
                 device_description_button.click()
                 self.dro = "Yes"
-                #time.sleep(random.randint(5, 15))
+                # time.sleep(random.randint(5, 15))
             except Exception as e:
                 self.dro = "No"
                 return

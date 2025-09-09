@@ -21,7 +21,6 @@ class Main:
             message = "Another type of exception occurred at start"
             print(handle_general_exception(e, message))
 
-
     @staticmethod
     def log_init_message():
         current_date = datetime.now()

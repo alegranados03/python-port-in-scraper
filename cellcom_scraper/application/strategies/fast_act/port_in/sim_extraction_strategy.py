@@ -95,7 +95,17 @@ class SimExtractionStrategy(BellFastActBaseStrategy):
         sim_p_8 = "/html[1]/body[1]/div[1]/div[2]/div[1]/div[2]/div[1]/div[3]/div[1]/div[2]/form[1]/div[3]/div[1]/div[4]/div[1]/div[4]/div[2]"
         sim_p_9 = "/html[1]/body[1]/div[1]/div[2]/div[1]/div[2]/div[1]/div[3]/div[1]/div[2]/form[1]/div[3]/div[1]/div[4]/div[2]/div[5]/div[2]"
 
-        possibilities = [sim_p_1, sim_p_2, sim_p_3, sim_p_4, sim_p_5, sim_p_6, sim_p_7, sim_p_8, sim_p_9]
+        possibilities = [
+            sim_p_1,
+            sim_p_2,
+            sim_p_3,
+            sim_p_4,
+            sim_p_5,
+            sim_p_6,
+            sim_p_7,
+            sim_p_8,
+            sim_p_9,
+        ]
         sim_card = ""
         for possibility in possibilities:
             try:
@@ -115,23 +125,42 @@ class SimExtractionStrategy(BellFastActBaseStrategy):
         return sim_card
 
     def get_sim_value2(self):
-        users = self.driver.find_elements(By.CSS_SELECTOR, '#user_data')
+        users = self.driver.find_elements(By.CSS_SELECTOR, "#user_data")
         for user in users:
-            labels = user.find_elements(By.CLASS_NAME, 'fLabel2')
+            labels = user.find_elements(By.CLASS_NAME, "fLabel2")
             for label in labels:
-                if 'Phone Number:' in label.text:
-                    phone_number_element = label.find_element(By.XPATH, 'following-sibling::div[@class="fWidget"]')
-                    phone_number = phone_number_element.text.strip().replace("(", "").replace(")", "").replace(" ", "").replace("-", "")
+                if "Phone Number:" in label.text:
+                    phone_number_element = label.find_element(
+                        By.XPATH, 'following-sibling::div[@class="fWidget"]'
+                    )
+                    phone_number = (
+                        phone_number_element.text.strip()
+                        .replace("(", "")
+                        .replace(")", "")
+                        .replace(" ", "")
+                        .replace("-", "")
+                    )
 
-                    if self.remove_phone_number_format(phone_number) == self.phone_number:
-                        sim_label = user.find_element(By.XPATH, ".//div[contains(., 'SIM:')]/following-sibling::div[@class='fWidget']")
+                    if (
+                        self.remove_phone_number_format(phone_number)
+                        == self.phone_number
+                    ):
+                        sim_label = user.find_element(
+                            By.XPATH,
+                            ".//div[contains(., 'SIM:')]/following-sibling::div[@class='fWidget']",
+                        )
                         sim_number = sim_label.text.strip()
                         return sim_number
         return None
 
     @staticmethod
     def remove_phone_number_format(phone_number: str):
-        phone_number = phone_number.replace("(", "").replace(")", "").replace(" ", "").replace("-", "")
+        phone_number = (
+            phone_number.replace("(", "")
+            .replace(")", "")
+            .replace(" ", "")
+            .replace("-", "")
+        )
         return phone_number.strip()
 
     @staticmethod

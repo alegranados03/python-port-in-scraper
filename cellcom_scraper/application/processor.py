@@ -4,7 +4,7 @@ import os
 from cellcom_scraper.application.controllers import (
     PortInController,
     UpgradeAndDroController,
-    VirginUpgradeAndDroController
+    VirginUpgradeAndDroController,
 )
 from cellcom_scraper.domain.entities import (
     AccountEntity,
@@ -15,9 +15,7 @@ from cellcom_scraper.domain.exceptions.exceptions import handle_general_exceptio
 
 
 class Processor:
-    def __init__(
-            self
-    ):
+    def __init__(self):
         self.account_credentials_dict: dict = {
             PortInController.__name__: AccountEntity(
                 username=os.getenv("BELL_FAST_USERNAME"),
@@ -33,13 +31,13 @@ class Processor:
                 username=os.getenv("VIRGIN_USERNAME"),
                 dealer_code=os.getenv("VIRGIN_DEALER_CODE"),
                 password=os.getenv("VIRGIN_PASSWORD"),
-            )
+            ),
         }
 
         self.controllers_list: list = [
             PortInController,
             UpgradeAndDroController,
-            VirginUpgradeAndDroController
+            VirginUpgradeAndDroController,
         ]
 
     def _get_account_credentials(self, controller: Controller):
@@ -59,4 +57,6 @@ class Processor:
         try:
             c.execute()
         except Exception as e:
-            print(handle_general_exception(e, f"{controller.__name__} failed at execute"))
+            print(
+                handle_general_exception(e, f"{controller.__name__} failed at execute")
+            )

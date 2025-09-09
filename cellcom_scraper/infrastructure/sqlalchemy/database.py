@@ -27,6 +27,7 @@ def create_connection_string():
                 case "production":
                     return f"mysql://{user}:{password}@{host}:{port}/{database_name}?ssl_ca={ssl_cert_path}"
 
+
 def create_default_engine():
     return create_engine(create_connection_string())
 

@@ -110,7 +110,9 @@ class PortInViaFicticeNumberStrategy(BellFastActBaseStrategy):
                 )
                 check_elegibility_button.click()
             except Exception as e:
-                message = handle_general_exception(e, "Exception trying to find elegibility button")
+                message = handle_general_exception(
+                    e, "Exception trying to find elegibility button"
+                )
                 logging.info(message)
                 message = f"{check_elegibility_path} check elegibility button not found"
                 raise NoItemFoundException(message=message)
@@ -177,7 +179,9 @@ class PortInViaFicticeNumberStrategy(BellFastActBaseStrategy):
                 customer_name_input.send_keys(configuration.client_authorization_name)
 
                 quick_submit_button = self.wait10.until(
-                    ec.presence_of_element_located((By.XPATH, "//button[@id='fSubmitBtn']"))
+                    ec.presence_of_element_located(
+                        (By.XPATH, "//button[@id='fSubmitBtn']")
+                    )
                 )
 
                 quick_submit_button.click()

@@ -64,7 +64,6 @@ class FastActController(BaseController):
         )
         repository.update(request.id, update_data)
 
-
     def set_environment(self):
         while not self.webdriver_is_active():
             if self.system_resources_limit_surpassed():

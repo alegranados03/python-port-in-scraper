@@ -29,7 +29,7 @@ class VirginUpgradeAndDroController(UpgradeAndDroController):
                         limit=1,
                         status=RequestStatus.READY.value,
                         scraper_id=2,
-                        type=RequestType.VIRGIN_UPGRADE_STATUS_AND_DRO.value
+                        type=RequestType.VIRGIN_UPGRADE_STATUS_AND_DRO.value,
                     )
                     if self.request:
                         self._update_request_status_without_commit(

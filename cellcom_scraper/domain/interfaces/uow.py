@@ -6,6 +6,7 @@ from sqlalchemy.orm import Session
 
 class UnitOfWork(ABC):
     """Abstract unit of work."""
+
     session: Session
 
     def __enter__(self) -> "UnitOfWork":

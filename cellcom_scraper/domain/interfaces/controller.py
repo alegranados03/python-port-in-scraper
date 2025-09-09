@@ -47,7 +47,7 @@ class Controller(ABC):
     @abstractmethod
     def system_resources_limit_surpassed() -> bool:
         raise NotImplementedError
-    
+
     @abstractmethod
     def _update_request_status(self, *, request, status) -> None:
         raise NotImplementedError

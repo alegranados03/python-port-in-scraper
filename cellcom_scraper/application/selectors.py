@@ -31,7 +31,7 @@ DriverBuilder = TypeVar("DriverBuilder", bound=AutomationDriverBuilder)
 
 
 def get_webdriver_builder(
-        navigator_name: NavigatorWebDriverType, url: str
+    navigator_name: NavigatorWebDriverType, url: str
 ) -> AutomationDriverBuilder:
     builders = {
         NavigatorWebDriverType.CHROME: ChromeDriverBuilder,

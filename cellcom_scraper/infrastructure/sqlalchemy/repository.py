@@ -80,15 +80,17 @@ class SQLAlchemyRepository(Repository):
 
     def _filter_query(self, **filters):
         context = {self.get_model().__name__: self.get_model(), "datetime": datetime}
-        return (
-            self.session.query(self.get_model())
-            .filter(
-                *[eval(filter_, context) for filter_ in self.format_filters(**filters)]
-            )
+        return self.session.query(self.get_model()).filter(
+            *[eval(filter_, context) for filter_ in self.format_filters(**filters)]
         )
 
     def filter_with_skip_locked(self, limit=1, **filters) -> Entity | None:
-        result = self._filter_query(**filters).limit(limit).with_for_update(skip_locked=True).first()
+        result = (
+            self._filter_query(**filters)
+            .limit(limit)
+            .with_for_update(skip_locked=True)
+            .first()
+        )
         if result:
             return result.to_entity()
 

@@ -14,7 +14,7 @@ FORCE_STOP_ERRORS = [
     "For interbrand transfers, please complete an Account Migration transaction through fastACT.",
     "Unknown fictive number port in configuration",
     "Only accounts with Open or Suspended status can be viewed",
-    "A port request is already in progress. Go to Order Search to retrieve and continue with the original order."
+    "A port request is already in progress. Go to Order Search to retrieve and continue with the original order.",
 ]
 PORT_IN_AWS_SERVER = os.environ.get("PORT_IN_AWS_SERVER")
 UPGRADE_AND_DRO_AWS_SERVER = os.environ.get("UPGRADE_AND_DRO_AWS_SERVER")
