@@ -185,6 +185,22 @@ class PortInViaFicticeNumberStrategy(BellFastActBaseStrategy):
                 )
 
                 quick_submit_button.click()
+                try:
+                    step_3_button = self.wait10.until(
+                        ec.presence_of_element_located(
+                            (By.XPATH, "/html/body/div/div[2]/div/div[2]/div/div[4]/div[1]/div[2]/form/div[14]/div/div/div/button[2]")
+                        )
+                    )
+                    step_3_button.click()
+
+                    step_5_button = self.wait10.until(
+                        ec.presence_of_element_located(
+                            (By.XPATH, "/html/body/div/div[2]/div/div[2]/div/div[3]/div[1]/div[2]/div/form/div[4]/button[2]")
+                        )
+                    )
+                    step_5_button.click()
+                except:
+                    pass
             except (NoSuchElementException, TimeoutException) as e:
                 message = "Final port in form not found"
                 logging.error(e)
