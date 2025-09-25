@@ -58,12 +58,12 @@ controller.set_environment()
 
 # Configuración para probar Fictive Number Port-In
 # NECESITAS tener estos datos en tu base de datos en la tabla fictive_number_port_in
-number_to_test = "4372247632"  # El número real que quieres portar
+
 
 # Crear configuración fictive (normalmente viene de la BD)
 fictive_config = FictiveNumberPortInEntity(
     id=1,
-    number_to_port=number_to_test,
+    number_to_port="4168946102",
     fictive_number="4384545004",
     current_provider_account_number="32400809",
     client_authorization_name="Farzad Hassanzadeh",
