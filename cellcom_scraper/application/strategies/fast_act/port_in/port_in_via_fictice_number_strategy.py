@@ -180,7 +180,7 @@ class PortInViaFicticeNumberStrategy(BellFastActBaseStrategy):
 
                 quick_submit_button = self.wait10.until(
                     ec.presence_of_element_located(
-                        (By.XPATH, "//button[@id='fSubmitBtn']")
+                        (By.XPATH, "/html/body/div/div[2]/div/div[2]/div/div[4]/div[1]/div[2]/form/div[5]/div/div/div[1]/div[2]/button")
                     )
                 )
 

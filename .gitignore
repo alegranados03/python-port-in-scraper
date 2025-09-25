@@ -493,3 +493,4 @@ screenshots/*.png
 
 #Custom files to ignore
 result_query.txt
+claude/

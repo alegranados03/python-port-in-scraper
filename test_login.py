@@ -26,6 +26,11 @@ from cellcom_scraper.application.strategies.fast_act.port_in.sim_extraction_stra
 from cellcom_scraper.application.strategies.fast_act.upgrade_and_dro.virgin_upgrade_and_dro_strategy import (
     VirginUpgradeAndDroStrategy,
 )
+from cellcom_scraper.application.strategies.fast_act.port_in import (
+    PortInViaFicticeNumberStrategy,
+    SimExtractionFictiveNumberStrategy
+)
+from cellcom_scraper.application.controllers import (PortInController)
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as ec
 
@@ -54,7 +59,7 @@ scraper = ScraperEntity(
     available=1,
 )
 uow = DefaultUnitOfWork()
-controller = VirginUpgradeAndDroController(uow)
+controller = PortInController(uow)
 
 wait30 = WebDriverWait(controller.driver, 30)
 controller.set_credentials(credentials)
