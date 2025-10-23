@@ -109,12 +109,15 @@ class FastActController(BaseController):
 
             #modal password cannot be empty
             try:
+                print("can fail alert")
                 alert = self.wait30.until(ec.alert_is_present())
                 time.sleep(5)
                 alert.accept()
-            except NoAlertPresentException:
+            except (NoAlertPresentException, Exception) as e:
+                print("alert failed")
+                print(str(e))
+                logging.exception("alert detection failed at login")
                 pass
-
         except (NoSuchElementException, TimeoutException, Exception) as e:
             message = "Failed during FastAct login"
             logging.error(e)
