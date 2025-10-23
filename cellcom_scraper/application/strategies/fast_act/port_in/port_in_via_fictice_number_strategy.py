@@ -99,23 +99,26 @@ class PortInViaFicticeNumberStrategy(BellFastActBaseStrategy):
             number_to_port_input.send_keys(configuration.number_to_port)
 
             check_elegibility_path = "/html[1]/body[1]/div[1]/div[2]/div[1]/div[2]/div[1]/div[4]/div[1]/div[2]/form[1]/div[3]/div[1]/div[3]/div[4]/div[1]/div[1]/div[1]/button[1]"
-            try:
-                check_elegibility_button = self.wait30.until(
-                    ec.presence_of_element_located(
-                        (
-                            By.XPATH,
-                            check_elegibility_path,
+            check_elegibility_path_2 = "/html/body/div/div[2]/div/div[2]/div/div[4]/div[1]/div[2]/form/div[4]/div/div[3]/div[4]/div/div/div[1]/button"
+            for elegibility_path in [check_elegibility_path, check_elegibility_path_2]:
+                try:
+                    check_elegibility_button = self.wait30.until(
+                        ec.presence_of_element_located(
+                            (
+                                By.XPATH,
+                                elegibility_path,
+                            )
                         )
                     )
-                )
-                check_elegibility_button.click()
-            except Exception as e:
-                message = handle_general_exception(
-                    e, "Exception trying to find elegibility button"
-                )
-                logging.info(message)
-                message = f"{check_elegibility_path} check elegibility button not found"
-                raise NoItemFoundException(message=message)
+                    check_elegibility_button.click()
+                except Exception as e:
+                    message = handle_general_exception(
+                        e, "Exception trying to find elegibility button"
+                    )
+                    logging.info(message)
+                    print("Exception trying to find elegibility button")
+                    message = f"{elegibility_path} check elegibility button not found"
+                    raise NoItemFoundException(message=message)
 
             try:
                 error_message = self.wait10.until(
