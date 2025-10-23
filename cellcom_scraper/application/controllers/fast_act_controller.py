@@ -107,6 +107,14 @@ class FastActController(BaseController):
             login_button.click()
             time.sleep(10)
 
+            #modal password cannot be empty
+            try:
+                alert = self.wait30.until(ec.alert_is_present())
+                time.sleep(5)
+                alert.accept()
+            except NoAlertPresentException:
+                pass
+
         except (NoSuchElementException, TimeoutException, Exception) as e:
             message = "Failed during FastAct login"
             logging.error(e)
