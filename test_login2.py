@@ -63,10 +63,10 @@ controller.set_environment()
 # Crear configuración fictive (normalmente viene de la BD)
 fictive_config = FictiveNumberPortInEntity(
     id=1,
-    number_to_port="4168946102",
-    fictive_number="4384545004",
-    current_provider_account_number="32400809",
-    client_authorization_name="Farzad Hassanzadeh",
+    number_to_port="4188037714",
+    fictive_number="5813496703",
+    current_provider_account_number="36321483",
+    client_authorization_name="Philippe Boucher",
     current_billing_provider_value="8303"  # | TELS
 )
 
@@ -81,7 +81,7 @@ print("=" * 50)
 # Crear estrategia Fictive Number
 strategy = PortInViaFicticeNumberStrategy(credentials)
 strategy.set_driver(controller.driver)
-strategy.set_phone_number(number_to_test)
+strategy.set_phone_number(fictive_config.number_to_port)
 
 wait30 = WebDriverWait(controller.driver, 30)
 
@@ -124,7 +124,7 @@ def test_full_fictive_strategy():
     try:
         print("Ejecutando estrategia completa (busca en BD)...")
         strategy.execute()  # Este método busca la config en la BD
-        strategy.handle_results()
+        #strategy.handle_results()
         print("✅ Estrategia completa ejecutada exitosamente!")
 
     except Exception as e:

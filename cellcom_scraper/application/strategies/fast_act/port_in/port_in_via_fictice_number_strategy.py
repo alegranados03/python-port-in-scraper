@@ -100,7 +100,8 @@ class PortInViaFicticeNumberStrategy(BellFastActBaseStrategy):
 
             check_elegibility_path = "/html[1]/body[1]/div[1]/div[2]/div[1]/div[2]/div[1]/div[4]/div[1]/div[2]/form[1]/div[3]/div[1]/div[3]/div[4]/div[1]/div[1]/div[1]/button[1]"
             check_elegibility_path_2 = "/html/body/div/div[2]/div/div[2]/div/div[4]/div[1]/div[2]/form/div[4]/div/div[3]/div[4]/div/div/div[1]/button"
-            for elegibility_path in [check_elegibility_path, check_elegibility_path_2]:
+            check_elegibility_path_3 = '//*[@id="portEligibilitySection"]/div[4]/div/div/div[1]/button'
+            for elegibility_path in [check_elegibility_path, check_elegibility_path_2, check_elegibility_path_3]:
                 try:
                     check_elegibility_button = self.wait30.until(
                         ec.presence_of_element_located(
@@ -111,6 +112,7 @@ class PortInViaFicticeNumberStrategy(BellFastActBaseStrategy):
                         )
                     )
                     check_elegibility_button.click()
+                    break
                 except Exception as e:
                     message = handle_general_exception(
                         e, "Exception trying to find elegibility button"
