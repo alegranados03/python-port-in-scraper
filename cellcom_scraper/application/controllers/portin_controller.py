@@ -20,6 +20,7 @@ class PortInController(FastActController):
 
     def _get_request(self) -> None:
         try:
+            logging.debug(f"{self.__class__.__name__}: Attempting to retrieve next request")
             with self.uow:
                 transaction = self.uow.session.begin()
                 try:
@@ -31,34 +32,43 @@ class PortInController(FastActController):
                         scraper_id=1,
                     )
                     if self.request:
+                        logging.info(f"{self.__class__.__name__}: Request fetched with ID {self.request.id}, number_to_port: {self.request.number_to_port}")
                         self._update_request_status_without_commit(
                             request=self.request, status=RequestStatus.IN_PROGRESS
                         )
+                        logging.debug(f"{self.__class__.__name__}: Request status updated to IN_PROGRESS")
+                    else:
+                        logging.debug(f"{self.__class__.__name__}: No ready requests found")
                     transaction.commit()
                 except Exception as e:
-                    logging.error("Error occurred on request transaction")
+                    logging.error(f"{self.__class__.__name__}: Error occurred on request transaction - {str(e)}")
                     transaction.close()
         except Exception as e:
-            print(
-                handle_general_exception(
-                    e, "Requests fetch on Port In Controller failed"
-                )
+            error_message = handle_general_exception(
+                e, "Requests fetch on Port In Controller failed"
             )
-            logging.error(f"Requests fetch on {self.__class__.__name__} failed")
+            print(error_message)
+            logging.error(f"Requests fetch on {self.__class__.__name__} failed - {error_message}", exc_info=True)
 
     def execute(self):
+        logging.info(f"{self.__class__.__name__}: Starting execute loop")
         while True:
             self._get_request()
             if not self.request:
+                logging.debug(f"{self.__class__.__name__}: No more requests to process, exiting loop")
                 break
             try:
+                logging.info(f"{self.__class__.__name__}: Processing request {self.request.id}")
                 request_type: RequestType = RequestType(self.request.type)
+                logging.debug(f"{self.__class__.__name__}: Request type identified as {request_type.name}")
                 self.set_strategy(request_type)
                 self.strategy.set_phone_number(self.request.number_to_port)
                 self.strategy.set_aws_id(self.request.aws_id)
+                logging.debug(f"{self.__class__.__name__}: Strategy configured for phone {self.request.number_to_port}")
                 tries = 0
                 while tries < MAX_ATTEMPTS:
                     try:
+                        logging.info(f"{self.__class__.__name__}: Attempt {tries + 1} of {MAX_ATTEMPTS} for request {self.request.id}")
                         self.set_environment()
                         self.strategy.set_driver(self.builder.get_driver())
                         self.strategy.execute()
@@ -67,10 +77,12 @@ class PortInController(FastActController):
                         self._update_request_status(
                             request=self.request, status=RequestStatus.FINISHED
                         )
+                        logging.info(f"{self.__class__.__name__}: Request {self.request.id} completed successfully")
                         try:
                             if self.webdriver_is_active():
                                 self.click_screen_close_button()
                         except CloseButtonNotFoundException as e:
+                            logging.warning(f"{self.__class__.__name__}: Close button not found for request {self.request.id}")
                             self.handle_errors(
                                 error_description=e.message,
                                 send_sms="yes",
@@ -79,13 +91,16 @@ class PortInController(FastActController):
                             self.driver.close()
                     except ApplicationException as e:
                         tries = tries + 1
+                        logging.warning(f"{self.__class__.__name__}: ApplicationException on attempt {tries} for request {self.request.id}: {e.message}")
                         for error in FORCE_STOP_ERRORS:
                             if error in str(e):
+                                logging.error(f"{self.__class__.__name__}: Force stop error detected: {error}")
                                 tries = MAX_ATTEMPTS
                         if tries == MAX_ATTEMPTS:
                             self._update_request_status(
                                 request=self.request, status=RequestStatus.ERROR
                             )
+                            logging.error(f"{self.__class__.__name__}: Request {self.request.id} marked as ERROR after max attempts")
                         self.handle_errors(
                             error_description=f"Error occurred: attempt {tries} {e.message}",
                             send_sms="yes",
@@ -95,6 +110,7 @@ class PortInController(FastActController):
                             if self.webdriver_is_active():
                                 self.click_screen_close_button()
                         except CloseButtonNotFoundException as e:
+                            logging.warning(f"{self.__class__.__name__}: Close button not found after error on request {self.request.id}")
                             self.handle_errors(
                                 error_description=f"After error: {e.message}",
                                 send_sms="no",
@@ -105,6 +121,7 @@ class PortInController(FastActController):
                         tries = tries + 1
                         message = "Another type of exception occurred please check what happened"
                         complete_error_message = handle_general_exception(e, message)
+                        logging.error(f"{self.__class__.__name__}: Unexpected exception on attempt {tries} for request {self.request.id}: {complete_error_message}", exc_info=True)
                         print(complete_error_message)
                         self.handle_errors(
                             error_description=complete_error_message,
@@ -113,4 +130,4 @@ class PortInController(FastActController):
                         )
                         self.driver.close()
             except Exception as e:
-                logging.error(f"PortInController: Thread error: {e}")
+                logging.error(f"{self.__class__.__name__}: Thread error while processing request: {e}", exc_info=True)

@@ -4,6 +4,7 @@ MAX_ATTEMPTS = 10
 UPGRADE_AND_DRO_MAX_ATTEMPTS = 3
 FORCE_STOP_ERRORS = [
     "SIM number not found",
+    "No subscriber found",
     "Phone number not found",
     "The original order cannot be found for this port-in number. Please verify the information entered and try again.",
     "The status for the mobile number entered is not valid.",

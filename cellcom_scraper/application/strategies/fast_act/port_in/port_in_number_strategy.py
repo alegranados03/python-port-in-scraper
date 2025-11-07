@@ -21,12 +21,15 @@ class PortInNumberStrategy(BellFastActBaseStrategy):
 
     def port_in_number(self):
         try:
+            logging.info(f"{self.__class__.__name__}: Starting port in process for phone {self.phone_number}")
             portin_dates_changes = self.wait30.until(
                 ec.presence_of_element_located(
                     (By.XPATH, "//span[contains(text(),'Port-In Date Changes')]")
                 )
             )
+            logging.debug(f"{self.__class__.__name__}: Port-In Date Changes element found")
             portin_dates_changes.click()
+            logging.debug(f"{self.__class__.__name__}: Port-In Date Changes clicked")
 
             manual_entry = self.wait30.until(
                 ec.presence_of_element_located(

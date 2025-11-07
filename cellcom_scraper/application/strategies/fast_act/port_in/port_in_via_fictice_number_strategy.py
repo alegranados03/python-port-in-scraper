@@ -97,10 +97,12 @@ class PortInViaFicticeNumberStrategy(BellFastActBaseStrategy):
             )
 
             number_to_port_input.send_keys(configuration.number_to_port)
-
+            import time
+            time.sleep(6)
             check_elegibility_path = "/html[1]/body[1]/div[1]/div[2]/div[1]/div[2]/div[1]/div[4]/div[1]/div[2]/form[1]/div[3]/div[1]/div[3]/div[4]/div[1]/div[1]/div[1]/button[1]"
             check_elegibility_path_2 = "/html/body/div/div[2]/div/div[2]/div/div[4]/div[1]/div[2]/form/div[4]/div/div[3]/div[4]/div/div/div[1]/button"
             check_elegibility_path_3 = '//*[@id="portEligibilitySection"]/div[4]/div/div/div[1]/button'
+            button_found = False
             for elegibility_path in [check_elegibility_path, check_elegibility_path_2, check_elegibility_path_3]:
                 try:
                     check_elegibility_button = self.wait30.until(
@@ -112,15 +114,18 @@ class PortInViaFicticeNumberStrategy(BellFastActBaseStrategy):
                         )
                     )
                     check_elegibility_button.click()
+                    button_found = True
                     break
                 except Exception as e:
                     message = handle_general_exception(
-                        e, "Exception trying to find elegibility button"
+                        e, f"Exception trying to find elegibility button: {elegibility_path}"
                     )
                     logging.info(message)
-                    print("Exception trying to find elegibility button")
-                    message = f"{elegibility_path} check elegibility button not found"
-                    raise NoItemFoundException(message=message)
+                    print(f"Exception trying to find elegibility button: {elegibility_path}")
+
+            if not button_found:
+                logging.error("No elegibility button found")
+                raise NoItemFoundException(message="check elegibility button not found")
 
             try:
                 error_message = self.wait10.until(
@@ -138,6 +143,8 @@ class PortInViaFicticeNumberStrategy(BellFastActBaseStrategy):
                 raise PortInNumberException(error_message.text)
 
             try:
+                # "/html/body/div/div[2]/div/div[2]/div/div[4]/div[1]/div[2]/form/div[4]/div/div[4]/div/div[4]/div[2]/select"
+                # '//*[@id="fCurrentBillingProvider"]/div[2]/select'
                 current_billing_provider_dropdown = Select(
                     self.wait30.until(
                         ec.presence_of_element_located(
@@ -185,7 +192,8 @@ class PortInViaFicticeNumberStrategy(BellFastActBaseStrategy):
 
                 quick_submit_button = self.wait10.until(
                     ec.presence_of_element_located(
-                        (By.XPATH, "/html/body/div/div[2]/div/div[2]/div/div[4]/div[1]/div[2]/form/div[5]/div/div/div[1]/div[2]/button")
+                        (By.XPATH,
+                         "/html/body/div/div[2]/div/div[2]/div/div[4]/div[1]/div[2]/form/div[5]/div/div/div[1]/div[2]/button")
                     )
                 )
 
@@ -193,14 +201,16 @@ class PortInViaFicticeNumberStrategy(BellFastActBaseStrategy):
                 try:
                     step_3_button = self.wait10.until(
                         ec.presence_of_element_located(
-                            (By.XPATH, "/html/body/div/div[2]/div/div[2]/div/div[4]/div[1]/div[2]/form/div[14]/div/div/div/button[2]")
+                            (By.XPATH,
+                             "/html/body/div/div[2]/div/div[2]/div/div[4]/div[1]/div[2]/form/div[14]/div/div/div/button[2]")
                         )
                     )
                     step_3_button.click()
 
                     step_5_button = self.wait10.until(
                         ec.presence_of_element_located(
-                            (By.XPATH, "/html/body/div/div[2]/div/div[2]/div/div[3]/div[1]/div[2]/div/form/div[4]/button[2]")
+                            (By.XPATH,
+                             "/html/body/div/div[2]/div/div[2]/div/div[3]/div[1]/div[2]/div/form/div[4]/button[2]")
                         )
                     )
                     step_5_button.click()
@@ -240,7 +250,7 @@ class PortInViaFicticeNumberStrategy(BellFastActBaseStrategy):
         self.send_to_aws(data, endpoint)
 
     def handle_errors(
-        self, *, error_description, send_sms, send_client_sms="no", error_log=""
+            self, *, error_description, send_sms, send_client_sms="no", error_log=""
     ):
         screenshot: dict = self.take_screenshot()
         data: dict = {
