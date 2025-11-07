@@ -19,6 +19,7 @@ class SimExtractionStrategy(BellFastActBaseStrategy):
 
     def search_sim_number(self):
         try:
+            logging.info(f"{self.__class__.__name__}: Starting SIM extraction process for phone {self.phone_number}")
             search_link = self.wait120.until(
                 ec.presence_of_element_located(
                     (
@@ -27,7 +28,9 @@ class SimExtractionStrategy(BellFastActBaseStrategy):
                     )
                 )
             )
+            logging.debug(f"{self.__class__.__name__}: Search link found")
             search_link.click()
+            logging.debug(f"{self.__class__.__name__}: Search link clicked")
 
             mobile_radiobtn = self.wait120.until(
                 ec.presence_of_element_located(
@@ -37,7 +40,9 @@ class SimExtractionStrategy(BellFastActBaseStrategy):
                     )
                 )
             )
+            logging.debug(f"{self.__class__.__name__}: Mobile radio button found")
             mobile_radiobtn.click()
+            logging.debug(f"{self.__class__.__name__}: Mobile radio button clicked")
 
             mobile_number_input = self.wait120.until(
                 ec.presence_of_element_located(
@@ -47,7 +52,9 @@ class SimExtractionStrategy(BellFastActBaseStrategy):
                     )
                 )
             )
+            logging.debug(f"{self.__class__.__name__}: Mobile number input found")
             mobile_number_input.send_keys(self.phone_number)
+            logging.debug(f"{self.__class__.__name__}: Phone number entered: {self.phone_number}")
 
             button_next = self.wait120.until(
                 ec.presence_of_element_located(
@@ -57,9 +64,12 @@ class SimExtractionStrategy(BellFastActBaseStrategy):
                     )
                 )
             )
+            logging.debug(f"{self.__class__.__name__}: Next button found")
             button_next.click()
+            logging.debug(f"{self.__class__.__name__}: Next button clicked")
 
         except (NoSuchElementException, TimeoutException) as e:
+            logging.error(f"{self.__class__.__name__}: Failed searching SIM number - {str(e)}")
             raise SimExtractionException("Failed searching SIM number")
 
         try:
@@ -71,7 +81,9 @@ class SimExtractionStrategy(BellFastActBaseStrategy):
                     )
                 )
             )
+            logging.debug(f"{self.__class__.__name__}: Results table found")
         except Exception:
+            logging.error(f"{self.__class__.__name__}: Phone number not found in search results")
             raise SimExtractionException("Phone number not found")
 
         agreement_number_link = self.wait120.until(
@@ -82,7 +94,9 @@ class SimExtractionStrategy(BellFastActBaseStrategy):
                 )
             )
         )
+        logging.debug(f"{self.__class__.__name__}: Agreement number link found")
         agreement_number_link.click()
+        logging.debug(f"{self.__class__.__name__}: Agreement number link clicked")
 
     def get_sim_value(self):
         sim_p_1 = self.get_sim_field_xpath("4", "8", "4")

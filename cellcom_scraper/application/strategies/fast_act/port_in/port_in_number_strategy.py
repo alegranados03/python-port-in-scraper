@@ -36,48 +36,61 @@ class PortInNumberStrategy(BellFastActBaseStrategy):
                     (By.XPATH, "//a[contains(text(),'Manual Entry')]")
                 )
             )
+            logging.debug(f"{self.__class__.__name__}: Manual Entry link found")
             manual_entry.click()
+            logging.debug(f"{self.__class__.__name__}: Manual Entry clicked")
 
             portin_number = self.wait30.until(
                 ec.presence_of_element_located(
                     (By.XPATH, "//tbody/tr[@id='rowId_0']/td[1]/input[1]")
                 )
             )
+            logging.debug(f"{self.__class__.__name__}: Port-in number input field found")
             portin_number.send_keys(self.phone_number)
+            logging.debug(f"{self.__class__.__name__}: Phone number entered: {self.phone_number}")
 
             asap_checkbox = self.wait30.until(
                 ec.presence_of_element_located(
                     (By.XPATH, "//tbody/tr[@id='rowId_0']/td[6]/input[1]")
                 )
             )
+            logging.debug(f"{self.__class__.__name__}: ASAP checkbox found")
             asap_checkbox.click()
+            logging.debug(f"{self.__class__.__name__}: ASAP checkbox clicked")
 
             validate_btn = self.wait30.until(
                 ec.presence_of_element_located((By.XPATH, "//a[@id='validate']"))
             )
+            logging.debug(f"{self.__class__.__name__}: Validate button found")
             validate_btn.click()
+            logging.info(f"{self.__class__.__name__}: Validate clicked, checking for errors")
 
             rows = self.driver.find_elements(
                 By.CSS_SELECTOR, "table > tbody tr[id*=rowId_]"
             )
+            logging.debug(f"{self.__class__.__name__}: Found {len(rows)} rows to validate")
 
             error_number_indexes = []
             for i, row in enumerate(rows):
                 if row.get_attribute("style") == "color: rgb(255, 0, 0);":
                     error_number_indexes.append(i)
+                    logging.warning(f"{self.__class__.__name__}: Error found at row {i}")
 
             if len(error_number_indexes) > 0:
                 error_msg = self.driver.find_element(
                     By.XPATH,
                     "//body/div[@id='instant_activation']/div[2]/div[1]/div[1]/form[1]/div[1]/div[1]/div[1]/ul[1]/li[1]/font[1]",
                 )
+                logging.error(f"{self.__class__.__name__}: Port-in error: {error_msg.text}")
                 raise PortInNumberException(error_msg.text)
 
             else:
                 submit_btn = self.wait30.until(
                     ec.presence_of_element_located((By.XPATH, "//a[@id='submitted']"))
                 )
+                logging.debug(f"{self.__class__.__name__}: Submit button found")
                 submit_btn.click()
+                logging.info(f"{self.__class__.__name__}: Port-in submitted successfully")
         except (NoSuchElementException, TimeoutException) as e:
             message = "Failed during port in strategy"
             logging.error(e)
