@@ -28,6 +28,7 @@ class PortInController(FastActController):
                         "process_requests"
                     ).filter_with_skip_locked(
                         limit=1,
+                        order_by="type",
                         status=RequestStatus.READY.value,
                         scraper_id=1,
                     )
@@ -50,6 +51,36 @@ class PortInController(FastActController):
             print(error_message)
             logging.error(f"Requests fetch on {self.__class__.__name__} failed - {error_message}", exc_info=True)
 
+    def _handle_request_type_change(self, request_type: RequestType) -> None:
+        new_credentials = self._get_credentials_by_request_type(request_type)
+
+        # Check if credentials changed, not just request type
+        if self.current_request_type != request_type:
+            current_credentials = self._get_credentials_by_request_type(self.current_request_type) if self.current_request_type else None
+
+            if current_credentials != new_credentials:
+                logging.info(f"{self.__class__.__name__}: Credentials changed from {self.current_request_type} to {request_type.name}, handling session change")
+                # If there was a previous request type and driver is active, logout
+                if self.current_request_type is not None and self.webdriver_is_active():
+                    logging.info(f"{self.__class__.__name__}: Logging out from previous session")
+                    try:
+                        if self.webdriver_is_active():
+                            self.click_screen_close_button()
+                            self.driver.close()
+                    except Exception as e:
+                        logging.warning(f"{self.__class__.__name__}: Error closing previous session: {str(e)}")
+                        self.driver.close() if self.webdriver_is_active() else None
+
+                # Update credentials
+                self.set_credentials(new_credentials)
+                logging.info(f"{self.__class__.__name__}: Credentials updated for request type {request_type.name}")
+            else:
+                logging.debug(f"{self.__class__.__name__}: Request type changed but credentials remain the same, maintaining current session")
+
+            self.current_request_type = request_type
+        else:
+            logging.debug(f"{self.__class__.__name__}: Request type unchanged, maintaining current session")
+
     def execute(self):
         logging.info(f"{self.__class__.__name__}: Starting execute loop")
         while True:
@@ -61,6 +92,9 @@ class PortInController(FastActController):
                 logging.info(f"{self.__class__.__name__}: Processing request {self.request.id}")
                 request_type: RequestType = RequestType(self.request.type)
                 logging.debug(f"{self.__class__.__name__}: Request type identified as {request_type.name}")
+
+                self._handle_request_type_change(request_type)
+
                 self.set_strategy(request_type)
                 self.strategy.set_phone_number(self.request.number_to_port)
                 self.strategy.set_aws_id(self.request.aws_id)

@@ -1,14 +1,10 @@
 import threading
-import os
 import logging
 
 from cellcom_scraper.application.controllers import (
     PortInController,
     UpgradeAndDroController,
     VirginUpgradeAndDroController,
-)
-from cellcom_scraper.domain.entities import (
-    AccountEntity,
 )
 from cellcom_scraper.domain.interfaces.controller import Controller
 from cellcom_scraper.infrastructure.sqlalchemy.default_uow import DefaultUnitOfWork
@@ -19,37 +15,13 @@ logger = logging.getLogger(__name__)
 
 class Processor:
     def __init__(self):
-        logger.info("Initializing Processor with controllers and credentials")
-        self.account_credentials_dict: dict = {
-            PortInController.__name__: AccountEntity(
-                username=os.getenv("BELL_FAST_USERNAME"),
-                dealer_code=os.getenv("BELL_FAST_DEALER_CODE"),
-                password=os.getenv("BELL_FAST_PASSWORD"),
-            ),
-            UpgradeAndDroController.__name__: AccountEntity(
-                username=os.getenv("BELL_FAST_USERNAME"),
-                dealer_code=os.getenv("BELL_FAST_DEALER_CODE"),
-                password=os.getenv("BELL_FAST_PASSWORD"),
-            ),
-            VirginUpgradeAndDroController.__name__: AccountEntity(
-                username=os.getenv("VIRGIN_USERNAME"),
-                dealer_code=os.getenv("VIRGIN_DEALER_CODE"),
-                password=os.getenv("VIRGIN_PASSWORD"),
-            ),
-        }
-        logger.debug(f"Credentials configured for {len(self.account_credentials_dict)} controllers")
-
+        logger.info("Initializing Processor with controllers")
         self.controllers_list: list = [
             PortInController,
             UpgradeAndDroController,
             VirginUpgradeAndDroController,
         ]
         logger.debug(f"Loaded {len(self.controllers_list)} controllers: {[c.__name__ for c in self.controllers_list]}")
-
-    def _get_account_credentials(self, controller: Controller):
-        credentials = self.account_credentials_dict[controller.__name__]
-        logger.debug(f"Retrieved credentials for controller: {controller.__name__}")
-        return credentials
 
     def start_processor(self):
         logger.info("Starting processor - initiating controller execution sequence")
@@ -65,8 +37,7 @@ class Processor:
         logger.debug(f"Initializing UnitOfWork for {controller.__name__}")
         uow = DefaultUnitOfWork()
         c: Controller = controller(uow)
-        c.set_credentials(self._get_account_credentials(controller))
-        logger.debug(f"Credentials set for {controller.__name__}")
+        logger.debug(f"Controller {controller.__name__} instantiated")
         try:
             logger.info(f"Executing {controller.__name__}")
             c.execute()

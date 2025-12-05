@@ -29,6 +29,7 @@ class BaseController(Controller):
         self.strategy: Optional[Strategy] = None
         self.driver: Optional[WebDriver] = None
         self.credentials: Optional[AccountEntity] = None
+        self.current_request_type: Optional[RequestType] = None
         self.request: Optional[ProcessQueueRequestEntity] = None
         self.cache_scrapers: dict = {}
         self.uow: UnitOfWork = uow
@@ -52,6 +53,9 @@ class BaseController(Controller):
 
     def _get_account_credentials(self) -> AccountEntity:
         return self.credentials
+
+    def _get_credentials_by_request_type(self, request_type: RequestType) -> AccountEntity:
+        raise NotImplementedError
 
     def handle_results(self):
         self.strategy.handle_results()

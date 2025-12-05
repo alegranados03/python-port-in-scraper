@@ -1,6 +1,8 @@
+import os
 from cellcom_scraper.application.controllers.upgrade_and_dro_controller import (
     UpgradeAndDroController,
 )
+from cellcom_scraper.domain.entities import AccountEntity
 from cellcom_scraper.domain.exceptions.exceptions import handle_general_exception
 from cellcom_scraper.domain.enums import RequestStatus, RequestType
 from selenium.webdriver.common.by import By
@@ -18,6 +20,19 @@ import logging
 
 
 class VirginUpgradeAndDroController(UpgradeAndDroController):
+    def _initialize_default_credentials(self):
+        self.default_credentials = AccountEntity(
+            username=os.getenv("VIRGIN_USERNAME"),
+            dealer_code=os.getenv("VIRGIN_DEALER_CODE"),
+            password=os.getenv("VIRGIN_PASSWORD"),
+        )
+        self.credentials = self.default_credentials
+
+    def _get_credentials_by_request_type(self, request_type: RequestType) -> AccountEntity:
+        credentials_map: dict = {
+        }
+        return credentials_map.get(request_type, self.default_credentials)
+
     def _get_request(self) -> None:
         try:
             logging.debug(f"{self.__class__.__name__}: Attempting to retrieve next request")

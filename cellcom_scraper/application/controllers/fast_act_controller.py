@@ -15,9 +15,11 @@ from selenium.webdriver.support import expected_conditions as ec
 from cellcom_scraper.application.controllers.base_controller import BaseController
 from cellcom_scraper.application.enums import NavigatorWebDriverType
 from cellcom_scraper.application.selectors import get_webdriver_builder
+from cellcom_scraper.domain.entities import AccountEntity
 from cellcom_scraper.domain.entities.process_queue_request import (
     ProcessQueueUpdateEntity,
 )
+from cellcom_scraper.domain.enums import RequestType
 from cellcom_scraper.domain.exceptions import (
     ApplicationException,
     LoginFailedException,
@@ -34,6 +36,38 @@ class FastActController(BaseController):
     def __init__(self, uow: UnitOfWork):
         super().__init__(uow)
         self.fast_act_url = os.environ.get("FAST_ACT_URL")
+        self._initialize_default_credentials()
+
+    def _initialize_default_credentials(self):
+        self.default_credentials = AccountEntity(
+            username=os.getenv("BELL_FAST_USERNAME"),
+            dealer_code=os.getenv("BELL_FAST_DEALER_CODE"),
+            password=os.getenv("BELL_FAST_PASSWORD"),
+        )
+        self.credentials = self.default_credentials
+
+    def _get_credentials_by_request_type(self, request_type: RequestType) -> AccountEntity:
+        gta_credentials = AccountEntity(
+            username=os.getenv("BELL_FAST_USERNAME"),
+            dealer_code=os.getenv("GTA_DEALER_CODE"),
+            password=os.getenv("BELL_FAST_PASSWORD"),
+        )
+        ont_credentials = AccountEntity(
+            username=os.getenv("BELL_FAST_USERNAME"),
+            dealer_code=os.getenv("ONT_DEALER_CODE"),
+            password=os.getenv("BELL_FAST_PASSWORD"),
+        )
+        credentials_map: dict = {
+            RequestType.PORT_IN_NUMBER: self.default_credentials,
+            RequestType.SIM_EXTRACTION: self.default_credentials,
+            RequestType.FICTIVE_NUMBER_PORT_IN: self.default_credentials,
+            RequestType.FICTIVE_NUMBER_SIM_EXTRACTION: self.default_credentials,
+            RequestType.GTA_PORT_IN_NUMBER: gta_credentials,
+            RequestType.GTA_SIM_EXTRACTION: gta_credentials,
+            RequestType.ONT_PORT_IN_NUMBER: ont_credentials,
+            RequestType.ONT_SIM_EXTRACTION: ont_credentials,
+        }
+        return credentials_map.get(request_type, self.default_credentials)
 
     def webdriver_is_active(self):
         if not self.driver:

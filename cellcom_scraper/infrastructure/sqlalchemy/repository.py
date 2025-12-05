@@ -84,9 +84,14 @@ class SQLAlchemyRepository(Repository):
             *[eval(filter_, context) for filter_ in self.format_filters(**filters)]
         )
 
-    def filter_with_skip_locked(self, limit=1, **filters) -> Entity | None:
+    def filter_with_skip_locked(self, limit=1, order_by=None, **filters) -> Entity | None:
+        query = self._filter_query(**filters)
+        if order_by:
+            model = self.get_model()
+            if hasattr(model, order_by):
+                query = query.order_by(getattr(model, order_by))
         result = (
-            self._filter_query(**filters)
+            query
             .limit(limit)
             .with_for_update(skip_locked=True)
             .first()
