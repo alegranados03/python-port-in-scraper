@@ -60,10 +60,22 @@ def get_scraper_strategy(strategy_name: RequestType):
         RequestType.GTA_PORT_IN_NUMBER: lambda credentials: PortInNumberStrategy(
             credentials
         ),
+        RequestType.GTA_FICTIVE_SIM_EXTRACTION: lambda credentials: SimExtractionFictiveNumberStrategy(
+            credentials
+        ),
+        RequestType.GTA_FICTIVE_PORT_IN: lambda credentials: PortInViaFicticeNumberStrategy(
+            credentials
+        ),
         RequestType.ONT_SIM_EXTRACTION: lambda credentials: SimExtractionStrategy(
             credentials
         ),
         RequestType.ONT_PORT_IN_NUMBER: lambda credentials: PortInNumberStrategy(
+            credentials
+        ),
+        RequestType.ONT_FICTIVE_SIM_EXTRACTION: lambda credentials: SimExtractionFictiveNumberStrategy(
+            credentials
+        ),
+        RequestType.ONT_FICTIVE_PORT_IN: lambda credentials: PortInViaFicticeNumberStrategy(
             credentials
         ),
         RequestType.FICTIVE_NUMBER_SIM_EXTRACTION: lambda credentials: SimExtractionFictiveNumberStrategy(

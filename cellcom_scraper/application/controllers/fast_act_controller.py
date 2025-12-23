@@ -64,8 +64,12 @@ class FastActController(BaseController):
             RequestType.FICTIVE_NUMBER_SIM_EXTRACTION: self.default_credentials,
             RequestType.GTA_PORT_IN_NUMBER: gta_credentials,
             RequestType.GTA_SIM_EXTRACTION: gta_credentials,
+            RequestType.GTA_FICTIVE_PORT_IN: gta_credentials,
+            RequestType.GTA_FICTIVE_SIM_EXTRACTION: gta_credentials,
             RequestType.ONT_PORT_IN_NUMBER: ont_credentials,
             RequestType.ONT_SIM_EXTRACTION: ont_credentials,
+            RequestType.ONT_FICTIVE_PORT_IN: ont_credentials,
+            RequestType.ONT_FICTIVE_SIM_EXTRACTION: ont_credentials,
         }
         return credentials_map.get(request_type, self.default_credentials)
 
