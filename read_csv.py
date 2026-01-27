@@ -1,9 +1,9 @@
 from pathlib import Path
 import pandas as pd
 
-EXCEL_PATH = Path(r"C:\Users\Alejandro\Downloads\EN_pour_Davie Mster file for Sean Expertel.xlsx")
-SHEET_NAME = "New activation & Port"
-CURRENT_BILLING_PROVIDER_VALUE = 8303
+EXCEL_PATH = Path(r"C:\Users\Alejandro\Downloads\Autobus Neron.xlsx")
+SHEET_NAME = "Sheet1"
+CURRENT_BILLING_PROVIDER_VALUE = "8303"
 BATCH_SIZE = 1000
 
 def esc(s: str) -> str:
@@ -15,24 +15,25 @@ df.columns = [c.strip() for c in df.columns]
 
 number_to_port = df["Phone Number"].str.strip()
 fictive_number = df["fictive #"].str.strip()
-#current_provider_account_number = df["Contrat"].str.strip()
-current_provider_account_number = "36321483"
+current_provider_account_number = df["Current Provider Account #"].str.strip()
+#current_provider_account_number = "558427618"
 # client_authorization_name = (
 #     df["First Name/ Prénom"].str.strip() + " " + df["Last Name/ Nom de famille"].str.strip()
 # ).str.strip()
-client_authorization_name = ["Jeremy Citone", "Philippe Boucher"]
+client_authorization_name = ["Dave Lessard", "Dave Lessard"]
 
 values_rows = []
 indexes = range(len(number_to_port))
-for index, nport, fict in zip(
+for index, nport, fict, acct_num in zip(
     indexes,
     number_to_port,
     fictive_number,
+    current_provider_account_number,
 ):
     i = index % 2
     c_a_n = client_authorization_name[i]
     values_rows.append(
-        f"('{esc(nport)}', '{esc(fict)}', '{current_provider_account_number}', '{c_a_n}', {CURRENT_BILLING_PROVIDER_VALUE})"
+        f"('{esc(nport)}', '{esc(fict)}', '{esc(acct_num)}', '{c_a_n}', {CURRENT_BILLING_PROVIDER_VALUE})"
     )
 
 table = "fictive_number_port_in"

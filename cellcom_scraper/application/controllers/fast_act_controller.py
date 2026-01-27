@@ -36,6 +36,8 @@ class FastActController(BaseController):
     def __init__(self, uow: UnitOfWork):
         super().__init__(uow)
         self.fast_act_url = os.environ.get("FAST_ACT_URL")
+        self.default_fast_act_url = self.fast_act_url
+        self.ont_fast_act_url = os.environ.get("ONT_FAST_ACT_URL", self.fast_act_url)
         self._initialize_default_credentials()
 
     def _initialize_default_credentials(self):
@@ -72,6 +74,17 @@ class FastActController(BaseController):
             RequestType.ONT_FICTIVE_SIM_EXTRACTION: ont_credentials,
         }
         return credentials_map.get(request_type, self.default_credentials)
+
+    def _get_url_by_request_type(self, request_type: RequestType) -> str:
+        ont_types = {
+            RequestType.ONT_PORT_IN_NUMBER,
+            RequestType.ONT_SIM_EXTRACTION,
+            RequestType.ONT_FICTIVE_PORT_IN,
+            RequestType.ONT_FICTIVE_SIM_EXTRACTION,
+        }
+        if request_type in ont_types:
+            return self.ont_fast_act_url
+        return self.default_fast_act_url
 
     def webdriver_is_active(self):
         if not self.driver:
