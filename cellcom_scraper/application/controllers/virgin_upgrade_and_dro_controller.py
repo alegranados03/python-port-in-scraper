@@ -22,9 +22,9 @@ import logging
 class VirginUpgradeAndDroController(UpgradeAndDroController):
     def _initialize_default_credentials(self):
         self.default_credentials = AccountEntity(
-            username=os.getenv("VIRGIN_USERNAME"),
+            username=os.getenv("BELL_FAST_USERNAME"),
             dealer_code=os.getenv("VIRGIN_DEALER_CODE"),
-            password=os.getenv("VIRGIN_PASSWORD"),
+            password=os.getenv("BELL_FAST_PASSWORD"),
         )
         self.credentials = self.default_credentials
 
