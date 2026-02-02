@@ -17,6 +17,7 @@ from cellcom_scraper.application.strategies.fast_act.port_in import (
 from cellcom_scraper.application.strategies.fast_act.upgrade_and_dro import (
     UpgradeAndDroStrategy,
     VirginUpgradeAndDroStrategy,
+    VirginUpgradeAndDroStrategyAlternative
 )
 from cellcom_scraper.domain.enums import RequestType
 from cellcom_scraper.domain.exceptions import (
@@ -87,7 +88,7 @@ def get_scraper_strategy(strategy_name: RequestType):
         RequestType.UPGRADE_STATUS_AND_DRO: lambda credentials: UpgradeAndDroStrategy(
             credentials
         ),
-        RequestType.VIRGIN_UPGRADE_STATUS_AND_DRO: lambda credentials: VirginUpgradeAndDroStrategy(
+        RequestType.VIRGIN_UPGRADE_STATUS_AND_DRO: lambda credentials: VirginUpgradeAndDroStrategyAlternative(
             credentials
         ),
     }
