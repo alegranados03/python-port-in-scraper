@@ -67,6 +67,4 @@ class VirginUpgradeAndDroController(UpgradeAndDroController):
             logging.error(f"Requests fetch on {self.__class__.__name__} failed - {error_message}", exc_info=True)
 
     def click_screen_close_button(self):
-        logging.debug(f"{self.__class__.__name__}: Redirecting to Virgin Plus OneView")
-        self.driver.get("https://oneview.virginplus.ca/RFEApp/Shared/Ng9Index.html")
-        logging.debug(f"{self.__class__.__name__}: Redirect completed")
+        self.strategy.click_screen_close_button()

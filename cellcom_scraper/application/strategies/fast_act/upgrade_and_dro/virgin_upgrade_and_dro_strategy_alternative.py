@@ -1,9 +1,10 @@
 import logging
 import re
+import time
 from datetime import datetime
 from typing import Optional
 
-from selenium.common.exceptions import NoSuchElementException, TimeoutException
+from selenium.common.exceptions import NoSuchElementException, TimeoutException, NoAlertPresentException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as ec
 
@@ -11,7 +12,7 @@ from cellcom_scraper.application.strategies.fast_act.base_bellfast_strategy impo
     BellFastActBaseStrategy,
 )
 from cellcom_scraper.config import UPGRADE_AND_DRO_AWS_SERVER
-from cellcom_scraper.domain.exceptions import UpgradeStatusException
+from cellcom_scraper.domain.exceptions import UpgradeStatusException, CloseButtonNotFoundException
 
 
 class VirginUpgradeAndDroStrategyAlternative(BellFastActBaseStrategy):
@@ -209,3 +210,42 @@ class VirginUpgradeAndDroStrategyAlternative(BellFastActBaseStrategy):
                     return datetime.strptime(english_date, "%B %d, %Y").date().isoformat()
 
         return None
+
+
+    def click_screen_close_button(self):
+        option_1 = "/html/body/div/div[2]/div/div[1]/div[1]/div[2]/div/a[1]"
+        option_2 = "/html[1]/body[1]/div[1]/div[1]/div[1]/div[3]/div[1]/ul[1]/li[3]/a[1]"
+        option_3 = "/html[1]/body[1]/div[1]/div[2]/div[1]/div[1]/div[1]/div[2]/div[1]/a[1]"
+
+        close_options = [option_1, option_2, option_3]
+        for option in close_options:
+            try:
+                close = self.wait30.until(
+                    ec.presence_of_element_located(
+                        (
+                            By.XPATH,
+                            option,
+                        )
+                    )
+                )
+                close.click()
+
+                try:
+                    alert = self.wait30.until(ec.alert_is_present())
+                    time.sleep(5)
+                    alert.accept()
+                except NoAlertPresentException:
+                    pass
+                return  # Éxito, salir del método
+            except (NoSuchElementException, TimeoutException) as e:
+                message = f"{option} button not found"
+                logging.error(e)
+                logging.error(message)
+            except Exception as e:
+                # Cualquier otra excepción (WebDriverException, StaleElement, etc.)
+                logging.error(f"Unexpected error clicking close button: {e}")
+
+        # Si llegamos aquí, ningún XPath funcionó
+        logging.error("Close button not found, forced close")
+        raise CloseButtonNotFoundException("Finished without close button")
+
