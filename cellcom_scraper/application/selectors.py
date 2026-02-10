@@ -79,6 +79,12 @@ def get_scraper_strategy(strategy_name: RequestType):
         RequestType.ONT_FICTIVE_PORT_IN: lambda credentials: PortInViaFicticeNumberStrategy(
             credentials
         ),
+        RequestType.WPCI_PORT_IN_NUMBER: lambda credentials: PortInNumberStrategy(
+            credentials
+        ),
+        RequestType.WPCI_SIM_EXTRACTION: lambda credentials: SimExtractionStrategy(
+            credentials
+        ),
         RequestType.FICTIVE_NUMBER_SIM_EXTRACTION: lambda credentials: SimExtractionFictiveNumberStrategy(
             credentials
         ),

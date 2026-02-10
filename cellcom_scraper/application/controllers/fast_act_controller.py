@@ -57,6 +57,11 @@ class FastActController(BaseController):
             dealer_code=os.getenv("ONT_DEALER_CODE"),
             password=os.getenv("BELL_FAST_PASSWORD"),
         )
+        wpci_credentials = AccountEntity(
+            username=os.getenv("BELL_FAST_USERNAME"),
+            dealer_code=os.getenv("WPCI_DEALER_CODE"),
+            password=os.getenv("BELL_FAST_PASSWORD"),
+        )
         credentials_map: dict = {
             RequestType.PORT_IN_NUMBER: self.default_credentials,
             RequestType.SIM_EXTRACTION: self.default_credentials,
@@ -70,6 +75,8 @@ class FastActController(BaseController):
             RequestType.ONT_SIM_EXTRACTION: ont_credentials,
             RequestType.ONT_FICTIVE_PORT_IN: ont_credentials,
             RequestType.ONT_FICTIVE_SIM_EXTRACTION: ont_credentials,
+            RequestType.WPCI_PORT_IN_NUMBER: wpci_credentials,
+            RequestType.WPCI_SIM_EXTRACTION: wpci_credentials,
         }
         return credentials_map.get(request_type, self.default_credentials)
 
