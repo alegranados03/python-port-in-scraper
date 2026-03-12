@@ -108,6 +108,7 @@ class SimExtractionStrategy(BellFastActBaseStrategy):
         sim_p_7 = "/html[1]/body[1]/div[1]/div[2]/div[1]/div[2]/div[1]/div[3]/div[1]/div[2]/form[1]/div[3]/div[1]/div[4]/div[2]/div[4]/div[2]"
         sim_p_8 = "/html[1]/body[1]/div[1]/div[2]/div[1]/div[2]/div[1]/div[3]/div[1]/div[2]/form[1]/div[3]/div[1]/div[4]/div[1]/div[4]/div[2]"
         sim_p_9 = "/html[1]/body[1]/div[1]/div[2]/div[1]/div[2]/div[1]/div[3]/div[1]/div[2]/form[1]/div[3]/div[1]/div[4]/div[2]/div[5]/div[2]"
+        sim_p_10 = "/html[1]/body[1]/div[1]/div[2]/div[1]/div[2]/div[1]/div[3]/div[1]/div[2]/form[1]/div[4]/div[1]/div[1]/div[1]/div[10]/div[7]/div[2]"
 
         possibilities = [
             sim_p_1,
@@ -119,6 +120,7 @@ class SimExtractionStrategy(BellFastActBaseStrategy):
             sim_p_7,
             sim_p_8,
             sim_p_9,
+            sim_p_10
         ]
         sim_card = ""
         for possibility in possibilities:
