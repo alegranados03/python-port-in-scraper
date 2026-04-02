@@ -144,9 +144,8 @@ class VirginUpgradeAndDroStrategyAlternative(BellFastActBaseStrategy):
         logging.info(details)
 
     def handle_results(self):
-        screenshot = self.take_screenshot()
         data = {
-            "screenshot": screenshot["screenshot"],
+            "screenshot": "",
             "upgrade": self.upgrade,
             "device_return_option": self.dro,
             "details": self.details,

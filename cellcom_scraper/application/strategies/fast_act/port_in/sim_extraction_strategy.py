@@ -167,6 +167,21 @@ class SimExtractionStrategy(BellFastActBaseStrategy):
                         )
                         sim_number = sim_label.text.strip()
                         return sim_number
+
+        # Fallback: search SIM directly by #dnewSim element ID
+        try:
+            sim_element = self.driver.find_element(
+                By.CSS_SELECTOR, "#dnewSim .fWidget"
+            )
+            sim_number = sim_element.text.strip()
+            if sim_number:
+                logging.info(
+                    f"{self.__class__.__name__}: SIM found via #dnewSim fallback: {sim_number}"
+                )
+                return sim_number
+        except Exception:
+            logging.debug(f"{self.__class__.__name__}: #dnewSim fallback did not find SIM")
+
         return None
 
     @staticmethod

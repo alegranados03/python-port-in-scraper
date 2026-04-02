@@ -363,11 +363,10 @@ class PortInViaFicticeNumberStrategy(BellFastActBaseStrategy):
         self.port_in_number(configuration)
 
     def handle_results(self):
-        screenshot = self.take_screenshot()
         data = {
             "response": "Finished successfully",
-            "error_filename": screenshot["filename"],
-            "error_screenshot": screenshot["screenshot"],
+            "error_filename": "",
+            "error_screenshot": "",
             "process_id": self.aws_id,
         }
         endpoint: str = "reply-results"
