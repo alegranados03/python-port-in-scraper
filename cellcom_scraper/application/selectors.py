@@ -94,7 +94,7 @@ def get_scraper_strategy(strategy_name: RequestType):
         RequestType.UPGRADE_STATUS_AND_DRO: lambda credentials: UpgradeAndDroStrategy(
             credentials
         ),
-        RequestType.VIRGIN_UPGRADE_STATUS_AND_DRO: lambda credentials: VirginUpgradeAndDroStrategyAlternative(
+        RequestType.VIRGIN_UPGRADE_STATUS_AND_DRO: lambda credentials: VirginUpgradeAndDroStrategy(
             credentials
         ),
     }
