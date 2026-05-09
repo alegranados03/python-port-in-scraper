@@ -202,10 +202,10 @@ class VirginUpgradeAndDroStrategy(BellFastActBaseStrategy):
         self.send_to_aws(data, endpoint)
 
     def handle_errors(self, *, description: str, details=""):
-        screenshot: dict = self.take_screenshot()
+
         payload = {
             "description": description,
-            "screenshot": screenshot["screenshot"],
+            "screenshot": "",
             "details": details,
         }
         endpoint: str = f"phones/{self.aws_id}/logs/error"
