@@ -97,6 +97,21 @@ class VirginUpgradeAndDroStrategy(BellFastActBaseStrategy):
                 print("no modal or couldn't select option")
 
             try:
+                print("checking update customer email modal")
+                update_email_close = self.wait10.until(
+                    ec.element_to_be_clickable(
+                        (
+                            By.XPATH,
+                            '//*[@id="updateCustomerEmailPopUp"]//button[@aria-label="close button"]',
+                        )
+                    )
+                )
+                update_email_close.click()
+                print("update customer email modal closed")
+            except Exception:
+                print("no update customer email modal")
+
+            try:
                 # email request modal, ignore.
                 print("email request modal to ignore")
                 modal_discard = "/html/body/app-root/div[1]/div[1]/div[2]/app-customer-homepage/div[1]/div[1]/div/div[3]/app-customer-services-available/div/div/div[10]/div/div/div[3]/button[2]"
